@@ -6,7 +6,7 @@
 /*   By: ldinaut <ldinaut@student.42.fr>            +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2023/05/26 17:14:07 by ldinaut           #+#    #+#             */
-/*   Updated: 2023/06/10 00:08:01 by ldinaut          ###   ########.fr       */
+/*   Updated: 2023/06/14 16:49:00 by ldinaut          ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -25,6 +25,8 @@ int main(int argc, char *argv[])
 	toto.epoll_fd = epoll_create1(0);
 
 	int sock = socket(AF_INET, SOCK_STREAM, 0);
+	int flags = fcntl(sock, F_GETFL, 0);
+	fcntl(sock, F_SETFL, flags | O_NONBLOCK);
 	if (sock == -1)
 	{
 		std::cout << "socket failed" << std::endl;
@@ -50,7 +52,7 @@ int main(int argc, char *argv[])
 	ev->data.fd = sock;
 	ev->events = EPOLLIN;
 	epoll_ctl(toto.epoll_fd, EPOLL_CTL_ADD, sock, ev);
-	send(fd_co, toto.password.c_str(), toto.password.length(), 0);
+	int j = 0;
 	while (1)
 	{
 		int event = epoll_wait(toto.epoll_fd, ev, 5, 10000);
@@ -61,9 +63,22 @@ int main(int argc, char *argv[])
 		}
 		else if (event > 0)
 		{
-			char toto1[4608];
-			int i = read(fd_co, toto1, 4608);
-			std::cout << "client : " << toto1 << std::endl;
+			std::cout << "event = " << event << "    lol = " << ev->data.fd << std::endl;
+			if (event == ev->data.fd)
+				std::cout << "NOUVEAU CLIENT" << std::endl;
+			else
+			{
+				std::cout << "COMMAND : " << std::endl;
+				char toto1[4608];
+				int i = read(fd_co, toto1, 4608);
+				std::cout << "client : " << toto1 << std::endl;
+			}
+			// if (j == 0)
+			// {
+			// 	std::string str = "CAP * LS :";
+			// 	j++;
+			// 	send(fd_co, str.c_str(), str.length(), 0);
+			// }
 		}
 	}
 
