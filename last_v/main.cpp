@@ -6,123 +6,93 @@
 /*   By: ldinaut <ldinaut@student.42.fr>            +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2023/05/26 17:14:07 by ldinaut           #+#    #+#             */
-/*   Updated: 2023/06/14 18:54:52 by mcouppe          ###   ########.fr       */
+/*   Updated: 2023/06/18 17:28:50 by mcouppe          ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
 #include "Server.hpp"
 
+int	error_int(std::string msg){
+	std::cerr << RED <<  msg << RESET << std::endl;
+	return (1);
+}
+void	new_connection()
+{
+
+}
+
 int main(int argc, char *argv[])
 {
 	if (argc != 3)
-	{
-		std::cout << "./ircserv <port> <password>" << std::endl;
-		return (1);
-	}
+		return (error_int("./ircserv <port> <password>"));
 	struct epoll_event ev[5];
+	for (int h = 0; h < 5; h++)
+		ev[h].data.fd = 0;
 
 	Server toto(atoi(argv[1]), argv[2]);
 	toto.epoll_fd = epoll_create1(0);
 
-	int sock = socket(AF_INET, SOCK_STREAM, 0);
-	if (sock == -1)
-	{
-		std::cout << "socket failed" << std::endl;
-		exit(1);
-	}
+	toto.sock = socket(AF_INET, SOCK_STREAM, 0);
+	// int flags = fcntl(toto.sock, F_GETFL, 0);
+	// fcntl(toto.sock, F_SETFL, flags | O_NONBLOCK);
+	if (toto.sock == -1)
+		return (error_int("socket failed"));
 	sockaddr_in sockaddr;
 	sockaddr.sin_family = AF_INET;
 	sockaddr.sin_addr.s_addr = INADDR_ANY;
 	sockaddr.sin_port = htons(toto.port);
 		
-	if (bind(sock, (struct sockaddr*)&sockaddr, sizeof(sockaddr)) < 0)
-	{
-		std::cout << "bind failed" << std::endl;
-		exit (1);
-	}
-	if (listen(sock, 10) < 0)
-	{
-		std::cout << "listen failed" << std::endl;
-		exit(1);
-	}
+	if (bind(toto.sock, (struct sockaddr*)&sockaddr, sizeof(sockaddr)) < 0)
+		return (error_int("bind failed"));
+	if (listen(toto.sock, 10) < 0)
+		return (error_int("listen failed"));
 	int addrlen = sizeof(sockaddr);
-	std::cout << "sock before accept :" << sock << std::endl;
-	int fd_co = accept(sock, (struct sockaddr*)&sockaddr, (socklen_t*)&addrlen);
-	if (fd_co == -1){
-		std::cerr << "accept issue : " << errno << std::endl;
-		return (1);
-	}
-	std::cout << "sock after accept : " << sock << "fd_client = " << fd_co << std::endl;
-	ev->data.fd = sock;
+	int fd_co = accept(toto.sock, (struct sockaddr*)&sockaddr, (socklen_t*)&addrlen);
+	toto.fd_co = fd_co;
+	ev->data.fd = toto.sock;
 	ev->events = EPOLLIN;
-	epoll_ctl(toto.epoll_fd, EPOLL_CTL_ADD, sock, ev);
+	epoll_ctl(toto.epoll_fd, EPOLL_CTL_ADD, toto.sock, ev);
+	int j = 0;
 	while (1)
-	{
+{	
 		int event = epoll_wait(toto.epoll_fd, ev, 5, 10000);
-		std::cout << "event after epoll_wait : " << event << std::endl;
 		if (event < 0)
-		{
-			std::cout << "event a eu un souci : " << errno << std::endl;
-			return (1);
-		}
+			return (error_int("Error: epoll_wait failed"));
 		else if (event > 0)
 		{
-/*
-
-		ici je fais exactement pareil que dans le man de epoll (cf https://manpages.ubuntu.com/manpages/focal/fr/man7/epoll.7.html)
-		y'a juste une partie ou dans le man ils appellent une fonction pour mettre socket non blocking
-		du coup j'ai remis les fcntl qui faisaient tout buguer en haut mais ca marche pas ni avec ni sans lol
-
-		aussi, seconde diff avec le man : la structure ev il aime pas trop dc peut etre un pblm avec ca ?
-
-*/
-
-			for (int n = 0; n < event; ++n){
-				if (ev[n].data.fd == sock){
-					addrlen = sizeof(sockaddr);
-					fd_co = accept(sock, (struct sockaddr*)&sockaddr, (socklen_t*)&addrlen);
-					if (fd_co == -1){
-						std::cerr << "ze kroi ke zé vu un grominet" << std::endl;
-						return (1);
-					}
-		//			int flags = fcntl(fd_co, F_GETFL, 0);
-		//			fcntl(fd_co, F_SETFL, flags | O_NONBLOCK);
-					ev->events = EPOLLIN | EPOLLET;
-					ev->data.fd = fd_co;
-					if (epoll_ctl(sock, EPOLL_CTL_ADD, fd_co, ev) == -1){
-						std::cerr << "error on epoll_ctl : fd_co" << std::endl;
-						return (1);
-					}
+			for (int k = 0; k < 6; ++k)
+			{
+				std::cout << LAVENDER << "[LOG]\nevent = " << event << " event[" << k << "].data.fd = " << ev[k].data.fd << RESET << std::endl;
+				if (toto.sock == ev[k].data.fd)
+				{
+					std::cout << GREEN << "[NOUVEAU CLIENT]" << RESET <<  std::endl;
+					toto.new_connection(ev[k], sockaddr);
+					write(fd_co, ":* NICK ldinaut", 12);
 				}
-				else {
-					std::cout << "ici on doit utiliser fd ???" << std::endl;
-					break;
+				else if (ev[k].events == EPOLLIN)
+				{
+					std::cout << GREEN << "[COMMAND]" << RESET << std::endl;
+					std::cout << LIGHT_BLUE << "[DEBUG]\nici le fd sur lequel on ecoute : " << ev[k].data.fd << RESET << std::endl;
+					char toto1[1000];
+					recv(ev[k].data.fd, toto1, 1000, MSG_DONTWAIT);
+					std::string buffer(toto1);
+					if (buffer.find("CAP LS") != std::string::npos)
+						std::cout << ORANGE << "[INFO CLIENT]" << RESET << std::endl;
+					std::cout << "client : " << toto1 << std::endl;
 				}
 			}
-/*			std::cout << "event = " << event << "    lol = " << ev->data.fd << std::endl;
-			if (event == ev->data.fd)
-				std::cout << "NOUVEAU CLIENT" << std::endl;
-			else
-			{
-				std::cout << "COMMAND : " << std::endl;
-				char toto1[4608];
-//				int i = read(fd_co, toto1, 4608);
-				read(fd_co, toto1, 4608);
-				std::cout << "client : " << toto1 << std::endl;
-				break;
-			}*/
 			// if (j == 0)
 			// {
 			// 	std::string str = "CAP * LS :";
 			// 	j++;
 			// 	send(fd_co, str.c_str(), str.length(), 0);
-			// }
+			// 
 		}
 	}
 
-	std::string rep = "je reponds hihi ca va et toi\n";
-	send(fd_co, rep.c_str(), rep.length(), 0);
+// 	std::string rep = "je reponds hihi ca va et toi\n";
+// 	send(toto.fd_co, rep.c_str(), rep.length(), 0);
 
-	close(fd_co);
-	close(sock);
+// 	close(toto.fd_co);
+// 	close(toto.sock);
 }
