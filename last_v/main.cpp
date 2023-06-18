@@ -6,7 +6,7 @@
 /*   By: ldinaut <ldinaut@student.42.fr>            +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2023/05/26 17:14:07 by ldinaut           #+#    #+#             */
-/*   Updated: 2023/06/18 18:34:07 by mcouppe          ###   ########.fr       */
+/*   Updated: 2023/06/18 19:10:13 by mcouppe          ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -18,11 +18,12 @@ int	error_int(std::string msg){
 	std::cerr << RED <<  msg << RESET << std::endl;
 	return (1);
 }
+/*
 void	new_connection()
 {
 
 }
-
+*/
 int main(int argc, char *argv[])
 {
 	if (argc != 3)
