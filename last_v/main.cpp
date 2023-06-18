@@ -6,11 +6,13 @@
 /*   By: ldinaut <ldinaut@student.42.fr>            +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2023/05/26 17:14:07 by ldinaut           #+#    #+#             */
-/*   Updated: 2023/06/18 17:28:50 by mcouppe          ###   ########.fr       */
+/*   Updated: 2023/06/18 18:34:07 by mcouppe          ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
 #include "Server.hpp"
+#include "Client.hpp"
+#include "Colors.hpp"
 
 int	error_int(std::string msg){
 	std::cerr << RED <<  msg << RESET << std::endl;
@@ -52,7 +54,6 @@ int main(int argc, char *argv[])
 	ev->data.fd = toto.sock;
 	ev->events = EPOLLIN;
 	epoll_ctl(toto.epoll_fd, EPOLL_CTL_ADD, toto.sock, ev);
-	int j = 0;
 	while (1)
 {	
 		int event = epoll_wait(toto.epoll_fd, ev, 5, 10000);
@@ -62,6 +63,7 @@ int main(int argc, char *argv[])
 		{
 			for (int k = 0; k < 6; ++k)
 			{
+//		ici qd on est sur le event[5] est tres negatif vraiment un boloss
 				std::cout << LAVENDER << "[LOG]\nevent = " << event << " event[" << k << "].data.fd = " << ev[k].data.fd << RESET << std::endl;
 				if (toto.sock == ev[k].data.fd)
 				{
