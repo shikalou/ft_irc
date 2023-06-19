@@ -6,7 +6,7 @@
 /*   By: ldinaut <ldinaut@student.42.fr>            +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2023/05/29 13:25:21 by ldinaut           #+#    #+#             */
-/*   Updated: 2023/06/19 15:02:14 by ldinaut          ###   ########.fr       */
+/*   Updated: 2023/06/19 16:20:58 by ldinaut          ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -21,6 +21,8 @@
 #include <unistd.h>
 #include <fcntl.h>
 #include <string.h>
+#include <vector>
+#include "Client.hpp"
 
 class Server
 {
@@ -33,6 +35,8 @@ class Server
 		int			port;
 		int			epoll_fd;
 		int			fd_co;
+
+		std::vector<Client*>	_clients;
 
 		void	new_connection(struct epoll_event ev, sockaddr_in sockaddr);
 };
