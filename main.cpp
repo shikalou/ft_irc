@@ -6,16 +6,37 @@
 /*   By: ldinaut <ldinaut@student.42.fr>            +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2023/05/26 17:14:07 by ldinaut           #+#    #+#             */
-/*   Updated: 2023/06/16 19:41:37 by ldinaut          ###   ########.fr       */
+/*   Updated: 2023/06/19 16:17:03 by ldinaut          ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
 #include "Server.hpp"
+#include "Commands.hpp"
 
-void	new_connection()
+void	parsing_cmd(std::string cmd)
 {
-
+	std::string pass, user, nick;
+	size_t i;
+	size_t n = cmd.find("PASS");
+	if (n != cmd.npos)
+	{
+		i = cmd.find('\n', n);
+		pass = cmd.substr(n+5, i);
+	}
+	n = cmd.find("NICK");
+	if (n != cmd.npos)
+	{
+		i = cmd.find('\n', n);
+		nick = cmd.substr(n+5, i);
+	}
+	n = cmd.find("USER");
+	if (n != cmd.npos)
+	{
+		i = cmd.find('\n', n);
+		nick = cmd.substr(n+5, i);
+	}
 }
+
 
 int main(int argc, char *argv[])
 {
@@ -83,14 +104,23 @@ int main(int argc, char *argv[])
 				//	recv(ev[k].data.fd, toto1, 4608, MSG_DONTWAIT);
 				//	std::cout << "client dans new : " << toto1 << std::endl;
 					toto.new_connection(ev[k], sockaddr);
-					write(fd_co, ":* NICK ldinaut", 12);
+					//write(fd_co, "PASS pass\n", 10);
+					//write(fd_co, "NICK ldinaut\n", 13);
 				}
 				else if (ev[k].events == EPOLLIN)
 				{
 					std::cout << "COMMAND : " << std::endl;
 					char toto1[1000];
-					recv(ev[k].data.fd, toto1, 1000, MSG_DONTWAIT);
-					std::cout << "client : " << toto1 << std::endl;
+					std::vector<char>	buff(4096);
+					std::string			cmd;
+
+					//recv(ev[k].data.fd, (char *)cmd.c_str(), 1000, MSG_DONTWAIT);
+					recv(ev[k].data.fd, &buff[0], 1000, MSG_DONTWAIT);
+					cmd.append(buff.cbegin(), buff.cend());
+					parsing_cmd(cmd);
+					std::cout << "client : " << cmd << std::endl;
+					// recv(ev[k].data.fd, toto1, 1000, MSG_DONTWAIT);
+					// std::cout << "client : " << toto1 << std::endl;
 				}
 			}
 			// if (j == 0)
