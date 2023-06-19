@@ -6,36 +6,13 @@
 /*   By: ldinaut <ldinaut@student.42.fr>            +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2023/05/26 17:14:07 by ldinaut           #+#    #+#             */
-/*   Updated: 2023/06/19 16:20:51 by ldinaut          ###   ########.fr       */
+/*   Updated: 2023/06/19 18:54:13 by ldinaut          ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
 #include "Server.hpp"
 #include "Commands.hpp"
 
-void	parsing_cmd(std::string cmd)
-{
-	std::string pass, user, nick;
-	size_t i;
-	size_t n = cmd.find("PASS");
-	if (n != cmd.npos)
-	{
-		i = cmd.find('\n', n);
-		pass = cmd.substr(n+5, i);
-	}
-	n = cmd.find("NICK");
-	if (n != cmd.npos)
-	{
-		i = cmd.find('\n', n);
-		nick = cmd.substr(n+5, i);
-	}
-	n = cmd.find("USER");
-	if (n != cmd.npos)
-	{
-		i = cmd.find('\n', n);
-		nick = cmd.substr(n+5, i);
-	}
-}
 
 
 int main(int argc, char *argv[])
@@ -95,7 +72,7 @@ int main(int argc, char *argv[])
 		{
 			for (int k = 0; k < 6; ++k)
 			{
-				std::cout << "event = " << event << "    lol = " << ev[k].data.fd << std::endl;
+				//std::cout << "event = " << event << "    lol = " << ev[k].data.fd << std::endl;
 				if (toto.sock == ev[k].data.fd)
 				{
 					std::cout << "NOUVEAU CLIENT" << std::endl;
@@ -103,19 +80,51 @@ int main(int argc, char *argv[])
 				//	recv(ev[k].data.fd, toto1, 4608, MSG_DONTWAIT);
 				//	std::cout << "client dans new : " << toto1 << std::endl;
 					toto.new_connection(ev[k], sockaddr);
-					//write(fd_co, "PASS pass\n", 10);
-					//write(fd_co, "NICK ldinaut\n", 13);
-				}
-				else if (ev[k].events == EPOLLIN)
-				{
-					std::cout << "COMMAND : " << std::endl;
-					char toto1[1000];
-					int ret =recv(ev[k].data.fd, toto1, 1000, MSG_DONTWAIT);
+					std::vector<char>	buffer(4096);
+					std::string			cmd;
+					//int ret =recv(ev[k].data.fd, &buffer[0], 1000, MSG_DONTWAIT);
+					int ret =recv(fd_co, &buffer[0], 1000, MSG_DONTWAIT);
 					if (ret == 0){
 						std::cout << "[DISCONNECTED]" << std::endl;
 						return (1);
 					}
-					std::cout << "client : " << toto1 << std::endl;
+					std::cout << "command  =  "<< &buffer[0] << std::endl;
+					cmd.append(buffer.cbegin(), buffer.cend());
+					toto._clients = toto.parsing_cmd(cmd);
+					//write(fd_co, "PASS pass\n", 10);
+					// //write(fd_co, "NICK ldinaut\n", 13);
+					std::string tmp_pass = "PASS ";
+					tmp_pass += toto._clients[0]->getPass() + "\n";
+					std::string tmp_nick = ":* NICK ";
+					tmp_nick += toto._clients[0]->getNick() + "\n";
+					std::string tmp_user = "001 ldinaut :Welcome to the localhost Network, ldinaut\n";
+					std::string tmp_user2 = "002 ldinaut :Your host is localhost, running version lol\n";
+					tmp_user += toto._clients[0]->getUser() + "\n";
+					send(fd_co, tmp_pass.c_str(), tmp_pass.length(), 0);
+					send(fd_co, tmp_nick.c_str(), tmp_nick.length(), 0);
+					send(fd_co, tmp_user.c_str(), tmp_user.length(), 0);
+					send(fd_co, tmp_user2.c_str(), tmp_user2.length(), 0);
+				}
+				else if (ev[k].events == EPOLLET)
+				{
+					std::cout << "COMMAND : " << std::endl;
+					std::vector<char>	buffer(4096);
+					std::string			cmd;
+					int ret =recv(ev[k].data.fd, &buffer[0], 1000, MSG_DONTWAIT);
+					if (ret == 0){
+						std::cout << "[DISCONNECTED]" << std::endl;
+						return (1);
+					}
+					std::cout << &buffer[0] << std::endl;
+					cmd.append(buffer.cbegin(), buffer.cend());
+					toto._clients = toto.parsing_cmd(cmd);
+				}
+				else
+				{
+					std::vector<char>	buffer(4096);
+					int ret =recv(fd_co, &buffer[0], 1000, MSG_DONTWAIT);
+					if (ret > 5)
+						std::cout << "cmd maybe ???? = " << &buffer[0] << "\n";
 				}
 			}
 			// if (j == 0)
