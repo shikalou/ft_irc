@@ -6,18 +6,13 @@
 /*   By: mcouppe <marvin@42.fr>                     +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2023/06/18 19:01:28 by mcouppe           #+#    #+#             */
-/*   Updated: 2023/06/19 00:52:01 by mcouppe          ###   ########.fr       */
+/*   Updated: 2023/06/19 13:58:09 by mcouppe          ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
 # include "Server.hpp"
 # include "Client.hpp"
-/*
-int	ft_error(std::string msg, int ret){
-	std::cout << RED << msg << RESET << std::endl;
-	return (ret);
-}
-*/
+
 int	main(int ac, char **av){
 	if (ac != 3)
 		return (ft_error("wrong arg", 1));
@@ -62,7 +57,7 @@ int	main(int ac, char **av){
 //	epoll_ctl
 	ev->events = EPOLLIN;
 	ev->data.fd = sock_cli;
-	int check_ctl = epoll_ctl(serv.epoll_fd, EPOLL_CTL_ADD, sock_cli, ev);
+	int check_ctl = epoll_ctl(serv.epoll_fd, EPOLL_CTL_ADD, serv.sock, ev);
 	if (check_ctl == -1)
 		return (ft_error("epoll_ctl oups", 1));
 
@@ -72,19 +67,21 @@ int	main(int ac, char **av){
 		int nfds = epoll_wait(serv.epoll_fd, ev, 5, 1000);
 		if (nfds < 0)
 			return (ft_error("epoll_wait oups", 1));
-		std::cout << LAVENDER << "[LOG]\tnfds = " << nfds << RESET << std::endl;
-		for (int i = 0; i < 6; ++i){
-			std::cout << LAVENDER << "[LOG]\tnfds = " << nfds << RESET << std::endl;
-			int	fd_main = ev[i].data.fd;
-			if ( fd_main == serv.sock){
-				std::cout << ORANGE << "[NEW CLIENT INCOMING]" << RESET << std::endl;
-				int new_sock_cli = serv.new_connection();
-				if (new_sock_cli < 0)
-					return (1);
-			}
-			if (ev[i].events == EPOLLIN){
-				if (serv.client_request(fd_main) == -1)
-					return (1);
+	//	std::cout << LAVENDER << "[LOG]\tnfds = " << nfds << RESET << std::endl;
+		else if (nfds > 0){
+			for (int i = 0; i < 5; i++){
+				std::cout << LAVENDER << "[LOG]\tnfds = " << nfds << RESET << std::endl;
+				int	fd_main = ev[i].data.fd;
+				if ( fd_main == serv.sock){
+					std::cout << ORANGE << "[NEW CLIENT INCOMING]" << RESET << std::endl;
+					int new_sock_cli = serv.new_connection();
+					if (new_sock_cli < 0)
+						return (1);
+				}
+				else if (ev[i].events == EPOLLIN){
+					if (serv.client_request(fd_main) == -1)
+						return (1);
+				}
 			}
 		}
 	}
