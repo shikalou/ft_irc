@@ -6,7 +6,7 @@
 /*   By: ldinaut <ldinaut@student.42.fr>            +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2023/05/26 17:14:07 by ldinaut           #+#    #+#             */
-/*   Updated: 2023/06/16 19:41:37 by ldinaut          ###   ########.fr       */
+/*   Updated: 2023/06/19 16:11:31 by mcouppe          ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -62,9 +62,8 @@ int main(int argc, char *argv[])
 	ev->data.fd = toto.sock;
 	ev->events = EPOLLIN;
 	epoll_ctl(toto.epoll_fd, EPOLL_CTL_ADD, toto.sock, ev);
-	int j = 0;
 	while (1)
-{	
+	{	
 		int event = epoll_wait(toto.epoll_fd, ev, 5, 10000);
 		if (event < 0)
 		{
@@ -89,7 +88,11 @@ int main(int argc, char *argv[])
 				{
 					std::cout << "COMMAND : " << std::endl;
 					char toto1[1000];
-					recv(ev[k].data.fd, toto1, 1000, MSG_DONTWAIT);
+					int ret =recv(ev[k].data.fd, toto1, 1000, MSG_DONTWAIT);
+					if (ret == 0){
+						std::cout << "[DISCONNECTED]" << std::endl;
+						return (1);
+					}
 					std::cout << "client : " << toto1 << std::endl;
 				}
 			}
