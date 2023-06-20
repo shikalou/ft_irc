@@ -6,7 +6,7 @@
 /*   By: ldinaut <ldinaut@student.42.fr>            +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2023/05/29 13:25:21 by ldinaut           #+#    #+#             */
-/*   Updated: 2023/06/19 16:53:25 by ldinaut          ###   ########.fr       */
+/*   Updated: 2023/06/20 14:22:59 by ldinaut          ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -35,6 +35,7 @@ class Server
 		int			port;
 		int			epoll_fd;
 		int			fd_co;
+		std::string	network;
 
 		std::vector<Client*>	_clients;
 
