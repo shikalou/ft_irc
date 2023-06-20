@@ -6,7 +6,7 @@
 /*   By: mcouppe <mcouppe@student.42.fr>            +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2023/05/26 17:14:07 by ldinaut           #+#    #+#             */
-/*   Updated: 2023/06/20 17:47:50 by mcouppe          ###   ########.fr       */
+/*   Updated: 2023/06/20 17:52:11 by mcouppe          ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -87,22 +87,14 @@ int main(int argc, char *argv[])
 					std::cout << "\n\n\n\ncommand  ="<< &buffer[0] << std::endl << std::endl << std::endl << std::endl;
 					cmd.append(buffer.cbegin(), buffer.cend());
 					toto._clients = toto.parsing_cmd(cmd);
-					std::string tmp_pass = "PASS ";
-					tmp_pass += toto._clients[0]->getPass() + "\n";
-					std::string tmp_nick = ":* NICK ";
-					tmp_nick += toto._clients[0]->getNick() + "\n";
-					std::string rpl_wel = "001 ";
-					rpl_wel += toto._clients[0]->getNick() + " :Welcome to the ";
-					rpl_wel += toto.network + " Network, ";
-					rpl_wel +=  toto._clients[0]->getNick();
-
-					//std::string tmp_user = "001 ldinaut :Welcome to the localhost Network, ldinaut\n";
-					std::string tmp_user2 = "002 ldinaut :Your host is localhost, running version lol\n";
-					//tmp_user += toto._clients[0]->getUser() + "\n";
+					std::string tmp_pass = "PASS " + toto._clients[0]->getPass() + "\n";
+					std::string tmp_nick = ":* NICK " + toto._clients[0]->getNick() + "\n";
+					std::string rpl_wel = "001 " + toto._clients[0]->getNick() + " :Welcome to the " + toto.network + " Network, " + toto._clients[0]->getNick() + "\n";
+					std::string	rpl_yoh = "002 " + toto._clients[0]->getNick() + " :Your host is " + toto.network + ", running version 2.4\n";
 					send(fd_co, tmp_pass.c_str(), tmp_pass.length(), 0);
 					send(fd_co, tmp_nick.c_str(), tmp_nick.length(), 0);
 					send(fd_co, rpl_wel.c_str(), rpl_wel.length(), 0);
-					send(fd_co, tmp_user2.c_str(), tmp_user2.length(), 0);
+					send(fd_co, rpl_yoh.c_str(), rpl_yoh.length(), 0);
 				}
 				else if (ev[k].events == EPOLLET)
 				{
