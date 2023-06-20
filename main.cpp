@@ -3,10 +3,10 @@
 /*                                                        :::      ::::::::   */
 /*   main.cpp                                           :+:      :+:    :+:   */
 /*                                                    +:+ +:+         +:+     */
-/*   By: ldinaut <ldinaut@student.42.fr>            +#+  +:+       +#+        */
+/*   By: mcouppe <mcouppe@student.42.fr>            +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2023/05/26 17:14:07 by ldinaut           #+#    #+#             */
-/*   Updated: 2023/06/20 15:42:45 by ldinaut          ###   ########.fr       */
+/*   Updated: 2023/06/20 17:47:50 by mcouppe          ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -122,7 +122,13 @@ int main(int argc, char *argv[])
 				{
 					std::vector<char>	buffer(4096);
 					int ret =recv(fd_co, &buffer[0], 1000, MSG_DONTWAIT);
-					if (ret > 5)
+					if (ret > 5){
+						std::string	cmd_str;
+						cmd_str.append(buffer.cbegin(), buffer.cend());
+						Commands cmd(cmd_str); 
+						cmd.launcher();
+							
+					}
 						std::cout << "cmd maybe ???? = " << &buffer[0] << "\n";
 				}
 			}
