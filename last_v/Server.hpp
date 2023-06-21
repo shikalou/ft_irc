@@ -6,12 +6,11 @@
 /*   By: ldinaut <ldinaut@student.42.fr>            +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2023/05/29 13:25:21 by ldinaut           #+#    #+#             */
-/*   Updated: 2023/06/18 18:18:43 by mcouppe          ###   ########.fr       */
+/*   Updated: 2023/06/21 12:22:02 by mcouppe          ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
-#ifndef SERVER_HPP
-# define SERVER_HPP
+#pragma once
 
 #include <sys/socket.h>
 #include <sys/epoll.h>
@@ -22,7 +21,8 @@
 #include <unistd.h>
 #include <fcntl.h>
 #include <string.h>
-#include "Colors.hpp"
+#include <vector>
+#include "Client.hpp"
 
 class Server
 {
@@ -35,8 +35,12 @@ class Server
 		int			port;
 		int			epoll_fd;
 		int			fd_co;
+		std::string	network;
+
+		std::vector<Client*>	_clients;
 
 		void	new_connection(struct epoll_event ev, sockaddr_in sockaddr);
+		std::vector<Client*>	parsing_cmd(std::string cmd);
 };
 
-#endif
+int	ft_error(std::string msg);
