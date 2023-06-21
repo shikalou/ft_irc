@@ -6,7 +6,7 @@
 /*   By: mcouppe <mcouppe@student.42.fr>            +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2023/05/26 17:14:07 by ldinaut           #+#    #+#             */
-/*   Updated: 2023/06/21 12:50:07 by mcouppe          ###   ########.fr       */
+/*   Updated: 2023/06/21 17:44:15 by mcouppe          ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -96,7 +96,8 @@ int main(int argc, char *argv[])
 					if (ret > 5){
 						std::string	cmd_str;
 						cmd_str.append(buffer.cbegin(), buffer.cend());
-						Commands cmd(cmd_str); 
+						std::cout << "[MAIN CMD]\n" << cmd_str << std::endl;
+						Commands cmd(cmd_str, fd_co); 
 						cmd.launcher();
 							
 					}

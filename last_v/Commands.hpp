@@ -6,18 +6,20 @@
 /*   By: ldinaut <ldinaut@student.42.fr>            +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2023/06/19 14:10:05 by ldinaut           #+#    #+#             */
-/*   Updated: 2023/06/21 15:53:38 by mcouppe          ###   ########.fr       */
+/*   Updated: 2023/06/21 18:15:20 by mcouppe          ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
 #pragma once
 #include "Server.hpp"
 #include <vector>
+#include <sys/types.h>
+#include <sys/socket.h>
 
 class Commands
 {
 	public :
-		Commands(std::string cmd_str);
+		Commands(std::string cmd_str, int fd_co);
 		~Commands(void);
 
 		void	launcher(void);
@@ -31,10 +33,10 @@ class Commands
 //		void	invite(void);
 //		void	mode(void);
 		void	privmsg(void);
-/*		void	part(void);
+	//	void	part(void);
 		void	quit(void);
-		void	squit(void);// quit only server
-
+	//	void	squit(void);// quit only server
+/*
 		enum CommandList{
 			
 		};
@@ -43,6 +45,7 @@ class Commands
 		std::string	_str_rcv;
 		std::string	_cmd;
 		std::string	_cmd_args;
+		int			_fd_co;
 	//	std::string _cmd_send;
 	//	std::string	_cmd_send_args;
 /*	void	pass_cmd();
