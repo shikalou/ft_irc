@@ -6,7 +6,7 @@
 /*   By: ldinaut <ldinaut@student.42.fr>            +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2023/05/29 13:25:21 by ldinaut           #+#    #+#             */
-/*   Updated: 2023/06/20 14:22:59 by ldinaut          ###   ########.fr       */
+/*   Updated: 2023/06/21 12:22:02 by mcouppe          ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -42,3 +42,5 @@ class Server
 		void	new_connection(struct epoll_event ev, sockaddr_in sockaddr);
 		std::vector<Client*>	parsing_cmd(std::string cmd);
 };
+
+int	ft_error(std::string msg);

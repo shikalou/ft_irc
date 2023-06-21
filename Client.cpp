@@ -6,19 +6,20 @@
 /*   By: ldinaut <ldinaut@student.42.fr>            +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2023/06/19 16:07:39 by mcouppe           #+#    #+#             */
-/*   Updated: 2023/06/19 16:33:21 by ldinaut          ###   ########.fr       */
+/*   Updated: 2023/06/21 12:40:25 by mcouppe          ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
 # include "Client.hpp"
 
 Client::Client(int sock_cli): _sock(sock_cli){
-	std::cout << "[CLIENT CONSTRUCTOR]\nsock_cli = " << this->_sock << std::endl;
+	(void)this->_sock;
+//	std::cout << "[CLIENT CONSTRUCTOR]\nsock_cli = " << this->_sock << std::endl;
 	return;
 }
 
 Client::~Client(void){
-	std::cout << "[CLIENT DESTRUCTOR]" << std::endl;
+//	std::cout << "[CLIENT DESTRUCTOR]" << std::endl;
 	return ;
 }
 
