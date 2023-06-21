@@ -6,7 +6,7 @@
 /*   By: ldinaut <ldinaut@student.42.fr>            +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2023/05/29 13:25:21 by ldinaut           #+#    #+#             */
-/*   Updated: 2023/06/21 12:22:02 by mcouppe          ###   ########.fr       */
+/*   Updated: 2023/06/21 17:43:52 by ldinaut          ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -22,7 +22,11 @@
 #include <fcntl.h>
 #include <string.h>
 #include <vector>
+#include <map>
+#include <utility>
 #include "Client.hpp"
+
+#define NICK_TOOBIG "abcdefghijk"
 
 class Server
 {
@@ -37,10 +41,12 @@ class Server
 		int			fd_co;
 		std::string	network;
 
-		std::vector<Client*>	_clients;
+		std::map<std::string, Client*>	_clients;
 
-		void	new_connection(struct epoll_event ev, sockaddr_in sockaddr);
-		std::vector<Client*>	parsing_cmd(std::string cmd);
+		// void	new_connection(struct epoll_event ev, sockaddr_in sockaddr);
+		std::map<std::string, Client*>	parsing_cmd_co(std::string cmd, struct epoll_event ev, sockaddr_in sockaddr);
+		void	set_clients_info(std::string cmd, Client *client);
+		void	finish_connection(Client *client);
 };
 
 int	ft_error(std::string msg);
