@@ -6,7 +6,7 @@
 /*   By: ldinaut <ldinaut@student.42.fr>            +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2023/06/09 14:30:46 by ldinaut           #+#    #+#             */
-/*   Updated: 2023/06/21 17:47:03 by ldinaut          ###   ########.fr       */
+/*   Updated: 2023/06/23 14:47:39 by ldinaut          ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -20,21 +20,32 @@ Server::~Server()
 {
 }
 
-void	Server::set_clients_info(std:: string cmd, Client *client)
+int	Server::set_clients_info(std:: string cmd, Client *client)
 {
 	size_t i = 0;
 	size_t n = cmd.find("PASS");
 	if (n != cmd.npos)
 	{
 		i = cmd.find("\n", n);
+		
 		client->SetPass(cmd.substr(n + 5, i-(n + 5) - 1));
 	}
 	n = cmd.find("NICK");
 	if (n != cmd.npos)
 	{
 		i = cmd.find_first_of("\n", n);
-		
+		int r = i-(n + 5) - 1;
+		if (r > 9)
+		{
+			//send(fd_co, "432: nickname too long\n", )
+			return (0);
+		}
 		client->SetNick(cmd.substr(n + 5, i-(n + 5) - 1));
+	}
+	else
+	{
+		send(fd_co, "431: no nickname given\n", 23, MSG_DONTWAIT);
+		return (0);
 	}
 	n = cmd.find("USER");
 	if (n != cmd.npos)
@@ -46,6 +57,7 @@ void	Server::set_clients_info(std:: string cmd, Client *client)
 		size_t l3 = cmd.find_first_of(' ', l2 + 1);
 		this->network = cmd.substr(l2 + 1, l3- 1 - l2 );
 	}
+	return (1);
 }
 
 void	Server::finish_connection(Client *client)
@@ -70,8 +82,10 @@ std::map<std::string, Client*>	Server::parsing_cmd_co(std::string cmd, struct ep
 	
 	_clients[NICK_TOOBIG] = new Client(new_fd);
 
-	set_clients_info(cmd, _clients[NICK_TOOBIG]);
-
+	if (!set_clients_info(cmd, _clients[NICK_TOOBIG]))
+	{
+		// return error kill la connexion ?? jsais po
+	}
 	std::string nick_tmp = _clients[NICK_TOOBIG]->getNick();
 
 	_clients.insert(std::make_pair(nick_tmp, new Client(0)));

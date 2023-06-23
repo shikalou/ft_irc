@@ -6,14 +6,12 @@
 /*   By: ldinaut <ldinaut@student.42.fr>            +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2023/05/26 17:14:07 by ldinaut           #+#    #+#             */
-/*   Updated: 2023/06/21 17:48:35 by ldinaut          ###   ########.fr       */
+/*   Updated: 2023/06/23 12:44:46 by ldinaut          ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
 #include "Server.hpp"
 #include "Commands.hpp"
-
-
 
 int main(int argc, char *argv[])
 {
@@ -65,7 +63,7 @@ int main(int argc, char *argv[])
 					if (ret == 0)
 						return (ft_error("[DISCONNECTED"));
 					std::cout << "\n\n\n\ncommand  ="<< &buffer[0] << std::endl << std::endl << std::endl << std::endl;
-					cmd.append(buffer.cbegin(), buffer.cend());
+					cmd.append(buffer.begin(), buffer.end());
 					toto._clients = toto.parsing_cmd_co(cmd, ev[k], sockaddr);
 				}
 				else if (ev[k].events == EPOLLET)
@@ -77,7 +75,7 @@ int main(int argc, char *argv[])
 					if (ret == 0)
 						return (ft_error("[DISCONNECTED]"));
 					std::cout << &buffer[0] << std::endl;
-					cmd.append(buffer.cbegin(), buffer.cend());
+					cmd.append(buffer.begin(), buffer.end());
 					//toto._clients = toto.parsing_cmd(cmd);
 				}
 				else
@@ -86,7 +84,7 @@ int main(int argc, char *argv[])
 					int ret =recv(fd_co, &buffer[0], 1000, MSG_DONTWAIT);
 					if (ret > 5){
 						std::string	cmd_str;
-						cmd_str.append(buffer.cbegin(), buffer.cend());
+						cmd_str.append(buffer.begin(), buffer.end());
 						Commands cmd(cmd_str); 
 						cmd.launcher();
 							

@@ -6,7 +6,7 @@
 /*   By: ldinaut <ldinaut@student.42.fr>            +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2023/05/29 13:25:21 by ldinaut           #+#    #+#             */
-/*   Updated: 2023/06/21 17:43:52 by ldinaut          ###   ########.fr       */
+/*   Updated: 2023/06/23 12:49:30 by ldinaut          ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -15,7 +15,8 @@
 #include <sys/socket.h>
 #include <sys/epoll.h>
 #include <netinet/in.h>
-#include <cstdint>
+#include <cstdlib>
+#include <cerrno>
 #include <cstddef>
 #include <iostream>
 #include <unistd.h>
@@ -45,7 +46,7 @@ class Server
 
 		// void	new_connection(struct epoll_event ev, sockaddr_in sockaddr);
 		std::map<std::string, Client*>	parsing_cmd_co(std::string cmd, struct epoll_event ev, sockaddr_in sockaddr);
-		void	set_clients_info(std::string cmd, Client *client);
+		int	set_clients_info(std::string cmd, Client *client);
 		void	finish_connection(Client *client);
 };
 
