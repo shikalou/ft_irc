@@ -6,7 +6,7 @@
 /*   By: ldinaut <ldinaut@student.42.fr>            +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2023/05/26 17:14:07 by ldinaut           #+#    #+#             */
-/*   Updated: 2023/06/23 12:44:46 by ldinaut          ###   ########.fr       */
+/*   Updated: 2023/06/23 16:03:37 by mcouppe          ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -85,7 +85,7 @@ int main(int argc, char *argv[])
 					if (ret > 5){
 						std::string	cmd_str;
 						cmd_str.append(buffer.begin(), buffer.end());
-						Commands cmd(cmd_str); 
+						Commands cmd(cmd_str, fd_co); 
 						cmd.launcher();
 							
 					}
