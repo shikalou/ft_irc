@@ -6,7 +6,7 @@
 /*   By: ldinaut <ldinaut@student.42.fr>            +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2023/06/19 14:10:05 by ldinaut           #+#    #+#             */
-/*   Updated: 2023/06/21 18:15:20 by mcouppe          ###   ########.fr       */
+/*   Updated: 2023/06/23 15:56:24 by mcouppe          ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -15,6 +15,7 @@
 #include <vector>
 #include <sys/types.h>
 #include <sys/socket.h>
+#include <string>
 
 class Commands
 {
@@ -28,7 +29,7 @@ class Commands
 
 // CMDS FUNCTIONS
 		void	pong(void);
-//		void	join(void);
+		void	join_chan(void);
 //		void	kick(void);
 //		void	invite(void);
 //		void	mode(void);
@@ -42,6 +43,12 @@ class Commands
 		};
 */
 	private :
+/*
+	explications :
+		_str_rcv est la string brute envoyée par irssi
+		_cmd est la commande identifiee (ex: "JOIN") 
+		_cmd_args est ce qui suit apres "JOIN " par exemple
+*/
 		std::string	_str_rcv;
 		std::string	_cmd;
 		std::string	_cmd_args;
