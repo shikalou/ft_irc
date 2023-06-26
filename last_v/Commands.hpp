@@ -6,7 +6,7 @@
 /*   By: ldinaut <ldinaut@student.42.fr>            +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2023/06/19 14:10:05 by ldinaut           #+#    #+#             */
-/*   Updated: 2023/06/23 15:56:24 by mcouppe          ###   ########.fr       */
+/*   Updated: 2023/06/26 15:59:19 by mcouppe          ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -19,9 +19,9 @@
 
 class Commands
 {
-	public :
-		Commands(std::string cmd_str, int fd_co);
-		~Commands(void);
+		public :
+				Commands(std::string cmd_str, int fd_co);
+				~Commands(void);
 
 		void	launcher(void);
 	//	int		parser(void);

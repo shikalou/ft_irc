@@ -6,7 +6,7 @@
 /*   By: ldinaut <ldinaut@student.42.fr>            +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2023/06/19 14:09:45 by ldinaut           #+#    #+#             */
-/*   Updated: 2023/06/26 15:09:10 by mcouppe          ###   ########.fr       */
+/*   Updated: 2023/06/26 15:57:54 by mcouppe          ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -40,6 +40,7 @@ void	Commands::privmsg(void){
 }
 
 void	Commands::join_chan(void){
+	std::cout << "[DEBUG]\nstr_rcv length = " << this->_str_rcv.length() << " & cmd length = " << this->_cmd.length() << std::endl;
 	if (this->_str_rcv.length() > (this->_cmd.length())){
 	// INIT
 		this->_cmd_args.append(this->_str_rcv, (this->_cmd.length() + 1), ((this->_str_rcv.length() + 1) - (this->_cmd.length())));

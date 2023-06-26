@@ -6,7 +6,7 @@
 /*   By: ldinaut <ldinaut@student.42.fr>            +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2023/05/29 13:25:21 by ldinaut           #+#    #+#             */
-/*   Updated: 2023/06/23 12:49:30 by ldinaut          ###   ########.fr       */
+/*   Updated: 2023/06/26 16:27:19 by mcouppe          ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -50,4 +50,5 @@ class Server
 		void	finish_connection(Client *client);
 };
 
-int	ft_error(std::string msg);
+int				ft_error(std::string msg);
+std::string		string_creator(std::vector<char> buffer);
