@@ -6,7 +6,7 @@
 /*   By: ldinaut <ldinaut@student.42.fr>            +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2023/06/16 14:47:29 by ldinaut           #+#    #+#             */
-/*   Updated: 2023/06/19 16:32:35 by ldinaut          ###   ########.fr       */
+/*   Updated: 2023/06/26 14:31:33 by ldinaut          ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -14,6 +14,7 @@
 # define CLIENT_HPP
 
 # include <iostream>
+# include "Channel.hpp"
 
 class Client{
 	public :
@@ -27,6 +28,8 @@ class Client{
 		std::string	getPass() const;
 		std::string	getNick() const;
 		std::string	getUser() const;
+
+		std::vector<Channel> _chans;
 
 	private :
 		int			_sock;

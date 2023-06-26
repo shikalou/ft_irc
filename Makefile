@@ -6,15 +6,15 @@
 #    By: ldinaut <ldinaut@student.42.fr>            +#+  +:+       +#+         #
 #                                                 +#+#+#+#+#+   +#+            #
 #    Created: 2023/06/23 11:58:02 by ldinaut           #+#    #+#              #
-#    Updated: 2023/06/23 12:50:50 by ldinaut          ###   ########.fr        #
+#    Updated: 2023/06/26 16:37:36 by ldinaut          ###   ########.fr        #
 #                                                                              #
 # **************************************************************************** #
 
 NAME	=	ircserv
 
-SRCS	=	Server.cpp Client.cpp Commands.cpp ft_error.cpp main.cpp
+SRCS	=	Client.cpp Server.cpp Commands.cpp Channel.cpp ft_error.cpp main.cpp
 
-INCS	=	Server.hpp Client.hpp Commands.hpp 
+INCS	=	 Client.hpp Server.hpp Commands.hpp Channel.hpp
 
 #SRCS	=	$(addprefix ./, $(SRCS_FILES))
 
@@ -22,7 +22,7 @@ INCS	=	Server.hpp Client.hpp Commands.hpp
 
 CXX	=	c++
 
-CPPFLAGS	=	-Wall -Wextra -Werror -std=c++98 -pedantic -I .
+CPPFLAGS	=	-Wall -Wextra -Werror -std=c++98 -g3 -pedantic -I .
 
 OBJS_FILES	=	$(SRCS:%.cpp=%.o)
 

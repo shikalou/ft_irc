@@ -6,11 +6,12 @@
 /*   By: ldinaut <ldinaut@student.42.fr>            +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2023/06/09 14:30:46 by ldinaut           #+#    #+#             */
-/*   Updated: 2023/06/23 14:47:39 by ldinaut          ###   ########.fr       */
+/*   Updated: 2023/06/26 19:16:21 by ldinaut          ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
 #include "Server.hpp"
+#include "Client.hpp"
 
 Server::Server(int port, std::string pass):password(pass), port(port)
 {
@@ -44,7 +45,7 @@ int	Server::set_clients_info(std:: string cmd, Client *client)
 	}
 	else
 	{
-		send(fd_co, "431: no nickname given\n", 23, MSG_DONTWAIT);
+		send(fd_co, "431 : no nickname given\n", 24, MSG_DONTWAIT);
 		return (0);
 	}
 	n = cmd.find("USER");
@@ -72,18 +73,33 @@ void	Server::finish_connection(Client *client)
 	send(fd_co, rpl_yoh.c_str(), rpl_yoh.length(), 0);
 }
 
-std::map<std::string, Client*>	Server::parsing_cmd_co(std::string cmd, struct epoll_event ev, sockaddr_in sockaddr)
+int	Server::parsing_cmd_co(std::string cmd, struct epoll_event ev, sockaddr_in sockaddr, int mode, int clfd)
 {
+	if (mode == 1)
+	{
 	int addrlen = sizeof(sockaddr);
-	int new_fd = accept(this->sock, (struct sockaddr*)&sockaddr, (socklen_t*)&addrlen);
+	(void)addrlen;
+	//int new_fd = accept(this->sock, 0,0);
+	//fcntl(this->sock, F_SETFL, fcntl(this->sock, F_GETFL, 0) | O_NONBLOCK);
+	int new_fd;
+	if ((new_fd = accept(this->sock, (struct sockaddr*)&sockaddr, (socklen_t*)&addrlen)) < 0)
+	{
+		std::cout << "ERROR ACCEPT LOOOOL " << strerror(errno) << std::endl;;
+	}
+
+	fcntl(new_fd, F_GETFL, O_NONBLOCK);
 	ev.data.fd = new_fd;
-	ev.events = EPOLLIN;
+	ev.events = (EPOLLIN | EPOLLRDHUP);
 	epoll_ctl(this->epoll_fd, EPOLL_CTL_ADD, new_fd, &ev);
-	
-	_clients[NICK_TOOBIG] = new Client(new_fd);
+	return (new_fd);
+	}
+	else
+	{
+	_clients[NICK_TOOBIG] = new Client(clfd);
 
 	if (!set_clients_info(cmd, _clients[NICK_TOOBIG]))
 	{
+		
 		// return error kill la connexion ?? jsais po
 	}
 	std::string nick_tmp = _clients[NICK_TOOBIG]->getNick();
@@ -92,5 +108,28 @@ std::map<std::string, Client*>	Server::parsing_cmd_co(std::string cmd, struct ep
 	_clients[nick_tmp] = _clients[NICK_TOOBIG];
 	_clients.erase(NICK_TOOBIG);
 	finish_connection(_clients[nick_tmp]);
-	return (this->_clients);
+	return (clfd);
+	}
+}
+
+void	Server::new_client(struct epoll_event ev, int k, sockaddr_in sockaddr)
+
+{
+	(void)k;
+	(void)ev;
+	(void)sockaddr;
+	// std::cout << "NOUVEAU CLIENT" << std::endl;
+	// std::vector<char>	buffer(4096);
+	// std::string			cmd;
+	
+	// int ret = recv(fd_co, &buffer[0], 1000, MSG_DONTWAIT);
+	// if (ret == 0)
+	// {
+	// 	exit(0);
+	// 	//return (ft_error("[DISCONNECTED"));
+	// }
+	// std::cout << "\n\n\n\ncommand  ="<< &buffer[0] << std::endl << std::endl << std::endl << std::endl;
+	// cmd.append(buffer.begin(), buffer.end());
+	// this->_clients = this->parsing_cmd_co(cmd, ev, sockaddr);
+	
 }

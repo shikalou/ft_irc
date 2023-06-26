@@ -6,16 +6,18 @@
 /*   By: ldinaut <ldinaut@student.42.fr>            +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2023/06/19 14:10:05 by ldinaut           #+#    #+#             */
-/*   Updated: 2023/06/23 15:56:24 by mcouppe          ###   ########.fr       */
+/*   Updated: 2023/06/26 14:37:24 by ldinaut          ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
-#pragma once
+#ifndef COMMANDS_HPP
+#define COMMANDS_HPP
 #include "Server.hpp"
 #include <vector>
 #include <sys/types.h>
 #include <sys/socket.h>
 #include <string>
+
 
 class Commands
 {
@@ -59,3 +61,4 @@ class Commands
 	void	user_cmd();
 	void	nick_cmd();*/
 };
+#endif
