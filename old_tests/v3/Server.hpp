@@ -6,7 +6,7 @@
 /*   By: ldinaut <ldinaut@student.42.fr>            +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2023/05/29 13:25:21 by ldinaut           #+#    #+#             */
-/*   Updated: 2023/06/23 12:49:30 by ldinaut          ###   ########.fr       */
+/*   Updated: 2023/06/21 12:22:02 by mcouppe          ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -15,19 +15,14 @@
 #include <sys/socket.h>
 #include <sys/epoll.h>
 #include <netinet/in.h>
-#include <cstdlib>
-#include <cerrno>
+#include <cstdint>
 #include <cstddef>
 #include <iostream>
 #include <unistd.h>
 #include <fcntl.h>
 #include <string.h>
 #include <vector>
-#include <map>
-#include <utility>
 #include "Client.hpp"
-
-#define NICK_TOOBIG "abcdefghijk"
 
 class Server
 {
@@ -42,12 +37,10 @@ class Server
 		int			fd_co;
 		std::string	network;
 
-		std::map<std::string, Client*>	_clients;
+		std::vector<Client*>	_clients;
 
-		// void	new_connection(struct epoll_event ev, sockaddr_in sockaddr);
-		std::map<std::string, Client*>	parsing_cmd_co(std::string cmd, struct epoll_event ev, sockaddr_in sockaddr);
-		int	set_clients_info(std::string cmd, Client *client);
-		void	finish_connection(Client *client);
+		void	new_connection(struct epoll_event ev, sockaddr_in sockaddr);
+		std::vector<Client*>	parsing_cmd(std::string cmd);
 };
 
 int	ft_error(std::string msg);
