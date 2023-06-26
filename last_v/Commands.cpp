@@ -6,7 +6,7 @@
 /*   By: ldinaut <ldinaut@student.42.fr>            +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2023/06/19 14:09:45 by ldinaut           #+#    #+#             */
-/*   Updated: 2023/06/23 15:53:02 by mcouppe          ###   ########.fr       */
+/*   Updated: 2023/06/26 15:09:10 by mcouppe          ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -44,10 +44,11 @@ void	Commands::join_chan(void){
 	// INIT
 		this->_cmd_args.append(this->_str_rcv, (this->_cmd.length() + 1), ((this->_str_rcv.length() + 1) - (this->_cmd.length())));
 	// PARSING ARGS
-		if (this->_cmd_args.length() > 200){
+/*		if (this->_cmd_args.length() > 200){
 			std::cerr << "[ERROR] CHAN LENGTH TOO LONG" << std::endl;
 			return ;
-		}
+		}*/
+		std::cout << "[DEBUG]\n length = "<< this->_cmd_args.length() << std::endl;
 		if (this->_cmd_args[0] != '&' && this->_cmd_args[0] != '#'){
 			std::cerr << "[ERROR] BAD FIRST CHAR CHAN NAME ?" << std::endl;
 			return ;
