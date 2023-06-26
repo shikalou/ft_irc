@@ -6,7 +6,7 @@
 /*   By: ldinaut <ldinaut@student.42.fr>            +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2023/05/26 17:14:07 by ldinaut           #+#    #+#             */
-/*   Updated: 2023/06/26 17:01:55 by mcouppe          ###   ########.fr       */
+/*   Updated: 2023/06/26 19:57:58 by mcouppe          ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -56,40 +56,39 @@ int main(int argc, char *argv[])
 				if (toto.sock == ev[k].data.fd)
 				{
 					std::cout << "NOUVEAU CLIENT" << std::endl;
-					char	*buffer = NULL;
-			//		std::vector<char>	buffer(4096);
-			//		std::string			cmd;
+			//		char	*buffer = NULL;
+					std::vector<char>	buffer(4096);
+					std::string			cmd;
 					
-					int ret = recv(fd_co, buffer, 1000, MSG_DONTWAIT);
+					int ret = recv(fd_co, &buffer[0], 1000, MSG_DONTWAIT);
 					if (ret == 0)
 						return (ft_error("[DISCONNECTED"));
-					std::cout << "\n\n\n\ncommand  ="<< buffer << std::endl << std::endl << std::endl << std::endl;
-					std::string	cmd(buffer);
-			//		cmd.append(buffer.begin(), buffer.end());
+					std::cout << "\n\n\n\ncommand  ="<< &buffer[0] << std::endl << std::endl << std::endl << std::endl;
+			//		std::string	cmd(buffer);
+					cmd.append(buffer.begin(), buffer.end());
 					toto._clients = toto.parsing_cmd_co(cmd, ev[k], sockaddr);
 				}
 				else if (ev[k].events == EPOLLET)
 				{
 					std::cout << "COMMAND : " << std::endl;
-					char	*buffer = "" ;
-//					std::vector<char>	buffer(4096);
-					int ret =recv(ev[k].data.fd, buffer, 1000, MSG_DONTWAIT);
+		//			char	*buffer = "" ;
+					std::vector<char>	buffer(4096);
+					int ret =recv(ev[k].data.fd, &buffer[0], 1000, MSG_DONTWAIT);
 					if (ret == 0)
 						return (ft_error("[DISCONNECTED]"));
-					std::cout << buffer << std::endl;
-					std::string	cmd(buffer);
+					std::cout << &buffer[0] << std::endl;
+					std::string	cmd;
+					cmd.append(buffer.begin(), buffer.end());
 				//	mais jcomprends pas on en fait quoi derriere ??
 				}
 				else
 				{
-		//			std::vector<char>	buffer(4096);
+					std::vector<char>	buffer(4096);
 //	fo turn to char*
-					char	*buffer = "";
-					int ret =recv(fd_co, buffer, 1000, MSG_DONTWAIT);
+					int ret =recv(fd_co, &buffer[0], 1000, MSG_DONTWAIT);
 					if (ret > 5){
-						std::string	cmd_str(buffer);
-					//	cmd_str = string_creator(buffer);
-					//	cmd_str.append(buffer.begin(), buffer.end());
+						std::string	cmd_str;
+						cmd_str = string_creator(buffer, ret);
 						Commands cmd(cmd_str, fd_co); 
 						cmd.launcher();
 							
