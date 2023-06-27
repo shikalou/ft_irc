@@ -6,7 +6,7 @@
 /*   By: ldinaut <ldinaut@student.42.fr>            +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2023/05/29 13:25:21 by ldinaut           #+#    #+#             */
-/*   Updated: 2023/06/26 18:15:29 by ldinaut          ###   ########.fr       */
+/*   Updated: 2023/06/27 15:09:51 by ldinaut          ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -52,6 +52,7 @@ class Server
 		void new_client(struct epoll_event ev, int k, sockaddr_in sockaddr);
 		int	set_clients_info(std::string cmd, Client *client);
 		void	finish_connection(Client *client);
+		void	add_epoll(int new_fd, int i, sockaddr_in sockaddr);
 };
 
 int	ft_error(std::string msg);

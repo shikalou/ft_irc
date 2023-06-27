@@ -6,7 +6,7 @@
 /*   By: ldinaut <ldinaut@student.42.fr>            +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2023/06/09 14:30:46 by ldinaut           #+#    #+#             */
-/*   Updated: 2023/06/26 19:16:21 by ldinaut          ###   ########.fr       */
+/*   Updated: 2023/06/27 16:01:18 by ldinaut          ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -67,35 +67,42 @@ void	Server::finish_connection(Client *client)
 	std::string tmp_nick = ":* NICK " + client->getNick() + "\n";
 	std::string rpl_wel = "001 " + client->getNick() + " :Welcome to the " + network + " Network, " + client->getNick() + "\n";
 	std::string	rpl_yoh = "002 " + client->getNick() + " :Your host is " + network + ", running version 2.4\n";
-	send(fd_co, tmp_pass.c_str(), tmp_pass.length(), 0);
-	send(fd_co, tmp_nick.c_str(), tmp_nick.length(), 0);
-	send(fd_co, rpl_wel.c_str(), rpl_wel.length(), 0);
-	send(fd_co, rpl_yoh.c_str(), rpl_yoh.length(), 0);
+	send(client->_sock, tmp_pass.c_str(), tmp_pass.length(), 0);
+	send(client->_sock, tmp_nick.c_str(), tmp_nick.length(), 0);
+	send(client->_sock, rpl_wel.c_str(), rpl_wel.length(), 0);
+	send(client->_sock, rpl_yoh.c_str(), rpl_yoh.length(), 0);
+}
+
+void	Server::add_epoll(int new_fd, int i, sockaddr_in sockaddr)
+{
+	(void)sockaddr;
+	struct epoll_event ev;
+
+	(void)new_fd;
+	memset(&ev, 0, sizeof(ev));
+	ev.data.fd = new_fd;
+	ev.events = (EPOLLIN | EPOLLRDHUP);
+	epoll_ctl(epoll_fd, EPOLL_CTL_ADD, new_fd, &ev);
+	if (i == 1)
+	{
+		this->fd_co = new_fd;
+	}
 }
 
 int	Server::parsing_cmd_co(std::string cmd, struct epoll_event ev, sockaddr_in sockaddr, int mode, int clfd)
 {
+	(void)ev;
+	size_t addrlen = sizeof(sockaddr);
 	if (mode == 1)
 	{
-	int addrlen = sizeof(sockaddr);
-	(void)addrlen;
-	//int new_fd = accept(this->sock, 0,0);
-	//fcntl(this->sock, F_SETFL, fcntl(this->sock, F_GETFL, 0) | O_NONBLOCK);
-	int new_fd;
-	if ((new_fd = accept(this->sock, (struct sockaddr*)&sockaddr, (socklen_t*)&addrlen)) < 0)
-	{
-		std::cout << "ERROR ACCEPT LOOOOL " << strerror(errno) << std::endl;;
-	}
-
-	fcntl(new_fd, F_GETFL, O_NONBLOCK);
-	ev.data.fd = new_fd;
-	ev.events = (EPOLLIN | EPOLLRDHUP);
-	epoll_ctl(this->epoll_fd, EPOLL_CTL_ADD, new_fd, &ev);
-	return (new_fd);
+		int fd_accept = accept(this->sock, (struct sockaddr*)&sockaddr, (socklen_t*)&addrlen);
+		fcntl(fd_accept, F_GETFL, O_NONBLOCK);
+		add_epoll(fd_accept, 2, sockaddr);
+		return (fd_accept);
 	}
 	else
 	{
-	_clients[NICK_TOOBIG] = new Client(clfd);
+		_clients[NICK_TOOBIG] = new Client(clfd);
 
 	if (!set_clients_info(cmd, _clients[NICK_TOOBIG]))
 	{

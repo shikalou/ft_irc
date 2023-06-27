@@ -6,7 +6,7 @@
 /*   By: ldinaut <ldinaut@student.42.fr>            +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2023/06/19 14:09:45 by ldinaut           #+#    #+#             */
-/*   Updated: 2023/06/26 15:55:08 by ldinaut          ###   ########.fr       */
+/*   Updated: 2023/06/27 16:06:44 by ldinaut          ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -81,7 +81,8 @@ void	Commands::join_chan(void)
 	// std::cout << "[ERROR IN JOIN CMD]" << std::endl;
 	// return;
 }
-void	Commands::launcher(void){
+void	Commands::launcher(){
+	std::cout << "cmd start launcher = " << _str_rcv << "\n\n\n";
 	std::size_t found =  this->_str_rcv.find("PING");
 	if (found != std::string::npos && (found == 0))
 		return (this->pong());
