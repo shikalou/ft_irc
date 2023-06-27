@@ -6,7 +6,7 @@
 /*   By: ldinaut <ldinaut@student.42.fr>            +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2023/06/19 14:10:05 by ldinaut           #+#    #+#             */
-/*   Updated: 2023/06/26 14:37:24 by ldinaut          ###   ########.fr       */
+/*   Updated: 2023/06/27 17:23:24 by ldinaut          ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -25,9 +25,11 @@ class Commands
 		Commands(std::string cmd_str, int fd_co);
 		~Commands(void);
 
+
 		void	launcher(void);
 	//	int		parser(void);
 		void	sender(std::string cmd, std::string args);
+		void	init_cmd_book();
 
 // CMDS FUNCTIONS
 		void	pong(void);
@@ -39,6 +41,7 @@ class Commands
 	//	void	part(void);
 		void	quit(void);
 	//	void	squit(void);// quit only server
+		void	user_cmd();
 /*
 		enum CommandList{
 			
@@ -57,8 +60,7 @@ class Commands
 		int			_fd_co;
 	//	std::string _cmd_send;
 	//	std::string	_cmd_send_args;
-/*	void	pass_cmd();
-	void	user_cmd();
-	void	nick_cmd();*/
+	/*	void	pass_cmd();
+		void	nick_cmd();*/
 };
 #endif

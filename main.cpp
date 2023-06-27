@@ -6,7 +6,7 @@
 /*   By: ldinaut <ldinaut@student.42.fr>            +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2023/05/26 17:14:07 by ldinaut           #+#    #+#             */
-/*   Updated: 2023/06/27 16:04:04 by ldinaut          ###   ########.fr       */
+/*   Updated: 2023/06/27 16:25:06 by ldinaut          ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -90,11 +90,10 @@ int main(int argc, char *argv[])
 					}
 					else
 					{
-					std::string	cmd_str;
-					cmd_str.append(buffer.begin(), buffer.end());
-					Commands cmd(cmd_str, ev[k].data.fd); 
-					cmd.launcher();
-
+						std::string	cmd_str(&buffer[0], ret);
+						//cmd_str.append(buffer.begin(), buffer.end());
+						Commands cmd(cmd_str, ev[k].data.fd); 
+						cmd.launcher();
 					}
 				}
 			}
