@@ -6,7 +6,7 @@
 /*   By: ldinaut <ldinaut@student.42.fr>            +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2023/06/16 14:47:29 by ldinaut           #+#    #+#             */
-/*   Updated: 2023/06/27 16:01:30 by ldinaut          ###   ########.fr       */
+/*   Updated: 2023/06/28 16:32:33 by ldinaut          ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -15,6 +15,9 @@
 
 # include <iostream>
 # include "Channel.hpp"
+# include "Commands.hpp"
+
+class Commands;
 
 class Client{
 	public :
@@ -29,7 +32,8 @@ class Client{
 		std::string	getNick() const;
 		std::string	getUser() const;
 
-		std::vector<Channel> _chans;
+		std::vector<Channel>	_chans;
+		//Commands				launcher;
 
 		int			_sock;
 	private :

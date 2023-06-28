@@ -6,7 +6,7 @@
 /*   By: ldinaut <ldinaut@student.42.fr>            +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2023/06/19 14:10:05 by ldinaut           #+#    #+#             */
-/*   Updated: 2023/06/27 17:23:24 by ldinaut          ###   ########.fr       */
+/*   Updated: 2023/06/28 16:04:54 by ldinaut          ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -41,12 +41,8 @@ class Commands
 	//	void	part(void);
 		void	quit(void);
 	//	void	squit(void);// quit only server
-		void	user_cmd();
-/*
-		enum CommandList{
-			
-		};
-*/
+	//	void	user_cmd();
+	//	void	pass_cmd();
 	private :
 /*
 	explications :
@@ -60,7 +56,6 @@ class Commands
 		int			_fd_co;
 	//	std::string _cmd_send;
 	//	std::string	_cmd_send_args;
-	/*	void	pass_cmd();
-		void	nick_cmd();*/
+	//	void	nick_cmd();
 };
 #endif

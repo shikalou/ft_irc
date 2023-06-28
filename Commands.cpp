@@ -6,7 +6,7 @@
 /*   By: ldinaut <ldinaut@student.42.fr>            +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2023/06/19 14:09:45 by ldinaut           #+#    #+#             */
-/*   Updated: 2023/06/27 17:23:02 by ldinaut          ###   ########.fr       */
+/*   Updated: 2023/06/28 16:06:14 by ldinaut          ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -82,11 +82,13 @@ void	Commands::join_chan(void)
 	return;
 }
 
+// void	Commands::pass_cmd()
+// {
+
+// }
+
 void	Commands::launcher(){
 	std::cout << "cmd start launcher = " << _str_rcv << "\n\n\n";
-
-	
-
 	std::size_t found =  this->_str_rcv.find("PING");
 	if (found != std::string::npos && (found == 0))
 		return (this->pong());
@@ -101,8 +103,6 @@ void	Commands::launcher(){
 		this->_cmd = "JOIN";
 		return (this->join_chan());
 	}
-
-
 	std::cout << "Not pong nor quit nor privmsg :((( == " << this->_str_rcv << std::endl;
 	return ;
 }

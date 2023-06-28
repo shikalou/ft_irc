@@ -6,7 +6,7 @@
 /*   By: ldinaut <ldinaut@student.42.fr>            +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2023/06/09 14:30:46 by ldinaut           #+#    #+#             */
-/*   Updated: 2023/06/27 16:01:18 by ldinaut          ###   ########.fr       */
+/*   Updated: 2023/06/28 17:08:45 by ldinaut          ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -28,7 +28,8 @@ int	Server::set_clients_info(std:: string cmd, Client *client)
 	if (n != cmd.npos)
 	{
 		i = cmd.find("\n", n);
-		
+		// verifier par rapport a _pass de serveur si c le bon
+		// pas besoin de setter
 		client->SetPass(cmd.substr(n + 5, i-(n + 5) - 1));
 	}
 	n = cmd.find("NICK");
@@ -73,70 +74,106 @@ void	Server::finish_connection(Client *client)
 	send(client->_sock, rpl_yoh.c_str(), rpl_yoh.length(), 0);
 }
 
-void	Server::add_epoll(int new_fd, int i, sockaddr_in sockaddr)
+void	Server::add_epoll(int new_fd, int i)
 {
-	(void)sockaddr;
 	struct epoll_event ev;
 
-	(void)new_fd;
 	memset(&ev, 0, sizeof(ev));
 	ev.data.fd = new_fd;
 	ev.events = (EPOLLIN | EPOLLRDHUP);
 	epoll_ctl(epoll_fd, EPOLL_CTL_ADD, new_fd, &ev);
 	if (i == 1)
-	{
 		this->fd_co = new_fd;
-	}
 }
 
-int	Server::parsing_cmd_co(std::string cmd, struct epoll_event ev, sockaddr_in sockaddr, int mode, int clfd)
+void	Server::accept_newclient(sockaddr_in sockaddr)
 {
-	(void)ev;
 	size_t addrlen = sizeof(sockaddr);
-	if (mode == 1)
-	{
-		int fd_accept = accept(this->sock, (struct sockaddr*)&sockaddr, (socklen_t*)&addrlen);
-		fcntl(fd_accept, F_GETFL, O_NONBLOCK);
-		add_epoll(fd_accept, 2, sockaddr);
-		return (fd_accept);
-	}
-	else
-	{
-		_clients[NICK_TOOBIG] = new Client(clfd);
+	int fd_accept = accept(this->sock, (struct sockaddr*)&sockaddr, (socklen_t*)&addrlen);
+	fcntl(fd_accept, F_GETFL, O_NONBLOCK);
+	add_epoll(fd_accept, 2);
+}
 
+void	Server::parsing_cmd_co(std::string cmd, int clfd)
+{
+	_clients[NICK_TOOBIG] = new Client(clfd);
 	if (!set_clients_info(cmd, _clients[NICK_TOOBIG]))
 	{
-		
 		// return error kill la connexion ?? jsais po
 	}
 	std::string nick_tmp = _clients[NICK_TOOBIG]->getNick();
-
 	_clients.insert(std::make_pair(nick_tmp, new Client(0)));
 	_clients[nick_tmp] = _clients[NICK_TOOBIG];
 	_clients.erase(NICK_TOOBIG);
 	finish_connection(_clients[nick_tmp]);
-	return (clfd);
-	}
+	//return (clfd);
 }
 
-void	Server::new_client(struct epoll_event ev, int k, sockaddr_in sockaddr)
-
+int	Server::init_serv()
 {
-	(void)k;
-	(void)ev;
-	(void)sockaddr;
-	// std::cout << "NOUVEAU CLIENT" << std::endl;
-	// std::vector<char>	buffer(4096);
-	// std::string			cmd;
+	this->epoll_fd = epoll_create1(0);
+
+	this->sock = socket(AF_INET, SOCK_STREAM, 0);
+	if (this->sock == -1)
+		return (ft_error("socket failed"));
+	int	opt = 1;
+	if (setsockopt(this->sock, SOL_SOCKET, SO_REUSEADDR | SO_REUSEPORT, &opt, sizeof(opt)))
+		return (ft_error("setsockopt failed"));
+	sockaddr_in sockaddr;
+	sockaddr.sin_family = AF_INET;
+	sockaddr.sin_addr.s_addr = INADDR_ANY;
+	sockaddr.sin_port = htons(this->port);
+	_sockaddr = sockaddr;
+
+	if (bind(this->sock, (struct sockaddr*)&sockaddr, sizeof(sockaddr)) < 0)
+		return(ft_error("bind failed"));
+	if (listen(this->sock, 5) < 0)
+		ft_error("listen failed");
+	int flags = fcntl(this->sock, F_GETFL, O_NONBLOCK);
+	if (flags == -1)
+		return (ft_error("fcntl failed"));
+	this->add_epoll(this->sock, 1);
+	return (0);
+}
+
+int	Server::run_serv()
+{
+	std::vector<epoll_event> ev(5);
 	
-	// int ret = recv(fd_co, &buffer[0], 1000, MSG_DONTWAIT);
-	// if (ret == 0)
-	// {
-	// 	exit(0);
-	// 	//return (ft_error("[DISCONNECTED"));
-	// }
-	// std::cout << "\n\n\n\ncommand  ="<< &buffer[0] << std::endl << std::endl << std::endl << std::endl;
-	// cmd.append(buffer.begin(), buffer.end());
-	// this->_clients = this->parsing_cmd_co(cmd, ev, sockaddr);
-	
+	while (1)
+	{	
+		int event = epoll_wait(this->epoll_fd, ev.data(), 5, 1000);
+		if (event < 0)
+			return (ft_error(std::string(strerror(errno))));
+		for (int k = 0; k < event; k++)
+		{
+			if (this->sock == ev[k].data.fd)
+			{
+				std::cout << "NOUVEAU CLIENT" << std::endl;
+				this->accept_newclient(_sockaddr);
+			}
+			else if (ev[k].data.fd)
+			{
+				std::vector<char>	buffer(4096);
+				int ret;
+				if ((ret = recv(ev[k].data.fd, &buffer[0], 4096, MSG_DONTWAIT)) <= 0)
+				{
+					ft_error("error recv\n");
+					continue ;
+				}
+				std::string	cmd_str(&buffer[0], ret);
+				Commands cmd(cmd_str, ev[k].data.fd);
+				
+				cmd.launcher();
+				// std::size_t found;
+				// found = cmdtest.find("CAP");
+				// if (found != std::string::npos && (found == 0))
+				// {
+				// 	std::cout << cmdtest << "\n";
+				// 	this->parsing_cmd_co(cmdtest, ev[k].data.fd);
+				// }
+			}
+		}
+	}
+
 }

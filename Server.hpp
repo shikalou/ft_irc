@@ -6,7 +6,7 @@
 /*   By: ldinaut <ldinaut@student.42.fr>            +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2023/05/29 13:25:21 by ldinaut           #+#    #+#             */
-/*   Updated: 2023/06/27 15:09:51 by ldinaut          ###   ########.fr       */
+/*   Updated: 2023/06/28 17:08:33 by ldinaut          ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -47,12 +47,15 @@ class Server
 
 		std::map<std::string, Client*>	_clients;
 
-		// void	new_connection(struct epoll_event ev, sockaddr_in sockaddr);
-		int	parsing_cmd_co(std::string cmd, struct epoll_event ev, sockaddr_in sockaddr, int mode, int clfd);
-		void new_client(struct epoll_event ev, int k, sockaddr_in sockaddr);
-		int	set_clients_info(std::string cmd, Client *client);
+		void	parsing_cmd_co(std::string cmd, int clfd);
+		int		set_clients_info(std::string cmd, Client *client);
 		void	finish_connection(Client *client);
-		void	add_epoll(int new_fd, int i, sockaddr_in sockaddr);
+		void	accept_newclient(sockaddr_in sockaddr);
+		void	add_epoll(int new_fd, int i);
+		int		init_serv();
+		int		run_serv();
+	private:
+		sockaddr_in	_sockaddr;
 };
 
 int	ft_error(std::string msg);
