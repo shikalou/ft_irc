@@ -6,7 +6,7 @@
 /*   By: ldinaut <ldinaut@student.42.fr>            +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2023/05/26 17:14:07 by ldinaut           #+#    #+#             */
-/*   Updated: 2023/06/26 19:57:58 by mcouppe          ###   ########.fr       */
+/*   Updated: 2023/06/28 16:03:11 by mcouppe          ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -17,16 +17,21 @@ int main(int argc, char *argv[])
 {
 	if (argc != 3)
 		return (ft_error(" usage [./ircserv <port> <password>]"));
-	struct epoll_event ev[5];
-	for (int h = 0; h < 5; h++)
-		ev[h].data.fd = 0;
+	std::vector<epoll_event> ev(5);
+	//memset(&ev, 0, sizeof(ev));
 
 	Server toto(atoi(argv[1]), argv[2]);
 	toto.epoll_fd = epoll_create1(0);
 
 	toto.sock = socket(AF_INET, SOCK_STREAM, 0);
+	int	opt = 1;
+	if (setsockopt(toto.sock, SOL_SOCKET, SO_REUSEADDR | SO_REUSEPORT, &opt, sizeof(opt)))
+	{
+		std::cout << "ERROR SETSOCKOPT loooool\n";
+		exit(0);
+	}
 	// int flags = fcntl(toto.sock, F_GETFL, 0);
-	// fcntl(toto.sock, F_SETFL, flags | O_NONBLOCK);
+
 	if (toto.sock == -1)
 		return (ft_error("socket failed"));
 	sockaddr_in sockaddr;
@@ -36,72 +41,63 @@ int main(int argc, char *argv[])
 		
 	if (bind(toto.sock, (struct sockaddr*)&sockaddr, sizeof(sockaddr)) < 0)
 		return (ft_error("bind failed"));
-	if (listen(toto.sock, 10) < 0)
+	if (listen(toto.sock, 5) < 0)
 		return (ft_error("listen failed"));
-	int addrlen = sizeof(sockaddr);
-	int fd_co = accept(toto.sock, (struct sockaddr*)&sockaddr, (socklen_t*)&addrlen);
-	toto.fd_co = fd_co;
-	ev->data.fd = toto.sock;
-	ev->events = EPOLLIN;
-	epoll_ctl(toto.epoll_fd, EPOLL_CTL_ADD, toto.sock, ev);
+	// int fd_co = accept(toto.sock, (struct sockaddr*)&sockaddr, (socklen_t*)&addrlen);
+	int flags = fcntl(toto.sock, F_GETFL, O_NONBLOCK);
+	if (flags == -1)
+	{
+		std::cout << "ERRRRRORORR IN fcntl looll\n\n\n";
+		exit (0);
+	}
+	toto.add_epoll(toto.sock, 1, sockaddr);
+	//std::cout << "toto sock = " << toto.sock << " ev et tout = " << ev[0].data.fd << std::endl<< std::endl<< std::endl;
 	while (1)
 	{	
-		int event = epoll_wait(toto.epoll_fd, ev, 5, 10000);
+		int event = epoll_wait(toto.epoll_fd, ev.data(), 5, 1000);
 		if (event < 0)
 			return (ft_error(std::string(strerror(errno))));
-		else if (event > 0)
+		for (int k = 0; k < event; k++)
 		{
-			for (int k = 0; k < 6; ++k)
+			if (toto.sock == ev[k].data.fd)
 			{
-				if (toto.sock == ev[k].data.fd)
+				std::cout << "NOUVEAU CLIENT" << std::endl;
+				std::vector<char>	buffer(4096);
+				std::string			cmd;
+
+				toto.parsing_cmd_co(cmd, ev[k], sockaddr, 1, 0);
+				// int ret = recv(toto.fd_co, &buffer[0], 1024, MSG_DONTWAIT);
+				// if (ret == 0)
+				//  	return (ft_error("[DISCONNECTED"));
+				// std::cout << "rettttt = " << ret << "\n\n\n";
+				// std::cout << "\n\n\n\ncommand  ="<< &buffer[0] << std::endl << std::endl << std::endl << std::endl;
+				// cmd.append(buffer.begin(), buffer.end());
+				// toto.parsing_cmd_co(cmd, ev[k], sockaddr, 2, ev[k].data.fd);
+			}
+			else if (ev[k].data.fd)
+			{
+				std::vector<char>	buffer(4096);
+				int ret =recv(ev[k].data.fd, &buffer[0], 4096, MSG_DONTWAIT);
+				if (ret > 0)
 				{
-					std::cout << "NOUVEAU CLIENT" << std::endl;
-			//		char	*buffer = NULL;
-					std::vector<char>	buffer(4096);
-					std::string			cmd;
-					
-					int ret = recv(fd_co, &buffer[0], 1000, MSG_DONTWAIT);
-					if (ret == 0)
-						return (ft_error("[DISCONNECTED"));
-					std::cout << "\n\n\n\ncommand  ="<< &buffer[0] << std::endl << std::endl << std::endl << std::endl;
-			//		std::string	cmd(buffer);
-					cmd.append(buffer.begin(), buffer.end());
-					toto._clients = toto.parsing_cmd_co(cmd, ev[k], sockaddr);
-				}
-				else if (ev[k].events == EPOLLET)
-				{
-					std::cout << "COMMAND : " << std::endl;
-		//			char	*buffer = "" ;
-					std::vector<char>	buffer(4096);
-					int ret =recv(ev[k].data.fd, &buffer[0], 1000, MSG_DONTWAIT);
-					if (ret == 0)
-						return (ft_error("[DISCONNECTED]"));
-					std::cout << &buffer[0] << std::endl;
-					std::string	cmd;
-					cmd.append(buffer.begin(), buffer.end());
-				//	mais jcomprends pas on en fait quoi derriere ??
+					std::size_t found;
+					std::string cmdtest(&buffer[0], ret);
+					found =  cmdtest.find("CAP");
+					if (found != std::string::npos && (found == 0))
+					{
+						std::cout << cmdtest << "\n";
+						toto.parsing_cmd_co(cmdtest, ev[k], sockaddr, 2, ev[k].data.fd);
+					}
+					else
+					{
+						std::string	cmd_str(&buffer[0], ret);
+						Commands cmd(cmd_str, ev[k].data.fd, toto.network); 
+						cmd.launcher();
+					}
 				}
 				else
-				{
-					std::vector<char>	buffer(4096);
-//	fo turn to char*
-					int ret =recv(fd_co, &buffer[0], 1000, MSG_DONTWAIT);
-					if (ret > 5){
-						std::string	cmd_str;
-						cmd_str = string_creator(buffer, ret);
-						Commands cmd(cmd_str, fd_co); 
-						cmd.launcher();
-							
-					}
-					//	std::cout << "cmd maybe ???? = " << &buffer[0] << "\n";
-				}
+					std::cout << ORANGE << "coucou" << RESET << std::endl;
 			}
-			// if (j == 0)
-			// {
-			// 	std::string str = "CAP * LS :";
-			// 	j++;
-			// 	send(fd_co, str.c_str(), str.length(), 0);
-			// }
 		}
 	}
 
