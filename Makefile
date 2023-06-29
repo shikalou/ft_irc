@@ -6,13 +6,13 @@
 #    By: ldinaut <ldinaut@student.42.fr>            +#+  +:+       +#+         #
 #                                                 +#+#+#+#+#+   +#+            #
 #    Created: 2023/06/23 11:58:02 by ldinaut           #+#    #+#              #
-#    Updated: 2023/06/26 16:37:36 by ldinaut          ###   ########.fr        #
+#    Updated: 2023/06/29 18:57:10 by ldinaut          ###   ########.fr        #
 #                                                                              #
 # **************************************************************************** #
 
 NAME	=	ircserv
 
-SRCS	=	Client.cpp Server.cpp Commands.cpp Channel.cpp ft_error.cpp main.cpp
+SRCS	=	main.cpp Client.cpp Server.cpp Commands.cpp Channel.cpp ft_error.cpp 
 
 INCS	=	 Client.hpp Server.hpp Commands.hpp Channel.hpp
 

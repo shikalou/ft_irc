@@ -6,12 +6,16 @@
 /*   By: ldinaut <ldinaut@student.42.fr>            +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2023/06/09 14:30:46 by ldinaut           #+#    #+#             */
-/*   Updated: 2023/06/29 15:48:19 by ldinaut          ###   ########.fr       */
+/*   Updated: 2023/06/29 17:32:18 by ldinaut          ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
 #include "Server.hpp"
 #include "Client.hpp"
+
+Server::Server()
+{
+}
 
 Server::Server(int port, std::string pass):password(pass), port(port)
 {
@@ -19,6 +23,20 @@ Server::Server(int port, std::string pass):password(pass), port(port)
 
 Server::~Server()
 {
+}
+
+Server Server::operator=(const Server *egal)
+{
+	this->sock = egal->sock;
+	this->password = egal->password;
+	this->port = egal->port;
+	this->epoll_fd = egal->epoll_fd;
+	this->fd_co = egal->fd_co;
+	this->network = egal->network;
+	this->_clients = egal->_clients;
+	this->_channels = egal->_channels;
+	this->_sockaddr = egal->_sockaddr;
+	return (*this);
 }
 
 int	Server::set_clients_info(std:: string cmd, Client *client)

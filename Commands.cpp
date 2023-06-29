@@ -6,11 +6,12 @@
 /*   By: ldinaut <ldinaut@student.42.fr>            +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2023/06/19 14:09:45 by ldinaut           #+#    #+#             */
-/*   Updated: 2023/06/29 15:59:09 by ldinaut          ###   ########.fr       */
+/*   Updated: 2023/06/29 19:21:15 by ldinaut          ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
 #include "Commands.hpp"
+#include "Client.hpp"
 
 Commands::Commands()
 {
@@ -58,10 +59,55 @@ void	Commands::privmsg(void){
 	return;
 }
 
-void	Commands::join_chan(void)
+void	aff_vector(std::vector<Channel *> toto)
 {
-	if (this->_str_rcv.length() > (this->_cmd.length()))
+	std::vector<Channel *>::iterator it = toto.begin();
+	for(; it != toto.end(); ++it)
+		std::cout << "channel = " << (*it)->getTitle() << "\n";
+}
+
+void	Commands::join_chan(Client *client)
+{
+	int f = 0;
+	if (_cmd_args.size() <= 0)
 	{
+		// NEED MORE PARAMS
+	}
+	std::vector<Channel *>::iterator it = server._channels.begin();
+	std::vector<Channel *>::iterator ite = server._channels.end();
+	for (; it != ite; ++it)
+	{
+		if (it == ite)
+		{
+			f = 1;
+			server._channels.push_back(new Channel(_cmd_args[0]));
+			client->_chans.push_back(new Channel(_cmd_args[0]));
+			server._channels.back()->getClients().push_back(client);
+		}
+	}
+	if (it == ite && f == 0)
+	{
+		server._channels.push_back(new Channel(_cmd_args[0]));
+		client->_chans.push_back(new Channel(_cmd_args[0]));
+		server._channels.back()->_clients.push_back(client);
+	}
+
+				/////////////////// DEBUG ///////////////////
+
+
+	std::cout << "VERIF JOIN\n\n\n";
+	aff_vector(server._channels);
+	aff_vector(client->_chans);
+	std::vector<Client *> test = server._channels.back()->_clients;
+	for(std::vector<Client *>::iterator itdeb = test.begin(); itdeb != test.end(); ++itdeb)
+		std::cout << "Client = " << (*itdeb)->getNick() << "\n";
+
+
+              /////////////////////  END DEBUG ////////////////////
+
+
+	//if (this->_str_rcv.length() > (this->_cmd.length()))
+	//{
 	// INIT
 	// 	this->_cmd_args.append(this->_str_rcv, (this->_cmd.length() + 1), ((this->_str_rcv.length() + 1) - (this->_cmd.length())));
 	// // PARSING ARGS
@@ -91,22 +137,27 @@ void	Commands::join_chan(void)
 	
 	// END OF PARSING & DEBUG PRINT	
 		//std::cout << "[user is joining a chan : " << this->_cmd_args << std::endl;
-		send(_fd_co, "JOIN #julienlbg\n", 16, MSG_DONTWAIT);
-		send(_fd_co, "331 ldinaut julienlbg :No topic is set\n", 39, MSG_DONTWAIT);
-		send(_fd_co, "353 ldinaut = #julienlbg :@ldinaut\n", 35, MSG_DONTWAIT);
-		send(_fd_co, "366 ldinaut #toto :End of /NAMES list\n", 38, MSG_DONTWAIT);
-		return ;
-	}
-	std::cout << "[ERROR IN JOIN CMD]" << std::endl;
-	return;
+	send(_fd_co, "JOIN #julienlbg\n", 16, MSG_DONTWAIT);
+	send(_fd_co, "331 ldinaut julienlbg :No topic is set\n", 39, MSG_DONTWAIT);
+	send(_fd_co, "353 ldinaut = #julienlbg :@ldinaut\n", 35, MSG_DONTWAIT);
+	send(_fd_co, "366 ldinaut #toto :End of /NAMES list\n", 38, MSG_DONTWAIT);
+	return ;
+	//}
+	//std::cout << "[ERROR IN JOIN CMD]" << std::endl;
+	//return;
 }
 
-// void	Commands::pass_cmd()
-// {
+void	Commands::user_cmd(Client *client)
+{
+	if (_cmd_args.size() <= 0)
+	{
+		//NEED_MORE_PARAMS
+	}
+	client->SetUser(_cmd_args[0]);
+	server.network = _cmd_args[2];
+}
 
-// }
-
-void	Commands::launcher(){
+void	Commands::launcher(std::map<int, Client *> client_list){
 
 	std::cout << "cmd start launcher = " << _str_rcv << "\n\n\n";
 	std::size_t found = this->_str_rcv.find("PING");
@@ -118,10 +169,15 @@ void	Commands::launcher(){
 	found =  this->_str_rcv.find("PRIVMSG");
 	if (found != std::string::npos)
 		return (this->privmsg());
-	found =  this->_str_rcv.find("JOIN");
-	if (found != std::string::npos && (found == 0)){
-		this->_cmd = "JOIN";
-		return (this->join_chan());
+	//found =  this->_cmd.find("JOIN");
+	//if (found != std::string::npos && (found == 0)){
+	if (_cmd == "JOIN")
+	{
+		return (this->join_chan(client_list[_fd_co]));
+	}
+	if (_cmd == "USER")
+	{
+		return (this->user_cmd(client_list[_fd_co]));
 	}
 	std::cout << "Not pong nor quit nor privmsg :((( == " << this->_str_rcv << std::endl;
 	return ;
@@ -152,9 +208,8 @@ void	Commands::cmd_manager(std::map<int, Client *> client_list)
 	{
 		std::cout << "split = " << *it << std::endl;
 	}
-	// parsing pour avoir std::string command principal + vector args
 	// puis launcher de commands pour remplir une reply qu'on send a la fin au client IRC
-	launcher();
+	launcher(client_list);
 }
 
 Commands::~Commands(void){

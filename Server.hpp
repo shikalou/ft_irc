@@ -6,7 +6,7 @@
 /*   By: ldinaut <ldinaut@student.42.fr>            +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2023/05/29 13:25:21 by ldinaut           #+#    #+#             */
-/*   Updated: 2023/06/29 11:50:29 by ldinaut          ###   ########.fr       */
+/*   Updated: 2023/06/29 17:31:52 by ldinaut          ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -31,12 +31,16 @@
 #define NICK_TOOBIG "abcdefghijk"
 
 class Client;
+class Channel;
 
 class Server
 {
 	public:
+		Server();
 		Server(int port, std::string pass);
 		~Server();
+
+		Server operator=(const Server *egal);
 
 		int			sock;
 		std::string	password;
@@ -46,6 +50,7 @@ class Server
 		std::string	network;
 
 		std::map<int, Client*>	_clients;
+		std::vector<Channel *> _channels;
 
 		void	parsing_cmd_co(std::string cmd, int clfd);
 		int		set_clients_info(std::string cmd, Client *client);
@@ -54,9 +59,12 @@ class Server
 		void	add_epoll(int new_fd, int i);
 		int		init_serv();
 		int		run_serv();
+		std::vector<Channel *> getChannel() const { return (_channels);}
 	private:
 		sockaddr_in	_sockaddr;
 };
+
+extern Server server;
 
 int	ft_error(std::string msg);
 

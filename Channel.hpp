@@ -6,7 +6,7 @@
 /*   By: ldinaut <ldinaut@student.42.fr>            +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2023/06/23 15:11:22 by ldinaut           #+#    #+#             */
-/*   Updated: 2023/06/26 15:58:11 by ldinaut          ###   ########.fr       */
+/*   Updated: 2023/06/29 19:21:02 by ldinaut          ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -22,8 +22,10 @@ class Channel
 		Channel(std::string title);
 		~Channel();
 
-	private:
+		std::vector<Client *> getClients() const {return (_clients);};
+		std::string getTitle() const {return (_title);};
 		std::vector<Client *>	_clients; // user du chan
+	private:
 		std::vector<Client *>	_operators; // admins du chan
 		std::vector<Client *>	_banned;
 		std::string				_title;
