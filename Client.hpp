@@ -6,7 +6,7 @@
 /*   By: ldinaut <ldinaut@student.42.fr>            +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2023/06/16 14:47:29 by ldinaut           #+#    #+#             */
-/*   Updated: 2023/06/28 16:32:33 by ldinaut          ###   ########.fr       */
+/*   Updated: 2023/06/29 11:40:06 by ldinaut          ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -33,7 +33,7 @@ class Client{
 		std::string	getUser() const;
 
 		std::vector<Channel>	_chans;
-		//Commands				launcher;
+		Commands				_cmd;
 
 		int			_sock;
 	private :

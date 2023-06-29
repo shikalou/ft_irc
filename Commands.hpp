@@ -6,7 +6,7 @@
 /*   By: ldinaut <ldinaut@student.42.fr>            +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2023/06/19 14:10:05 by ldinaut           #+#    #+#             */
-/*   Updated: 2023/06/28 16:04:54 by ldinaut          ###   ########.fr       */
+/*   Updated: 2023/06/29 11:49:19 by ldinaut          ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -22,6 +22,7 @@
 class Commands
 {
 	public :
+		Commands();
 		Commands(std::string cmd_str, int fd_co);
 		~Commands(void);
 

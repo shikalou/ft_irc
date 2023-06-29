@@ -6,11 +6,16 @@
 /*   By: ldinaut <ldinaut@student.42.fr>            +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2023/06/19 14:09:45 by ldinaut           #+#    #+#             */
-/*   Updated: 2023/06/28 16:06:14 by ldinaut          ###   ########.fr       */
+/*   Updated: 2023/06/29 11:49:07 by ldinaut          ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
 #include "Commands.hpp"
+
+Commands::Commands()
+{
+	// std::cout << "default constructor called" << std::endl;
+}
 
 Commands::Commands(std::string cmd_str, int fd_co): _str_rcv(cmd_str), _fd_co(fd_co){
 	std::cout << "[COMMAND CONSTRUCTOR]"  << std::endl;

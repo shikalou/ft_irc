@@ -6,7 +6,7 @@
 /*   By: ldinaut <ldinaut@student.42.fr>            +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2023/05/29 13:25:21 by ldinaut           #+#    #+#             */
-/*   Updated: 2023/06/28 17:08:33 by ldinaut          ###   ########.fr       */
+/*   Updated: 2023/06/29 11:50:29 by ldinaut          ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -45,7 +45,7 @@ class Server
 		int			fd_co;
 		std::string	network;
 
-		std::map<std::string, Client*>	_clients;
+		std::map<int, Client*>	_clients;
 
 		void	parsing_cmd_co(std::string cmd, int clfd);
 		int		set_clients_info(std::string cmd, Client *client);

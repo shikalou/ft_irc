@@ -6,7 +6,7 @@
 /*   By: ldinaut <ldinaut@student.42.fr>            +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2023/06/09 14:30:46 by ldinaut           #+#    #+#             */
-/*   Updated: 2023/06/28 17:08:45 by ldinaut          ###   ########.fr       */
+/*   Updated: 2023/06/29 12:25:05 by ldinaut          ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -96,17 +96,15 @@ void	Server::accept_newclient(sockaddr_in sockaddr)
 
 void	Server::parsing_cmd_co(std::string cmd, int clfd)
 {
-	_clients[NICK_TOOBIG] = new Client(clfd);
-	if (!set_clients_info(cmd, _clients[NICK_TOOBIG]))
+	std::pair<std::map<int, Client *>::iterator, bool> it = _clients.insert(std::make_pair(clfd, new Client(0)));
+	if (it.first != _clients.end())
 	{
-		// return error kill la connexion ?? jsais po
+		if (!set_clients_info(cmd, _clients[clfd]))
+		{
+			// return error kill la connexion ?? jsais po
+		}
+		finish_connection(_clients[clfd]);
 	}
-	std::string nick_tmp = _clients[NICK_TOOBIG]->getNick();
-	_clients.insert(std::make_pair(nick_tmp, new Client(0)));
-	_clients[nick_tmp] = _clients[NICK_TOOBIG];
-	_clients.erase(NICK_TOOBIG);
-	finish_connection(_clients[nick_tmp]);
-	//return (clfd);
 }
 
 int	Server::init_serv()
@@ -163,8 +161,8 @@ int	Server::run_serv()
 				}
 				std::string	cmd_str(&buffer[0], ret);
 				Commands cmd(cmd_str, ev[k].data.fd);
-				
-				cmd.launcher();
+				_clients[ev[k].data.fd]->_cmd = cmd;
+				_clients[ev[k].data.fd]->_cmd.launcher();
 				// std::size_t found;
 				// found = cmdtest.find("CAP");
 				// if (found != std::string::npos && (found == 0))
