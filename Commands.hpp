@@ -6,7 +6,7 @@
 /*   By: ldinaut <ldinaut@student.42.fr>            +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2023/06/19 14:10:05 by ldinaut           #+#    #+#             */
-/*   Updated: 2023/06/29 11:49:19 by ldinaut          ###   ########.fr       */
+/*   Updated: 2023/06/29 14:00:11 by ldinaut          ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -25,12 +25,13 @@ class Commands
 		Commands();
 		Commands(std::string cmd_str, int fd_co);
 		~Commands(void);
+		Commands(Commands *cpy);
+		Commands operator=(const Commands *egal);
 
-
+		void	cmd_manager(std::map<int, Client *> clients);
 		void	launcher(void);
 	//	int		parser(void);
 		void	sender(std::string cmd, std::string args);
-		void	init_cmd_book();
 
 // CMDS FUNCTIONS
 		void	pong(void);
@@ -53,7 +54,7 @@ class Commands
 */
 		std::string	_str_rcv;
 		std::string	_cmd;
-		std::string	_cmd_args;
+		std::vector<std::string>	_cmd_args;
 		int			_fd_co;
 	//	std::string _cmd_send;
 	//	std::string	_cmd_send_args;

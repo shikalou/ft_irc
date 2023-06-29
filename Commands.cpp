@@ -6,7 +6,7 @@
 /*   By: ldinaut <ldinaut@student.42.fr>            +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2023/06/19 14:09:45 by ldinaut           #+#    #+#             */
-/*   Updated: 2023/06/29 11:49:07 by ldinaut          ###   ########.fr       */
+/*   Updated: 2023/06/29 14:00:06 by ldinaut          ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -15,6 +15,20 @@
 Commands::Commands()
 {
 	// std::cout << "default constructor called" << std::endl;
+}
+
+Commands::Commands(Commands *cpy)
+{
+	*this = cpy;
+}
+
+Commands	Commands::operator=(const Commands *egal)
+{
+	this->_cmd = egal->_cmd;
+	this->_cmd_args = egal->_cmd_args;
+	this->_fd_co = egal->_fd_co;
+	this->_str_rcv = egal->_str_rcv;
+	return (*this);
 }
 
 Commands::Commands(std::string cmd_str, int fd_co): _str_rcv(cmd_str), _fd_co(fd_co){
@@ -49,34 +63,34 @@ void	Commands::join_chan(void)
 	if (this->_str_rcv.length() > (this->_cmd.length()))
 	{
 	// INIT
-		this->_cmd_args.append(this->_str_rcv, (this->_cmd.length() + 1), ((this->_str_rcv.length() + 1) - (this->_cmd.length())));
-	// PARSING ARGS
-		if (this->_cmd_args.length() > 200){
-			std::cerr << "[ERROR] CHAN LENGTH TOO LONG" << std::endl;
-			return ;
-		}
-		if (this->_cmd_args[0] != '&' && this->_cmd_args[0] != '#'){
-			std::cerr << "[ERROR] BAD FIRST CHAR CHAN NAME ?" << std::endl;
-			return ;
-		}
-		std::size_t found = this->_cmd_args.find(' ');
-		if (found != std::string::npos){
-			std::cerr << "[ERROR] SPACE CHAR CHAN NAME " << std::endl;
-			return ;
-		}
-		found = this->_cmd_args.find(7);
-		if (found != std::string::npos){
-			std::cerr << "[ERROR] CTRL G" << std::endl;
-			return ;
-		}
-		found = this->_cmd_args.find(',');
-		if (found != std::string::npos){
-			std::cerr << "[ERROR] COMA IN CHAN NAME" << std::endl;
-			return ;
-		}
+	// 	this->_cmd_args.append(this->_str_rcv, (this->_cmd.length() + 1), ((this->_str_rcv.length() + 1) - (this->_cmd.length())));
+	// // PARSING ARGS
+	// 	if (this->_cmd_args.length() > 200){
+	// 		std::cerr << "[ERROR] CHAN LENGTH TOO LONG" << std::endl;
+	// 		return ;
+	// 	}
+	// 	if (this->_cmd_args[0] != '&' && this->_cmd_args[0] != '#'){
+	// 		std::cerr << "[ERROR] BAD FIRST CHAR CHAN NAME ?" << std::endl;
+	// 		return ;
+	// 	}
+	// 	std::size_t found = this->_cmd_args.find(' ');
+	// 	if (found != std::string::npos){
+	// 		std::cerr << "[ERROR] SPACE CHAR CHAN NAME " << std::endl;
+	// 		return ;
+	// 	}
+	// 	found = this->_cmd_args.find(7);
+	// 	if (found != std::string::npos){
+	// 		std::cerr << "[ERROR] CTRL G" << std::endl;
+	// 		return ;
+	// 	}
+	// 	found = this->_cmd_args.find(',');
+	// 	if (found != std::string::npos){
+	// 		std::cerr << "[ERROR] COMA IN CHAN NAME" << std::endl;
+	// 		return ;
+	// 	}
 	
 	// END OF PARSING & DEBUG PRINT	
-		std::cout << "[user is joining a chan : "<< this->_cmd_args << std::endl;
+		//std::cout << "[user is joining a chan : " << this->_cmd_args << std::endl;
 		send(_fd_co, "JOIN #julienlbg\n", 16, MSG_DONTWAIT);
 		send(_fd_co, "331 ldinaut julienlbg :No topic is set\n", 39, MSG_DONTWAIT);
 		send(_fd_co, "353 ldinaut = #julienlbg :@ldinaut\n", 35, MSG_DONTWAIT);
@@ -93,8 +107,9 @@ void	Commands::join_chan(void)
 // }
 
 void	Commands::launcher(){
+
 	std::cout << "cmd start launcher = " << _str_rcv << "\n\n\n";
-	std::size_t found =  this->_str_rcv.find("PING");
+	std::size_t found = this->_str_rcv.find("PING");
 	if (found != std::string::npos && (found == 0))
 		return (this->pong());
 	found =  this->_str_rcv.find("QUIT");
@@ -110,6 +125,14 @@ void	Commands::launcher(){
 	}
 	std::cout << "Not pong nor quit nor privmsg :((( == " << this->_str_rcv << std::endl;
 	return ;
+}
+
+void	Commands::cmd_manager(std::map<int, Client *> client_list)
+{
+	(void)client_list;
+	// parsing pour avoir std::string command principal + vector args
+	// puis launcher de commands pour remplir une reply qu'on send a la fin au client IRC
+	launcher();
 }
 
 Commands::~Commands(void){

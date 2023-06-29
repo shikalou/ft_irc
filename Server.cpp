@@ -6,7 +6,7 @@
 /*   By: ldinaut <ldinaut@student.42.fr>            +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2023/06/09 14:30:46 by ldinaut           #+#    #+#             */
-/*   Updated: 2023/06/29 12:25:05 by ldinaut          ###   ########.fr       */
+/*   Updated: 2023/06/29 14:47:17 by ldinaut          ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -92,18 +92,25 @@ void	Server::accept_newclient(sockaddr_in sockaddr)
 	int fd_accept = accept(this->sock, (struct sockaddr*)&sockaddr, (socklen_t*)&addrlen);
 	fcntl(fd_accept, F_GETFL, O_NONBLOCK);
 	add_epoll(fd_accept, 2);
+	_clients.insert(std::make_pair(fd_accept, new Client(fd_accept)));
 }
 
 void	Server::parsing_cmd_co(std::string cmd, int clfd)
 {
-	std::pair<std::map<int, Client *>::iterator, bool> it = _clients.insert(std::make_pair(clfd, new Client(0)));
-	if (it.first != _clients.end())
+	//std::pair<std::map<int, Client *>::iterator, bool> it = _clients.insert(std::make_pair(clfd, new Client(0)));
+	std::map<int, Client *>::iterator it = _clients.find(clfd);
+	if (it != _clients.end() && _clients[clfd]->_register == 0)
 	{
 		if (!set_clients_info(cmd, _clients[clfd]))
 		{
 			// return error kill la connexion ?? jsais po
 		}
+		_clients[clfd]->_register = 1;
 		finish_connection(_clients[clfd]);
+	}
+	else
+	{
+		std::cout << "j;ai aps trouve le client " << std::endl;
 	}
 }
 
@@ -160,18 +167,17 @@ int	Server::run_serv()
 					continue ;
 				}
 				std::string	cmd_str(&buffer[0], ret);
-				Commands cmd(cmd_str, ev[k].data.fd);
+				std::size_t found;
+				found = cmd_str.find("CAP");
+				if (found != std::string::npos && (found == 0))
+				{
+					this->parsing_cmd_co(cmd_str, ev[k].data.fd);
+				}
+				Commands *cmd = new Commands(cmd_str, ev[k].data.fd);
+				//Commands cmd(cmd_str, ev[k].data.fd);
 				_clients[ev[k].data.fd]->_cmd = cmd;
-				_clients[ev[k].data.fd]->_cmd.launcher();
-				// std::size_t found;
-				// found = cmdtest.find("CAP");
-				// if (found != std::string::npos && (found == 0))
-				// {
-				// 	std::cout << cmdtest << "\n";
-				// 	this->parsing_cmd_co(cmdtest, ev[k].data.fd);
-				// }
+				_clients[ev[k].data.fd]->_cmd->cmd_manager(_clients);
 			}
 		}
 	}
-
 }
