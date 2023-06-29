@@ -6,7 +6,7 @@
 /*   By: ldinaut <ldinaut@student.42.fr>            +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2023/06/19 14:09:45 by ldinaut           #+#    #+#             */
-/*   Updated: 2023/06/29 14:00:06 by ldinaut          ###   ########.fr       */
+/*   Updated: 2023/06/29 15:59:09 by ldinaut          ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -127,9 +127,31 @@ void	Commands::launcher(){
 	return ;
 }
 
+std::vector<std::string> split(std::string str, std::string delim)
+{
+	size_t start = 0;
+	size_t pos_delim = str.find(delim);
+	std::vector<std::string> ret;
+	while (pos_delim != str.npos)
+	{
+		ret.push_back(str.substr(start, pos_delim - start));
+		start = pos_delim + 1;
+		pos_delim = str.find(delim, start);
+	}
+	ret.push_back(str.substr(start, str.length() - start));
+	return (ret);
+}
+
 void	Commands::cmd_manager(std::map<int, Client *> client_list)
 {
 	(void)client_list;
+	_cmd_args = split(_str_rcv, " ");
+	_cmd = _cmd_args[0];
+	_cmd_args.erase(_cmd_args.begin());
+	for (std::vector<std::string>::iterator it = _cmd_args.begin(); it != _cmd_args.end(); it++)
+	{
+		std::cout << "split = " << *it << std::endl;
+	}
 	// parsing pour avoir std::string command principal + vector args
 	// puis launcher de commands pour remplir une reply qu'on send a la fin au client IRC
 	launcher();

@@ -6,7 +6,7 @@
 /*   By: ldinaut <ldinaut@student.42.fr>            +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2023/06/19 14:10:05 by ldinaut           #+#    #+#             */
-/*   Updated: 2023/06/29 14:00:11 by ldinaut          ###   ########.fr       */
+/*   Updated: 2023/06/29 15:56:29 by ldinaut          ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -60,4 +60,6 @@ class Commands
 	//	std::string	_cmd_send_args;
 	//	void	nick_cmd();
 };
+std::vector<std::string> split(std::string str, std::string delim);
+
 #endif

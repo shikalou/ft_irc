@@ -6,7 +6,7 @@
 /*   By: ldinaut <ldinaut@student.42.fr>            +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2023/06/09 14:30:46 by ldinaut           #+#    #+#             */
-/*   Updated: 2023/06/29 14:47:17 by ldinaut          ###   ########.fr       */
+/*   Updated: 2023/06/29 15:48:19 by ldinaut          ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -173,10 +173,12 @@ int	Server::run_serv()
 				{
 					this->parsing_cmd_co(cmd_str, ev[k].data.fd);
 				}
-				Commands *cmd = new Commands(cmd_str, ev[k].data.fd);
-				//Commands cmd(cmd_str, ev[k].data.fd);
-				_clients[ev[k].data.fd]->_cmd = cmd;
-				_clients[ev[k].data.fd]->_cmd->cmd_manager(_clients);
+				else
+				{
+					Commands *cmd = new Commands(cmd_str, ev[k].data.fd);
+					_clients[ev[k].data.fd]->_cmd = cmd;
+					_clients[ev[k].data.fd]->_cmd->cmd_manager(_clients);
+				}
 			}
 		}
 	}
