@@ -6,7 +6,7 @@
 /*   By: ldinaut <ldinaut@student.42.fr>            +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2023/06/19 14:10:05 by ldinaut           #+#    #+#             */
-/*   Updated: 2023/06/29 18:43:09 by ldinaut          ###   ########.fr       */
+/*   Updated: 2023/06/30 18:46:33 by ldinaut          ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -29,21 +29,21 @@ class Commands
 		Commands operator=(const Commands *egal);
 
 		void	cmd_manager(std::map<int, Client *> clients);
-		void	launcher(std::map<int, Client *> client_list);
+		std::string	launcher(std::map<int, Client *> client_list);
 	//	int		parser(void);
 		void	sender(std::string cmd, std::string args);
 
 // CMDS FUNCTIONS
-		void	pong(void);
-		void	join_chan(Client *client);
+		std::string	pong(void);
+		std::string	join_chan(Client *client);
 //		void	kick(void);
 //		void	invite(void);
 //		void	mode(void);
-		void	privmsg(void);
+		std::string	privmsg(Client *client);
 	//	void	part(void);
 		void	quit(void);
 	//	void	squit(void);// quit only server
-		void	user_cmd(Client *client);
+		std::string	user_cmd(Client *client);
 	//	void	pass_cmd();
 	private :
 /*

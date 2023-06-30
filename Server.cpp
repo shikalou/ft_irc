@@ -6,7 +6,7 @@
 /*   By: ldinaut <ldinaut@student.42.fr>            +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2023/06/09 14:30:46 by ldinaut           #+#    #+#             */
-/*   Updated: 2023/06/29 17:32:18 by ldinaut          ###   ########.fr       */
+/*   Updated: 2023/06/30 15:40:55 by ldinaut          ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -50,21 +50,22 @@ int	Server::set_clients_info(std:: string cmd, Client *client)
 		// pas besoin de setter
 		client->SetPass(cmd.substr(n + 5, i-(n + 5) - 1));
 	}
+	
 	n = cmd.find("NICK");
 	if (n != cmd.npos)
 	{
 		i = cmd.find_first_of("\n", n);
-		int r = i-(n + 5) - 1;
-		if (r > 9)
-		{
-			//send(fd_co, "432: nickname too long\n", )
-			return (0);
-		}
+		// int r = i-(n + 5) - 1;
+		// if (r > 9)
+		// {
+		// 	//send(fd_co, "432: nickname too long\n", )
+		// 	return (0);
+		// }
 		client->SetNick(cmd.substr(n + 5, i-(n + 5) - 1));
 	}
 	else
 	{
-		send(fd_co, "431 : no nickname given\n", 24, MSG_DONTWAIT);
+		send(client->_sock, "431 : no nickname given\n", 24, MSG_DONTWAIT);
 		return (0);
 	}
 	n = cmd.find("USER");
@@ -82,7 +83,7 @@ int	Server::set_clients_info(std:: string cmd, Client *client)
 
 void	Server::finish_connection(Client *client)
 {
-	std::string tmp_pass = "PASS " + client->getPass() + "\n";
+	std::string tmp_pass = "PASS " + this->password + "\n";
 	std::string tmp_nick = ":* NICK " + client->getNick() + "\n";
 	std::string rpl_wel = "001 " + client->getNick() + " :Welcome to the " + network + " Network, " + client->getNick() + "\n";
 	std::string	rpl_yoh = "002 " + client->getNick() + " :Your host is " + network + ", running version 2.4\n";
@@ -185,6 +186,7 @@ int	Server::run_serv()
 					continue ;
 				}
 				std::string	cmd_str(&buffer[0], ret);
+				std::cout << "dans la boucle = " << &buffer[0] << std::endl << std::endl;
 				std::size_t found;
 				found = cmd_str.find("CAP");
 				if (found != std::string::npos && (found == 0))

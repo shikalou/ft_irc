@@ -6,7 +6,7 @@
 /*   By: ldinaut <ldinaut@student.42.fr>            +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2023/06/19 14:09:45 by ldinaut           #+#    #+#             */
-/*   Updated: 2023/06/29 19:21:15 by ldinaut          ###   ########.fr       */
+/*   Updated: 2023/06/30 18:46:00 by ldinaut          ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -43,20 +43,54 @@ void	Commands::sender(std::string cmd, std::string args){
 	return ;
 }
 
-void	Commands::pong(void){
-	this->sender("PONG", " 127.0.0.1");
-	return ;
+std::string	Commands::pong(void){
+	//this->sender("PONG", " 127.0.0.1");
+	return ("PONG 127.0.0.1");
 }
 
-void	Commands::quit(void){
-	std::cout << "[DISCONNECTED]" << std::endl;
-//	ne pas faire d'exit ?
-	exit (1);
+// void	Commands::quit(void){
+// 	std::cout << "[DISCONNECTED]" << std::endl;
+// //	ne pas faire d'exit ?
+// 	exit (1);
+// }
+
+std::string regroup_mess(std::vector<std::string> vec, Client *client)
+{
+	std::string ret = client->getNick() + "!" + "~" + client->getNick() + "@" + server.network + " PRIVMSG ";
+
+	for (size_t i = 0; i < vec.size(); ++i)
+	{
+		ret += vec[i];
+		ret += " ";
+	}
+	return (ret);
 }
 
-void	Commands::privmsg(void){
-	std::cout << "[sending privmsg....]" << std::endl;
-	return;
+std::string	Commands::privmsg(Client *client)
+{
+	std::string arg = regroup_mess(_cmd_args, client);
+	arg += "\r\n";
+	int f = 0;
+	std::vector<Channel *> recupname = server._channels;
+	std::vector<Channel *>::iterator itrecup = recupname.begin();
+	for(; itrecup != recupname.end(); ++itrecup)
+	{
+		if ((*itrecup)->getTitle() == _cmd_args[0])
+		{
+			f = 1;
+			break ;
+		}
+	}
+	if (f == 1)
+	{
+		for (size_t k = 0; k < (*itrecup)->_clients.size(); ++k)
+		{
+			std::cout << "arg = " << arg << " sock = " << (*itrecup)->_clients[k]->getNick() << "\n\n\n";
+			send((*itrecup)->_clients[k]->_sock, arg.c_str(), arg.size(), 0);
+		}
+	}
+	//std::cout << (*itrecup)->getTitle() << std::endl;
+	return "";
 }
 
 void	aff_vector(std::vector<Channel *> toto)
@@ -66,9 +100,10 @@ void	aff_vector(std::vector<Channel *> toto)
 		std::cout << "channel = " << (*it)->getTitle() << "\n";
 }
 
-void	Commands::join_chan(Client *client)
+std::string	Commands::join_chan(Client *client)
 {
 	int f = 0;
+	_cmd_args[0].erase(_cmd_args[0].size() - 2, _cmd_args[0].size());
 	if (_cmd_args.size() <= 0)
 	{
 		// NEED MORE PARAMS
@@ -77,8 +112,14 @@ void	Commands::join_chan(Client *client)
 	std::vector<Channel *>::iterator ite = server._channels.end();
 	for (; it != ite; ++it)
 	{
+		std::cout << "title = " << (*it)->getTitle() << " and arg[0] = " << _cmd_args[0] << "|" << "\n\n\n";
+		if ((*it)->getTitle() == _cmd_args[0])
+		{
+			break ;
+		}
 		if (it == ite)
 		{
+			std::cout << "11111111111\n";
 			f = 1;
 			server._channels.push_back(new Channel(_cmd_args[0]));
 			client->_chans.push_back(new Channel(_cmd_args[0]));
@@ -87,16 +128,30 @@ void	Commands::join_chan(Client *client)
 	}
 	if (it == ite && f == 0)
 	{
+			std::cout << "222222222222222\n";
 		server._channels.push_back(new Channel(_cmd_args[0]));
 		client->_chans.push_back(new Channel(_cmd_args[0]));
 		server._channels.back()->_clients.push_back(client);
+	}
+	else
+	{
+			std::cout << "3333333333333\n";
+		for (size_t i = 0; i < (*it)->_clients.size(); ++i)
+		{
+			if (client->_sock == (*it)->_clients[i]->_sock)
+				return ("");
+		}
+		(*it)->_clients.push_back(client);
+		client->_chans.push_back(*it);
 	}
 
 				/////////////////// DEBUG ///////////////////
 
 
 	std::cout << "VERIF JOIN\n\n\n";
+	std::cout << "serverchan:\n";
 	aff_vector(server._channels);
+	std::cout << "clientchan:\n";
 	aff_vector(client->_chans);
 	std::vector<Client *> test = server._channels.back()->_clients;
 	for(std::vector<Client *>::iterator itdeb = test.begin(); itdeb != test.end(); ++itdeb)
@@ -105,6 +160,35 @@ void	Commands::join_chan(Client *client)
 
               /////////////////////  END DEBUG ////////////////////
 
+
+
+	std::vector<Channel *> recupname = server._channels;
+	std::vector<Channel *>::iterator itrecup = recupname.begin();
+	for(; itrecup != recupname.end(); ++itrecup)
+	{
+		if ((*itrecup)->getTitle() == _cmd_args[0])
+			break ;
+	}
+	std::string ret = "JOIN " + (*itrecup)->getTitle() + "\n";
+	ret += "331 " + client->getNick() + (*itrecup)->getTopic() + "\n";
+	ret += "353";//+ client->getNick() + (*it)->getTopic() + "\n";
+	for(std::vector<Client *>::iterator itdeb = test.begin(); itdeb != test.end(); ++itdeb)
+		ret += " " + (*itdeb)->getNick();
+	if ((*itrecup)->getInviteOnly())
+		ret += " * ";
+	else
+		ret += " = ";
+	ret += (*itrecup)->getTitle();
+	ret += ":@" + client->getNick() + "\n";
+	ret += "366 " + client->getNick() + " " + (*itrecup)->getTitle() + " :End of /NAMES list\n";
+
+	std::cout << "aaaaaaaaa = " << ret << "\n\n\n";
+
+	return (ret);
+	// send(_fd_co, "JOIN #julienlbg\n", 16, MSG_DONTWAIT);
+	// send(_fd_co, "331 ldinaut julienlbg :No topic is set\n", 39, MSG_DONTWAIT);
+	// send(_fd_co, "353 ldinaut = #julienlbg :@ldinaut\n", 35, MSG_DONTWAIT);
+	// send(_fd_co, "366 ldinaut #toto :End of /NAMES list\n", 38, MSG_DONTWAIT);
 
 	//if (this->_str_rcv.length() > (this->_cmd.length()))
 	//{
@@ -137,17 +221,12 @@ void	Commands::join_chan(Client *client)
 	
 	// END OF PARSING & DEBUG PRINT	
 		//std::cout << "[user is joining a chan : " << this->_cmd_args << std::endl;
-	send(_fd_co, "JOIN #julienlbg\n", 16, MSG_DONTWAIT);
-	send(_fd_co, "331 ldinaut julienlbg :No topic is set\n", 39, MSG_DONTWAIT);
-	send(_fd_co, "353 ldinaut = #julienlbg :@ldinaut\n", 35, MSG_DONTWAIT);
-	send(_fd_co, "366 ldinaut #toto :End of /NAMES list\n", 38, MSG_DONTWAIT);
-	return ;
 	//}
 	//std::cout << "[ERROR IN JOIN CMD]" << std::endl;
 	//return;
 }
 
-void	Commands::user_cmd(Client *client)
+std::string	Commands::user_cmd(Client *client)
 {
 	if (_cmd_args.size() <= 0)
 	{
@@ -155,20 +234,24 @@ void	Commands::user_cmd(Client *client)
 	}
 	client->SetUser(_cmd_args[0]);
 	server.network = _cmd_args[2];
+	std::string rpl_wel = "001 " + client->getNick() + " :Welcome to the " + server.network + " Network, " + client->getNick() + "\n";
+	std::string	rpl_yoh = "002 " + client->getNick() + " :Your host is " + server.network + ", running version 2.4\n";
+	std::string ret = rpl_wel + rpl_yoh;
+	return (ret);
 }
 
-void	Commands::launcher(std::map<int, Client *> client_list){
+std::string	Commands::launcher(std::map<int, Client *> client_list){
 
 	std::cout << "cmd start launcher = " << _str_rcv << "\n\n\n";
 	std::size_t found = this->_str_rcv.find("PING");
 	if (found != std::string::npos && (found == 0))
 		return (this->pong());
-	found =  this->_str_rcv.find("QUIT");
-	if (found != std::string::npos)
-		return (this->quit());
+	// found =  this->_str_rcv.find("QUIT");
+	// if (found != std::string::npos)
+	// 	return (this->quit());
 	found =  this->_str_rcv.find("PRIVMSG");
 	if (found != std::string::npos)
-		return (this->privmsg());
+		return (this->privmsg(client_list[_fd_co]));
 	//found =  this->_cmd.find("JOIN");
 	//if (found != std::string::npos && (found == 0)){
 	if (_cmd == "JOIN")
@@ -180,7 +263,7 @@ void	Commands::launcher(std::map<int, Client *> client_list){
 		return (this->user_cmd(client_list[_fd_co]));
 	}
 	std::cout << "Not pong nor quit nor privmsg :((( == " << this->_str_rcv << std::endl;
-	return ;
+	return "";
 }
 
 std::vector<std::string> split(std::string str, std::string delim)
@@ -208,8 +291,9 @@ void	Commands::cmd_manager(std::map<int, Client *> client_list)
 	{
 		std::cout << "split = " << *it << std::endl;
 	}
-	// puis launcher de commands pour remplir une reply qu'on send a la fin au client IRC
-	launcher(client_list);
+	std::string ret;
+	ret = launcher(client_list);
+	sender(ret, "");
 }
 
 Commands::~Commands(void){
