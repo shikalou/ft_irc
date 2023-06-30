@@ -6,7 +6,7 @@
 /*   By: ldinaut <ldinaut@student.42.fr>            +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2023/06/19 14:09:45 by ldinaut           #+#    #+#             */
-/*   Updated: 2023/06/30 18:46:00 by ldinaut          ###   ########.fr       */
+/*   Updated: 2023/06/30 19:00:21 by ldinaut          ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -56,9 +56,10 @@ std::string	Commands::pong(void){
 
 std::string regroup_mess(std::vector<std::string> vec, Client *client)
 {
-	std::string ret = client->getNick() + "!" + "~" + client->getNick() + "@" + server.network + " PRIVMSG ";
+	(void)client;
+	std::string ret = /*client->getNick() + "!" + "~" + client->getNick() + "@" + server.network + */"PRIVMSG #toto ";
 
-	for (size_t i = 0; i < vec.size(); ++i)
+	for (size_t i = 1; i < vec.size(); ++i)
 	{
 		ret += vec[i];
 		ret += " ";
@@ -86,7 +87,8 @@ std::string	Commands::privmsg(Client *client)
 		for (size_t k = 0; k < (*itrecup)->_clients.size(); ++k)
 		{
 			std::cout << "arg = " << arg << " sock = " << (*itrecup)->_clients[k]->getNick() << "\n\n\n";
-			send((*itrecup)->_clients[k]->_sock, arg.c_str(), arg.size(), 0);
+			if (client->_sock != (*itrecup)->_clients[k]->_sock)
+				send((*itrecup)->_clients[k]->_sock, arg.c_str(), arg.size(), 0);
 		}
 	}
 	//std::cout << (*itrecup)->getTitle() << std::endl;
