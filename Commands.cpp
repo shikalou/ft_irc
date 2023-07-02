@@ -57,9 +57,9 @@ std::string	Commands::pong(void){
 std::string regroup_mess(std::vector<std::string> vec, Client *client)
 {
 	(void)client;
-	std::string ret = /*client->getNick() + "!" + "~" + client->getNick() + "@" + server.network + */"PRIVMSG #toto ";
+	std::string ret = ":" + client->getNick() + " PRIVMSG ";
 
-	for (size_t i = 1; i < vec.size(); ++i)
+	for (size_t i = 0; i < vec.size(); ++i)
 	{
 		ret += vec[i];
 		ret += " ";
@@ -69,6 +69,10 @@ std::string regroup_mess(std::vector<std::string> vec, Client *client)
 
 std::string	Commands::privmsg(Client *client)
 {
+	for (size_t i = 0; i < _cmd_args.size(); ++i)
+	{
+		std::cout << "i = " << i << " arg = " << _cmd_args[i] << "\n";
+	}
 	std::string arg = regroup_mess(_cmd_args, client);
 	arg += "\r\n";
 	int f = 0;
@@ -89,6 +93,15 @@ std::string	Commands::privmsg(Client *client)
 			std::cout << "arg = " << arg << " sock = " << (*itrecup)->_clients[k]->getNick() << "\n\n\n";
 			if (client->_sock != (*itrecup)->_clients[k]->_sock)
 				send((*itrecup)->_clients[k]->_sock, arg.c_str(), arg.size(), 0);
+		}
+	}
+	else
+	{
+		std::map<int, Client *>::iterator it = server._clients.begin();
+		for (; it != server._clients.end(); ++it) 
+		{
+			if ((*it).second->getNick() == _cmd_args[0])
+				send((*it).second->_sock, arg.c_str(), arg.size(), 0);
 		}
 	}
 	//std::cout << (*itrecup)->getTitle() << std::endl;
