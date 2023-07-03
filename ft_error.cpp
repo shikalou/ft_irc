@@ -6,16 +6,15 @@
 /*   By: mcouppe <marvin@42.fr>                     +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2023/06/21 12:15:45 by mcouppe           #+#    #+#             */
-/*   Updated: 2023/07/03 13:00:31 by mcouppe          ###   ########.fr       */
+/*   Updated: 2023/07/03 14:36:40 by mcouppe          ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
 # include "ft_error.hpp"
 
 // numerics replies
-/* sender etre basiquement nick de celui qui envoie ?*/
-std::string	err_nosuchnick(const std::string &sender, const std::string &nick){
-	return ("401 " + sender + " " + nick + " :No such nick/channel\r\n");
+std::string	err_nosuchnick(const std::string &nick){
+	return ("401 Irssi " + nick + " :No such nick/channel\r\n");
 }
 
 std::string	err_nosuchchannel(std::string &sender, std::string channel){
@@ -58,8 +57,8 @@ std::string	err_notregistered(std::string &sender){
 	return ("451 " + sender + " :You have not registered\r\n");
 }
 
-std::string	err_needmoreparams(const std::string &sender, std::string command){
-	return ("461 " + sender + " " + command + " :Not enough parameters\r\n");
+std::string	err_needmoreparams(std::string command){
+	return ("461 Irssi " + command + " :Not enough parameters\r\n");
 }
 
 std::string	err_passwdmismatch(std::string &sender){

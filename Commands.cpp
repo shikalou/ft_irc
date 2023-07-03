@@ -6,7 +6,7 @@
 /*   By: ldinaut <ldinaut@student.42.fr>            +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2023/06/19 14:09:45 by ldinaut           #+#    #+#             */
-/*   Updated: 2023/07/03 13:02:13 by mcouppe          ###   ########.fr       */
+/*   Updated: 2023/07/03 14:33:03 by mcouppe          ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -109,7 +109,7 @@ std::string	Commands::privmsg(Client *client)
 		}
 		if (check == 0){
 	// ERR_NOSUCHNICK
-			return (err_nosuchnick(client->getNick(), _cmd_args[0]));
+			return (err_nosuchnick(_cmd_args[0]));
 		}
 	}
 	//std::cout << (*itrecup)->getTitle() << std::endl;
@@ -129,7 +129,7 @@ std::string	Commands::join_chan(Client *client)
 	_cmd_args[0].erase(_cmd_args[0].size() - 2, _cmd_args[0].size());
 	if (_cmd_args.size() <= 0)
 	{
-		return (err_needmoreparams(client->getNick(), _cmd_args[0]));
+		return (err_needmoreparams(_cmd));
 		// NEED MORE PARAMS
 	}
 	std::vector<Channel *>::iterator it = server._channels.begin();
@@ -254,7 +254,7 @@ std::string	Commands::user_cmd(Client *client)
 {
 	if (_cmd_args.size() <= 0)
 	{
-		return (err_needmoreparams(client->getNick(), "[empty]"));
+		return (err_needmoreparams("[empty]"));
 		//NEED_MORE_PARAMS
 	}
 	client->SetUser(_cmd_args[0]);
