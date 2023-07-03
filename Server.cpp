@@ -6,7 +6,7 @@
 /*   By: ldinaut <ldinaut@student.42.fr>            +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2023/06/09 14:30:46 by ldinaut           #+#    #+#             */
-/*   Updated: 2023/07/03 14:46:24 by ldinaut          ###   ########.fr       */
+/*   Updated: 2023/07/03 16:14:31 by ldinaut          ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -176,7 +176,7 @@ int	Server::run_serv()
 				std::cout << "NOUVEAU CLIENT" << std::endl;
 				this->accept_newclient(_sockaddr);
 			}
-			else if (ev[k].data.fd)
+			else if (ev[k].events)
 			{
 				std::vector<char>	buffer(4096);
 				int ret;
@@ -186,19 +186,15 @@ int	Server::run_serv()
 					continue ;
 				}
 				std::string	cmd_str(&buffer[0], ret);
-				std::cout << "dans la boucle = " << &buffer[0] << std::endl << std::endl;
-				//std::size_t found;
-				//found = cmd_str.find("CAP");
-				//if (found != std::string::npos && (found == 0))
-				//{
-				//	this->parsing_cmd_co(cmd_str, ev[k].data.fd);
-				//}
-				//else
-				//{
-				Commands *cmd = new Commands(cmd_str, ev[k].data.fd);
-				_clients[ev[k].data.fd]->_cmd = cmd;
-				_clients[ev[k].data.fd]->_cmd->cmd_manager(_clients);
-				//}
+				_clients[ev[k].data.fd]->_recv += cmd_str;
+				if (_clients[ev[k].data.fd]->_recv.find('\n') != _clients[ev[k].data.fd]->_recv.npos)
+				{
+					std::cout << "dans la boucle = " << &buffer[0] << std::endl << std::endl;
+					Commands *cmd = new Commands(_clients[ev[k].data.fd]->_recv, ev[k].data.fd);
+					_clients[ev[k].data.fd]->_cmd = cmd;
+					_clients[ev[k].data.fd]->_cmd->cmd_manager(_clients);
+					_clients[ev[k].data.fd]->_recv.erase();
+				}
 			}
 		}
 	}

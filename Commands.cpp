@@ -6,7 +6,7 @@
 /*   By: ldinaut <ldinaut@student.42.fr>            +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2023/06/19 14:09:45 by ldinaut           #+#    #+#             */
-/*   Updated: 2023/07/03 14:45:56 by ldinaut          ###   ########.fr       */
+/*   Updated: 2023/07/03 15:58:45 by ldinaut          ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -40,7 +40,7 @@ Commands::Commands(std::string cmd_str, int fd_co): _str_rcv(cmd_str), _fd_co(fd
 
 void	Commands::sender(std::string cmd, std::string args){
 	cmd += args;
-	send(this->_fd_co, cmd.c_str(), cmd.length(), 0);
+	send(this->_fd_co, cmd.c_str(), cmd.length(), 0/*MSG_DONTWAIT | MSG_NOSIGNAL*/);
 	return ;
 }
 
@@ -94,7 +94,11 @@ std::string	Commands::privmsg(Client *client)
 		{
 			std::cout << "arg = " << arg << " sock = " << (*itrecup)->_clients[k]->getNick() << "\n\n\n";
 			if (client->_sock != (*itrecup)->_clients[k]->_sock)
-				send((*itrecup)->_clients[k]->_sock, arg.c_str(), arg.size(), 0);
+			{
+				_fd_co = (*itrecup)->_clients[k]->_sock;
+				//send((*itrecup)->_clients[k]->_sock, arg.c_str(), arg.size(), 0);
+				return (arg);
+			}
 		}
 	}
 	else
@@ -105,9 +109,11 @@ std::string	Commands::privmsg(Client *client)
 		{
 			if ((*it).second->getNick() == _cmd_args[0])
 			{
-				std::cout << "arg = " << arg << (*it).first << std::endl;
-				send((*it).second->_sock, arg.c_str(), arg.size(), 0);
+				std::cout << "arg = " << arg << (*it).first << " nick = " << (*it).second->getNick() << std::endl;
+				_fd_co = (*it).second->_sock;
+				//send((*it).second->_sock, arg.c_str(), arg.size(), 0);
 				check++;
+				break ;
 			}
 		}
 		if (check == 0){
@@ -116,7 +122,7 @@ std::string	Commands::privmsg(Client *client)
 		}
 	}
 	//std::cout << (*itrecup)->getTitle() << std::endl;
-	return "";
+	return (arg);
 }
 
 void	aff_vector(std::vector<Channel *> toto)
@@ -328,7 +334,7 @@ std::vector<std::string> split(std::string str, std::string delim)
 void	Commands::cmd_manager(std::map<int, Client *> client_list)
 {
 	std::vector<std::string> split_nl = split(_str_rcv, "\r\n");
-	for (size_t i = 0; i < split_nl.size(); ++i)
+	for (size_t i = 0; i < split_nl.size() - 1; ++i)
 	{
 		_cmd_args = split(split_nl[i], " ");
 		_cmd = _cmd_args[0];
