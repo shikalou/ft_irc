@@ -6,12 +6,13 @@
 /*   By: ldinaut <ldinaut@student.42.fr>            +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2023/06/19 14:09:45 by ldinaut           #+#    #+#             */
-/*   Updated: 2023/06/30 19:00:21 by ldinaut          ###   ########.fr       */
+/*   Updated: 2023/07/03 13:02:13 by mcouppe          ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
 #include "Commands.hpp"
 #include "Client.hpp"
+#include "ft_error.hpp"
 
 Commands::Commands()
 {
@@ -97,11 +98,18 @@ std::string	Commands::privmsg(Client *client)
 	}
 	else
 	{
+		int	check = 0;
 		std::map<int, Client *>::iterator it = server._clients.begin();
 		for (; it != server._clients.end(); ++it) 
 		{
-			if ((*it).second->getNick() == _cmd_args[0])
+			if ((*it).second->getNick() == _cmd_args[0]){
 				send((*it).second->_sock, arg.c_str(), arg.size(), 0);
+				check++;
+			}
+		}
+		if (check == 0){
+	// ERR_NOSUCHNICK
+			return (err_nosuchnick(client->getNick(), _cmd_args[0]));
 		}
 	}
 	//std::cout << (*itrecup)->getTitle() << std::endl;
@@ -121,6 +129,7 @@ std::string	Commands::join_chan(Client *client)
 	_cmd_args[0].erase(_cmd_args[0].size() - 2, _cmd_args[0].size());
 	if (_cmd_args.size() <= 0)
 	{
+		return (err_needmoreparams(client->getNick(), _cmd_args[0]));
 		// NEED MORE PARAMS
 	}
 	std::vector<Channel *>::iterator it = server._channels.begin();
@@ -245,12 +254,13 @@ std::string	Commands::user_cmd(Client *client)
 {
 	if (_cmd_args.size() <= 0)
 	{
+		return (err_needmoreparams(client->getNick(), "[empty]"));
 		//NEED_MORE_PARAMS
 	}
 	client->SetUser(_cmd_args[0]);
 	server.network = _cmd_args[2];
-	std::string rpl_wel = "001 " + client->getNick() + " :Welcome to the " + server.network + " Network, " + client->getNick() + "\n";
-	std::string	rpl_yoh = "002 " + client->getNick() + " :Your host is " + server.network + ", running version 2.4\n";
+	std::string rpl_wel = rpl_welcome(client->getNick(), client->getUser(), server.network);
+	std::string	rpl_yoh = rpl_yourhost(client->getNick(), server.network);
 	std::string ret = rpl_wel + rpl_yoh;
 	return (ret);
 }

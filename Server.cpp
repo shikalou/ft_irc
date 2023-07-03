@@ -6,7 +6,7 @@
 /*   By: ldinaut <ldinaut@student.42.fr>            +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2023/06/09 14:30:46 by ldinaut           #+#    #+#             */
-/*   Updated: 2023/06/30 15:40:55 by ldinaut          ###   ########.fr       */
+/*   Updated: 2023/07/03 12:56:55 by mcouppe          ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -85,8 +85,8 @@ void	Server::finish_connection(Client *client)
 {
 	std::string tmp_pass = "PASS " + this->password + "\n";
 	std::string tmp_nick = ":* NICK " + client->getNick() + "\n";
-	std::string rpl_wel = "001 " + client->getNick() + " :Welcome to the " + network + " Network, " + client->getNick() + "\n";
-	std::string	rpl_yoh = "002 " + client->getNick() + " :Your host is " + network + ", running version 2.4\n";
+	std::string rpl_wel =  rpl_welcome(client->getNick(), client->getUser(), this->network);
+	std::string rpl_yoh = rpl_yourhost(client->getNick(), this->network);
 	send(client->_sock, tmp_pass.c_str(), tmp_pass.length(), 0);
 	send(client->_sock, tmp_nick.c_str(), tmp_nick.length(), 0);
 	send(client->_sock, rpl_wel.c_str(), rpl_wel.length(), 0);

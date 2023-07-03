@@ -6,7 +6,7 @@
 /*   By: ldinaut <ldinaut@student.42.fr>            +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2023/05/29 13:25:21 by ldinaut           #+#    #+#             */
-/*   Updated: 2023/06/29 17:31:52 by ldinaut          ###   ########.fr       */
+/*   Updated: 2023/07/03 11:16:47 by mcouppe          ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -27,6 +27,7 @@
 #include <map>
 #include <utility>
 #include "Channel.hpp"
+#include "ft_error.hpp"
 
 #define NICK_TOOBIG "abcdefghijk"
 
@@ -66,6 +67,5 @@ class Server
 
 extern Server server;
 
-int	ft_error(std::string msg);
 
 #endif
