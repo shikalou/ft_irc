@@ -6,7 +6,7 @@
 /*   By: ldinaut <ldinaut@student.42.fr>            +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2023/06/16 14:47:29 by ldinaut           #+#    #+#             */
-/*   Updated: 2023/06/29 18:35:37 by ldinaut          ###   ########.fr       */
+/*   Updated: 2023/07/03 16:10:02 by ldinaut          ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -36,10 +36,12 @@ class Client{
 		Commands				*_cmd;
 		int						_sock;
 		int						_register;
+		std::string				_recv;
 	private :
 		std::string	_pass; // A VIRER
 		std::string	_nick;
 		std::string	_user;
+		
 };
 
 #endif

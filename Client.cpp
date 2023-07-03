@@ -6,7 +6,7 @@
 /*   By: ldinaut <ldinaut@student.42.fr>            +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2023/06/19 16:07:39 by mcouppe           #+#    #+#             */
-/*   Updated: 2023/06/29 14:44:29 by ldinaut          ###   ########.fr       */
+/*   Updated: 2023/07/03 16:14:51 by ldinaut          ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -15,6 +15,7 @@
 Client::Client(int sock_cli): _sock(sock_cli){
 	(void)this->_sock;
 	_register = 0;
+	_recv = "";
 	//_cmd = new Commands();
 //	std::cout << "[CLIENT CONSTRUCTOR]\nsock_cli = " << this->_sock << std::endl;
 	return;
