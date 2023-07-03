@@ -6,7 +6,7 @@
 /*   By: ldinaut <ldinaut@student.42.fr>            +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2023/06/19 14:10:05 by ldinaut           #+#    #+#             */
-/*   Updated: 2023/07/03 14:46:05 by ldinaut          ###   ########.fr       */
+/*   Updated: 2023/07/03 19:34:03 by ldinaut          ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -30,22 +30,24 @@ class Commands
 		Commands operator=(const Commands *egal);
 
 		void	cmd_manager(std::map<int, Client *> clients);
-		std::string	launcher(std::map<int, Client *> client_list);
+		std::vector<std::string>	launcher(std::map<int, Client *> client_list);
 	//	int		parser(void);
-		void	sender(std::string cmd, std::string args);
+		void	sender(std::vector<std::string> cmd, std::string args);
 
 // CMDS FUNCTIONS
-		std::string	pong(void);
-		std::string	join_chan(Client *client);
+		std::vector<std::string>	pong(void);
+		std::vector<std::string>	join_chan(Client *client);
 //		void	kick(void);
 //		void	invite(void);
 //		void	mode(void);
-		std::string	privmsg(Client *client);
+		std::vector<std::string>	privmsg(Client *client);
 	//	void	part(void);
-		std::string	quit(void);
+		std::vector<std::string>	quit(void);
 	//	void	squit(void);// quit only server
-		std::string	nick_cmd(Client *client);
-		std::string	user_cmd(Client *client);
+		std::vector<std::string>	nick_cmd(Client *client);
+		std::vector<std::string>	user_cmd(Client *client);
+
+		std::vector<int>			fd_users;
 	//	void	pass_cmd();
 	private :
 /*
@@ -54,6 +56,7 @@ class Commands
 		_cmd est la commande identifiee (ex: "JOIN") 
 		_cmd_args est ce qui suit apres "JOIN " par exemple
 */
+		std::vector<std::string> reponse;
 		std::string	_str_rcv;
 		std::string	_cmd;
 		std::vector<std::string>	_cmd_args;

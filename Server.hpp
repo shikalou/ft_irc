@@ -6,7 +6,7 @@
 /*   By: ldinaut <ldinaut@student.42.fr>            +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2023/05/29 13:25:21 by ldinaut           #+#    #+#             */
-/*   Updated: 2023/07/03 11:16:47 by mcouppe          ###   ########.fr       */
+/*   Updated: 2023/07/03 16:27:46 by ldinaut          ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -53,9 +53,6 @@ class Server
 		std::map<int, Client*>	_clients;
 		std::vector<Channel *> _channels;
 
-		void	parsing_cmd_co(std::string cmd, int clfd);
-		int		set_clients_info(std::string cmd, Client *client);
-		void	finish_connection(Client *client);
 		void	accept_newclient(sockaddr_in sockaddr);
 		void	add_epoll(int new_fd, int i);
 		int		init_serv();

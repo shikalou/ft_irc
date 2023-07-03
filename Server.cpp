@@ -6,7 +6,7 @@
 /*   By: ldinaut <ldinaut@student.42.fr>            +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2023/06/09 14:30:46 by ldinaut           #+#    #+#             */
-/*   Updated: 2023/07/03 16:14:31 by ldinaut          ###   ########.fr       */
+/*   Updated: 2023/07/03 16:33:28 by ldinaut          ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -39,60 +39,6 @@ Server Server::operator=(const Server *egal)
 	return (*this);
 }
 
-int	Server::set_clients_info(std:: string cmd, Client *client)
-{
-	size_t i = 0;
-	size_t n = cmd.find("PASS");
-	if (n != cmd.npos)
-	{
-		i = cmd.find("\n", n);
-		// verifier par rapport a _pass de serveur si c le bon
-		// pas besoin de setter
-		client->SetPass(cmd.substr(n + 5, i-(n + 5) - 1));
-	}
-	std::cout << "11111111111111111111 cmd = " << cmd << std::endl;
-	n = cmd.find("NICK");
-	if (n != cmd.npos)
-	{
-		i = cmd.find_first_of("\n", n);
-		// int r = i-(n + 5) - 1;
-		// if (r > 9)
-		// {
-		// 	//send(fd_co, "432: nickname too long\n", )
-		// 	return (0);
-		// }
-		client->SetNick(cmd.substr(n + 5, i-(n + 5) - 1));
-	}
-	else
-	{
-		send(client->_sock, "431 : no nickname given\n", 24, MSG_DONTWAIT);
-		return (0);
-	}
-	n = cmd.find("USER");
-	if (n != cmd.npos)
-	{
-		i = cmd.find_first_of('\n', n);
-		client->SetUser(cmd.substr(n + 5, i - (n + 5) - 1));
-		size_t l = cmd.find_first_of(' ', n + 5);
-		size_t l2 = cmd.find_first_of(' ', l + 1);
-		size_t l3 = cmd.find_first_of(' ', l2 + 1);
-		this->network = cmd.substr(l2 + 1, l3- 1 - l2 );
-	}
-	return (1);
-}
-
-void	Server::finish_connection(Client *client)
-{
-	std::string tmp_pass = "PASS " + this->password + "\n";
-	std::string tmp_nick = ":* NICK " + client->getNick() + "\n";
-	std::string rpl_wel =  rpl_welcome(client->getNick(), client->getUser(), this->network);
-	std::string rpl_yoh = rpl_yourhost(client->getNick(), this->network);
-	send(client->_sock, tmp_pass.c_str(), tmp_pass.length(), 0);
-	send(client->_sock, tmp_nick.c_str(), tmp_nick.length(), 0);
-	send(client->_sock, rpl_wel.c_str(), rpl_wel.length(), 0);
-	send(client->_sock, rpl_yoh.c_str(), rpl_yoh.length(), 0);
-}
-
 void	Server::add_epoll(int new_fd, int i)
 {
 	struct epoll_event ev;
@@ -112,25 +58,6 @@ void	Server::accept_newclient(sockaddr_in sockaddr)
 	fcntl(fd_accept, F_GETFL, O_NONBLOCK);
 	add_epoll(fd_accept, 2);
 	_clients.insert(std::make_pair(fd_accept, new Client(fd_accept)));
-}
-
-void	Server::parsing_cmd_co(std::string cmd, int clfd)
-{
-	//std::pair<std::map<int, Client *>::iterator, bool> it = _clients.insert(std::make_pair(clfd, new Client(0)));
-	std::map<int, Client *>::iterator it = _clients.find(clfd);
-	if (it != _clients.end() && _clients[clfd]->_register == 0)
-	{
-		if (!set_clients_info(cmd, _clients[clfd]))
-		{
-			// return error kill la connexion ?? jsais po
-		}
-		_clients[clfd]->_register = 1;
-		finish_connection(_clients[clfd]);
-	}
-	else
-	{
-		std::cout << "j;ai aps trouve le client " << std::endl;
-	}
 }
 
 int	Server::init_serv()
@@ -189,7 +116,7 @@ int	Server::run_serv()
 				_clients[ev[k].data.fd]->_recv += cmd_str;
 				if (_clients[ev[k].data.fd]->_recv.find('\n') != _clients[ev[k].data.fd]->_recv.npos)
 				{
-					std::cout << "dans la boucle = " << &buffer[0] << std::endl << std::endl;
+					std::cout << "dans la boucle = " << _clients[ev[k].data.fd]->_recv << std::endl << std::endl;
 					Commands *cmd = new Commands(_clients[ev[k].data.fd]->_recv, ev[k].data.fd);
 					_clients[ev[k].data.fd]->_cmd = cmd;
 					_clients[ev[k].data.fd]->_cmd->cmd_manager(_clients);
