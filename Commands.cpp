@@ -6,7 +6,7 @@
 /*   By: ldinaut <ldinaut@student.42.fr>            +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2023/06/19 14:09:45 by ldinaut           #+#    #+#             */
-/*   Updated: 2023/07/03 14:45:56 by ldinaut          ###   ########.fr       */
+/*   Updated: 2023/07/03 17:48:09 by mcouppe          ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -197,7 +197,8 @@ std::string	Commands::join_chan(Client *client)
 			break ;
 	}
 	std::string ret = "JOIN " + (*itrecup)->getTitle() + "\n";
-	ret += "331 " + client->getNick() + (*itrecup)->getTopic() + "\n";
+	ret += rpl_notopic(client->getNick(), (*itrecup)->getTopic());
+//"331 " + client->getNick() + (*itrecup)->getTopic() + "\n";
 	ret += "353";//+ client->getNick() + (*it)->getTopic() + "\n";
 	for(std::vector<Client *>::iterator itdeb = test.begin(); itdeb != test.end(); ++itdeb)
 		ret += " " + (*itdeb)->getNick();
@@ -217,44 +218,12 @@ std::string	Commands::join_chan(Client *client)
 	// send(_fd_co, "353 ldinaut = #julienlbg :@ldinaut\n", 35, MSG_DONTWAIT);
 	// send(_fd_co, "366 ldinaut #toto :End of /NAMES list\n", 38, MSG_DONTWAIT);
 
-	//if (this->_str_rcv.length() > (this->_cmd.length()))
-	//{
-	// INIT
-	// 	this->_cmd_args.append(this->_str_rcv, (this->_cmd.length() + 1), ((this->_str_rcv.length() + 1) - (this->_cmd.length())));
-	// // PARSING ARGS
-	// 	if (this->_cmd_args.length() > 200){
-	// 		std::cerr << "[ERROR] CHAN LENGTH TOO LONG" << std::endl;
-	// 		return ;
-	// 	}
-	// 	if (this->_cmd_args[0] != '&' && this->_cmd_args[0] != '#'){
-	// 		std::cerr << "[ERROR] BAD FIRST CHAR CHAN NAME ?" << std::endl;
-	// 		return ;
-	// 	}
-	// 	std::size_t found = this->_cmd_args.find(' ');
-	// 	if (found != std::string::npos){
-	// 		std::cerr << "[ERROR] SPACE CHAR CHAN NAME " << std::endl;
-	// 		return ;
-	// 	}
-	// 	found = this->_cmd_args.find(7);
-	// 	if (found != std::string::npos){
-	// 		std::cerr << "[ERROR] CTRL G" << std::endl;
-	// 		return ;
-	// 	}
-	// 	found = this->_cmd_args.find(',');
-	// 	if (found != std::string::npos){
-	// 		std::cerr << "[ERROR] COMA IN CHAN NAME" << std::endl;
-	// 		return ;
-	// 	}
-	
-	// END OF PARSING & DEBUG PRINT	
-		//std::cout << "[user is joining a chan : " << this->_cmd_args << std::endl;
-	//}
-	//std::cout << "[ERROR IN JOIN CMD]" << std::endl;
-	//return;
 }
 
 std::string	Commands::user_cmd(Client *client)
 {
+	if (client->_register == 1)
+		return (err_alreadyregistered(client->getNick()));
 	if (_cmd_args.size() <= 0)
 	{
 		return (err_needmoreparams("[empty]"));
@@ -262,11 +231,20 @@ std::string	Commands::user_cmd(Client *client)
 	}
 	client->SetUser(_cmd_args[0]);
 	server.network = _cmd_args[2];
-	std::string rpl_wel = rpl_welcome(client->getNick(), client->getUser(), server.network);
-	std::string	rpl_yoh = rpl_yourhost(client->getNick(), server.network);
-	std::string ret = rpl_wel + rpl_yoh;
-	client->_register = 1;
-	return (ret);
+	if (server.password != client->getPass())
+	{
+		std::cout << "\n\n\n[DEBUG]\npureeee " << server.password << " et client pass = " << client->getPass() << "\n\n" << std::endl;
+		std::string err_tmp = err_passwdmismatch(client->getNick());
+		send(this->_fd_co, err_tmp.c_str(), err_tmp.length(), 0);
+	}
+	else {
+		std::string rpl_wel = rpl_welcome(client->getNick(), client->getUser(), server.network);
+		std::string	rpl_yoh = rpl_yourhost(client->getNick(), server.network);
+		std::string ret = rpl_wel + rpl_yoh;
+		client->_register = 1;
+		return (ret);
+	}
+	return (err_notregistered(client->getNick()));
 }
 
 std::string	Commands::nick_cmd(Client *client)
@@ -275,6 +253,14 @@ std::string	Commands::nick_cmd(Client *client)
 	client->SetNick(_cmd_args[0]);
 	ret = ":* NICK " + client->getNick() + "\r\n";
 	return (ret);
+}
+
+std::string	Commands::pass_cmd(Client *client){
+	if (client->_register == 1)
+		return (err_alreadyregistered(client->getNick()));
+	else
+		client->SetPass(_cmd_args[0]);
+	return "";
 }
 
 std::string	Commands::launcher(std::map<int, Client *> client_list)
@@ -302,11 +288,17 @@ std::string	Commands::launcher(std::map<int, Client *> client_list)
 	{
 		return ("");
 	}
-	//if (_cmd == "PASS")
-	//{
-//
-//	}
-	std::cout << "Not pong nor quit nor privmsg :((( == " << this->_str_rcv << std::endl;
+	if (_cmd == "MODE")
+		return ("");
+	if (_cmd == "PASS")
+	{
+		return (this->pass_cmd(client_list[_fd_co]));
+	}
+	std::cout << "cmd =" << _cmd << "$" << std::endl;
+//	std::cout << "Not pong nor quit nor privmsg :((( == " << this->_str_rcv << std::endl;
+
+//	WHEN NOT IN DEBUG : 
+//	return (err_unknowncommand("Irssi", _cmd));
 	return "";
 }
 
