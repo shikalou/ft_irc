@@ -6,7 +6,7 @@
 /*   By: ldinaut <ldinaut@student.42.fr>            +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2023/06/09 14:30:46 by ldinaut           #+#    #+#             */
-/*   Updated: 2023/06/30 15:40:55 by ldinaut          ###   ########.fr       */
+/*   Updated: 2023/07/03 12:38:39 by ldinaut          ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -50,7 +50,7 @@ int	Server::set_clients_info(std:: string cmd, Client *client)
 		// pas besoin de setter
 		client->SetPass(cmd.substr(n + 5, i-(n + 5) - 1));
 	}
-	
+	std::cout << "11111111111111111111 cmd = " << cmd << std::endl;
 	n = cmd.find("NICK");
 	if (n != cmd.npos)
 	{
@@ -187,18 +187,18 @@ int	Server::run_serv()
 				}
 				std::string	cmd_str(&buffer[0], ret);
 				std::cout << "dans la boucle = " << &buffer[0] << std::endl << std::endl;
-				std::size_t found;
-				found = cmd_str.find("CAP");
-				if (found != std::string::npos && (found == 0))
-				{
-					this->parsing_cmd_co(cmd_str, ev[k].data.fd);
-				}
-				else
-				{
-					Commands *cmd = new Commands(cmd_str, ev[k].data.fd);
-					_clients[ev[k].data.fd]->_cmd = cmd;
-					_clients[ev[k].data.fd]->_cmd->cmd_manager(_clients);
-				}
+				//std::size_t found;
+				//found = cmd_str.find("CAP");
+				//if (found != std::string::npos && (found == 0))
+				//{
+				//	this->parsing_cmd_co(cmd_str, ev[k].data.fd);
+				//}
+				//else
+				//{
+				Commands *cmd = new Commands(cmd_str, ev[k].data.fd);
+				_clients[ev[k].data.fd]->_cmd = cmd;
+				_clients[ev[k].data.fd]->_cmd->cmd_manager(_clients);
+				//}
 			}
 		}
 	}

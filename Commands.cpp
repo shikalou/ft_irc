@@ -6,7 +6,7 @@
 /*   By: ldinaut <ldinaut@student.42.fr>            +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2023/06/19 14:09:45 by ldinaut           #+#    #+#             */
-/*   Updated: 2023/06/30 19:00:21 by ldinaut          ###   ########.fr       */
+/*   Updated: 2023/07/03 13:12:22 by ldinaut          ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -48,11 +48,12 @@ std::string	Commands::pong(void){
 	return ("PONG 127.0.0.1");
 }
 
-// void	Commands::quit(void){
-// 	std::cout << "[DISCONNECTED]" << std::endl;
-// //	ne pas faire d'exit ?
-// 	exit (1);
-// }
+std::string	Commands::quit(void){
+	std::cout << "[DISCONNECTED]" << std::endl;
+//	ne pas faire d'exit ?
+	exit (1);
+	return ("");
+}
 
 std::string regroup_mess(std::vector<std::string> vec, Client *client)
 {
@@ -101,7 +102,11 @@ std::string	Commands::privmsg(Client *client)
 		for (; it != server._clients.end(); ++it) 
 		{
 			if ((*it).second->getNick() == _cmd_args[0])
-				send((*it).second->_sock, arg.c_str(), arg.size(), 0);
+			{
+				std::cout << "arg = " << arg << (*it).first << std::endl;
+				//send((*it).second->_sock, arg.c_str(), arg.size(), 0);
+				send((*it).first, arg.c_str(), arg.size(), 0);
+			}
 		}
 	}
 	//std::cout << (*itrecup)->getTitle() << std::endl;
@@ -118,7 +123,7 @@ void	aff_vector(std::vector<Channel *> toto)
 std::string	Commands::join_chan(Client *client)
 {
 	int f = 0;
-	_cmd_args[0].erase(_cmd_args[0].size() - 2, _cmd_args[0].size());
+	//_cmd_args[0].erase(_cmd_args[0].size() - 2, _cmd_args[0].size());
 	if (_cmd_args.size() <= 0)
 	{
 		// NEED MORE PARAMS
@@ -252,23 +257,27 @@ std::string	Commands::user_cmd(Client *client)
 	std::string rpl_wel = "001 " + client->getNick() + " :Welcome to the " + server.network + " Network, " + client->getNick() + "\n";
 	std::string	rpl_yoh = "002 " + client->getNick() + " :Your host is " + server.network + ", running version 2.4\n";
 	std::string ret = rpl_wel + rpl_yoh;
+	client->_register = 1;
 	return (ret);
 }
 
-std::string	Commands::launcher(std::map<int, Client *> client_list){
+std::string	Commands::nick_cmd(Client *client)
+{
+	std::string ret;
+	client->SetNick(_cmd_args[0]);
+	ret = ":* NICK " + client->getNick() + "\r\n";
+	return (ret);
+}
 
-	std::cout << "cmd start launcher = " << _str_rcv << "\n\n\n";
-	std::size_t found = this->_str_rcv.find("PING");
-	if (found != std::string::npos && (found == 0))
+std::string	Commands::launcher(std::map<int, Client *> client_list)
+{
+	std::cout << "DANS LAUNCHER >> " << _cmd << std::endl << _cmd_args[0] << std::endl;
+	if (_cmd == "PING")
 		return (this->pong());
-	// found =  this->_str_rcv.find("QUIT");
-	// if (found != std::string::npos)
-	// 	return (this->quit());
-	found =  this->_str_rcv.find("PRIVMSG");
-	if (found != std::string::npos)
+	if (_cmd == "QUIT")
+		return (this->quit());
+	if (_cmd == "PRIVMSG")
 		return (this->privmsg(client_list[_fd_co]));
-	//found =  this->_cmd.find("JOIN");
-	//if (found != std::string::npos && (found == 0)){
 	if (_cmd == "JOIN")
 	{
 		return (this->join_chan(client_list[_fd_co]));
@@ -277,6 +286,18 @@ std::string	Commands::launcher(std::map<int, Client *> client_list){
 	{
 		return (this->user_cmd(client_list[_fd_co]));
 	}
+	if (_cmd == "NICK")
+	{
+		return (this->nick_cmd(client_list[_fd_co]));
+	}
+	if (_cmd == "CAP")
+	{
+		return ("");
+	}
+	//if (_cmd == "PASS")
+	//{
+//
+//	}
 	std::cout << "Not pong nor quit nor privmsg :((( == " << this->_str_rcv << std::endl;
 	return "";
 }
@@ -289,7 +310,7 @@ std::vector<std::string> split(std::string str, std::string delim)
 	while (pos_delim != str.npos)
 	{
 		ret.push_back(str.substr(start, pos_delim - start));
-		start = pos_delim + 1;
+		start = pos_delim + delim.length();
 		pos_delim = str.find(delim, start);
 	}
 	ret.push_back(str.substr(start, str.length() - start));
@@ -298,17 +319,21 @@ std::vector<std::string> split(std::string str, std::string delim)
 
 void	Commands::cmd_manager(std::map<int, Client *> client_list)
 {
-	(void)client_list;
-	_cmd_args = split(_str_rcv, " ");
-	_cmd = _cmd_args[0];
-	_cmd_args.erase(_cmd_args.begin());
-	for (std::vector<std::string>::iterator it = _cmd_args.begin(); it != _cmd_args.end(); it++)
+	std::vector<std::string> split_nl = split(_str_rcv, "\r\n");
+	for (size_t i = 0; i < split_nl.size(); ++i)
 	{
-		std::cout << "split = " << *it << std::endl;
+		_cmd_args = split(split_nl[i], " ");
+		_cmd = _cmd_args[0];
+		_cmd_args.erase(_cmd_args.begin());
+		std::cout << "split [0] = " << _cmd << std::endl;
+		for (std::vector<std::string>::iterator it = _cmd_args.begin(); it != _cmd_args.end(); it++)
+		{
+			std::cout << "split = " << *it << std::endl;
+		}
+		std::string ret;
+		ret = launcher(client_list);
+		sender(ret, "");
 	}
-	std::string ret;
-	ret = launcher(client_list);
-	sender(ret, "");
 }
 
 Commands::~Commands(void){

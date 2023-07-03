@@ -6,7 +6,7 @@
 /*   By: ldinaut <ldinaut@student.42.fr>            +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2023/06/19 14:10:05 by ldinaut           #+#    #+#             */
-/*   Updated: 2023/06/30 18:46:33 by ldinaut          ###   ########.fr       */
+/*   Updated: 2023/07/03 12:10:11 by ldinaut          ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -41,8 +41,9 @@ class Commands
 //		void	mode(void);
 		std::string	privmsg(Client *client);
 	//	void	part(void);
-		void	quit(void);
+		std::string	quit(void);
 	//	void	squit(void);// quit only server
+		std::string	nick_cmd(Client *client);
 		std::string	user_cmd(Client *client);
 	//	void	pass_cmd();
 	private :
@@ -58,7 +59,6 @@ class Commands
 		int			_fd_co;
 	//	std::string _cmd_send;
 	//	std::string	_cmd_send_args;
-	//	void	nick_cmd();
 };
 std::vector<std::string> split(std::string str, std::string delim);
 
