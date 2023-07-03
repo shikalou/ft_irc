@@ -6,7 +6,7 @@
 /*   By: mcouppe <marvin@42.fr>                     +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2023/06/21 12:15:45 by mcouppe           #+#    #+#             */
-/*   Updated: 2023/07/03 14:36:40 by mcouppe          ###   ########.fr       */
+/*   Updated: 2023/07/03 17:28:46 by mcouppe          ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -29,11 +29,11 @@ std::string	err_toomanychannels(std::string &sender, std::string channel){
 	return ("405 " + sender + " " + channel + " :You have joined too many channels\r\n");
 }
 
-std::string err_unknowncommmand(std::string &sender, std::string command){
+std::string err_unknowncommand(std::string sender, std::string command){
 	return ("421 " + sender + " " + command + " :Unknown command\r\n");
 }
 
-std::string err_nonicknamegiven(std::string &sender){
+std::string err_nonicknamegiven(const std::string &sender){
 	return ("431 " + sender + " :No nickname given\r\n");
 }
 
@@ -53,15 +53,19 @@ std::string	err_notonchannel(std::string &sender, std::string &channel){
 	return ("443 " + sender + " " + channel + " :You're not on that channel\r\n");
 }
 
-std::string	err_notregistered(std::string &sender){
+std::string	err_notregistered(const std::string &sender){
 	return ("451 " + sender + " :You have not registered\r\n");
+}
+
+std::string	err_alreadyregistered(const std::string &sender){
+	return ("462 " + sender + " :You may not reregister\r\n");
 }
 
 std::string	err_needmoreparams(std::string command){
 	return ("461 Irssi " + command + " :Not enough parameters\r\n");
 }
 
-std::string	err_passwdmismatch(std::string &sender){
+std::string	err_passwdmismatch(const std::string &sender){
 	return ("464 " + sender + " :Password incorrect\r\n");
 }
 
@@ -93,6 +97,9 @@ std::string	rpl_yourhost(const std::string &nick, const std::string &host){
 	return ("002 " + nick + " :Your host is " + host_to_use + ", running version 2.4\r\n");
 }
 
+std::string	rpl_notopic(const std::string &nick, const std::string &channel){
+	return ("331 " + nick + " " + channel + " :No topic is set\r\n");
+}
 // basic error
 int	ft_error(std::string msg){
 	std::cerr << "Error : " << msg << std::endl;

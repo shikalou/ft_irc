@@ -6,7 +6,7 @@
 /*   By: ldinaut <ldinaut@student.42.fr>            +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2023/06/19 14:10:05 by ldinaut           #+#    #+#             */
-/*   Updated: 2023/07/03 19:34:03 by ldinaut          ###   ########.fr       */
+/*   Updated: 2023/07/03 19:53:47 by ldinaut          ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -46,6 +46,8 @@ class Commands
 	//	void	squit(void);// quit only server
 		std::vector<std::string>	nick_cmd(Client *client);
 		std::vector<std::string>	user_cmd(Client *client);
+		std::string	pass_cmd(Client *client);
+
 
 		std::vector<int>			fd_users;
 	//	void	pass_cmd();
