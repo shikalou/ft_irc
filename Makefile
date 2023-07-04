@@ -6,25 +6,28 @@
 #    By: ldinaut <ldinaut@student.42.fr>            +#+  +:+       +#+         #
 #                                                 +#+#+#+#+#+   +#+            #
 #    Created: 2023/06/23 11:58:02 by ldinaut           #+#    #+#              #
-#    Updated: 2023/06/29 18:57:10 by ldinaut          ###   ########.fr        #
+#    Updated: 2023/07/04 12:57:50 by mcouppe          ###   ########.fr        #
 #                                                                              #
 # **************************************************************************** #
 
 NAME	=	ircserv
 
-SRCS	=	main.cpp Client.cpp Server.cpp Commands.cpp Channel.cpp ft_error.cpp 
+SRCS_FILES	=	main.cpp Client.cpp Server.cpp cmd_files/Commands.cpp cmd_files/join.cpp \
+				cmd_files/privmsg.cpp Channel.cpp ft_error.cpp 
 
-INCS	=	 Client.hpp Server.hpp Commands.hpp Channel.hpp
+SRCS	=	$(addprefix srcs/, $(SRCS_FILES))
+
+INC_FILES	=	 Client.hpp Server.hpp Commands.hpp Channel.hpp
 
 #SRCS	=	$(addprefix ./, $(SRCS_FILES))
 
-#INCS	=	$(addprefix ./, $(INC_FILES))
+INCS	=	$(addprefix includes/, $(INC_FILES))
 
 CXX	=	c++
 
-CPPFLAGS	=	-Wall -Wextra -Werror -std=c++98 -g3 -pedantic -I .
+CPPFLAGS	=	-Wall -Wextra -Werror -std=c++98 -g3 -pedantic -I includes/
 
-OBJS_FILES	=	$(SRCS:%.cpp=%.o)
+OBJS_FILES	=	$(SRCS_FILES:%.cpp=%.o)
 
 OBJS	=	$(addprefix objs/, $(OBJS_FILES))
 
@@ -35,6 +38,7 @@ all	:	$(NAME)
 $(NAME)	:	$(OBJS)
 	$(CXX) $(CPPFLAGS) -o $(NAME) $(OBJS)
 
+
 clean	:
 	rm -rf $(OBJS) $(DEP)
 	rm -rf objs/
@@ -44,8 +48,9 @@ fclean	:	clean
 
 re	:	fclean all
 
-objs/%.o	: %.cpp $(INCS)
+objs/%.o	: srcs/%.cpp $(INCS)
 	mkdir -p objs
+	mkdir -p objs/cmd_files
 	$(CXX) $(CPPFLAGS) -MMD -o $@ -c $<
 
 .PHONY: all clean fclean re
