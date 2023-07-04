@@ -6,7 +6,7 @@
 /*   By: ldinaut <ldinaut@student.42.fr>            +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2023/06/16 14:47:29 by ldinaut           #+#    #+#             */
-/*   Updated: 2023/07/03 18:31:45 by ldinaut          ###   ########.fr       */
+/*   Updated: 2023/07/04 16:42:35 by mcouppe          ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -37,6 +37,8 @@ class Client{
 		int						_sock;
 		int						_register;
 		std::string				_recv;
+//	if mode == 
+		int						_priv_mode;
 	private :
 		std::string	_pass; // A VIRER
 		std::string	_nick;

@@ -6,7 +6,7 @@
 /*   By: mcouppe <marvin@42.fr>                     +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2023/07/03 10:43:51 by mcouppe           #+#    #+#             */
-/*   Updated: 2023/07/04 12:03:04 by mcouppe          ###   ########.fr       */
+/*   Updated: 2023/07/04 15:13:26 by mcouppe          ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -17,7 +17,7 @@
 
 // numerics replies
 std::string	err_nosuchnick(const std::string &nick);
-std::string	err_nosuchchannel(const std::string &sender, const std::string channel);
+std::string	err_nosuchchannel(const std::string &sender, const std::string &channel);
 std::string	err_cannotsendtochan(std::string &sender, std::string channel);
 std::string	err_toomanychannels(std::string &sender, std::string channel);
 std::string err_unknowncommand(std::string sender, std::string command);

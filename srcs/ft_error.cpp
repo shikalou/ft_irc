@@ -6,7 +6,7 @@
 /*   By: mcouppe <marvin@42.fr>                     +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2023/06/21 12:15:45 by mcouppe           #+#    #+#             */
-/*   Updated: 2023/07/04 12:01:58 by mcouppe          ###   ########.fr       */
+/*   Updated: 2023/07/04 15:51:30 by mcouppe          ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -17,7 +17,7 @@ std::string	err_nosuchnick(const std::string &nick){
 	return ("401 Irssi " + nick + " :No such nick/channel\r\n");
 }
 
-std::string	err_nosuchchannel(std::string &sender, std::string channel){
+std::string	err_nosuchchannel(const std::string &sender, const std::string &channel){
 	return ("403 " + sender + " " + channel + " :No such channel\r\n");
 }
 
@@ -102,7 +102,7 @@ std::string	rpl_notopic(const std::string &nick, const std::string &channel){
 }
 
 std::string	rpl_topic(const std::string &nick, const std::string &channel, const std::string &topic){
-	return ("332 " + nick + " " + channel + " :" + topic + "\r\n");
+	return ("332 " + nick + " " + channel + " " + topic + "\r\n");
 }
 // basic error
 int	ft_error(std::string msg){
