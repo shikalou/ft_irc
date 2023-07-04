@@ -6,7 +6,7 @@
 /*   By: ldinaut <ldinaut@student.42.fr>            +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2023/06/19 14:09:45 by ldinaut           #+#    #+#             */
-/*   Updated: 2023/07/04 13:01:35 by mcouppe          ###   ########.fr       */
+/*   Updated: 2023/07/04 14:30:28 by mcouppe          ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -36,6 +36,7 @@ Commands	Commands::operator=(const Commands *egal)
 }
 
 Commands::Commands(std::string cmd_str, int fd_co):  fd_users(), reponse(), _str_rcv(cmd_str), _fd_co(fd_co) {
+	this->check_pass = 0;
 	std::cout << "[COMMAND CONSTRUCTOR]"  << std::endl;
 	return ;
 }
@@ -88,25 +89,14 @@ std::vector<std::string>	Commands::user_cmd(Client *client)
 	{
 		reponse.push_back(err_needmoreparams("[empty]"));
 		return (reponse);
-		//NEED_MORE_PARAMS
 	}
 	client->SetUser(_cmd_args[0]);
 	server.network = _cmd_args[2];
-	if (server.password != client->getPass())
-	{
-		std::cout << "\n\n\n[DEBUG]\npureeee " << server.password << " et client pass = " << client->getPass() << "\n\n" << std::endl;
-		std::string err_tmp = err_passwdmismatch(client->getNick());
-		send(this->_fd_co, err_tmp.c_str(), err_tmp.length(), 0);
-	}
-	else {
-		std::string rpl_wel = rpl_welcome(client->getNick(), client->getUser(), server.network);
-		std::string	rpl_yoh = rpl_yourhost(client->getNick(), server.network);
-		std::string ret = rpl_wel + rpl_yoh;
-		client->_register = 1;
-		reponse.push_back(ret);
-		return (reponse);
-	}
-	reponse.push_back(err_notregistered(client->getNick()));
+	std::string rpl_wel = rpl_welcome(client->getNick(), client->getUser(), server.network);
+	std::string	rpl_yoh = rpl_yourhost(client->getNick(), server.network);
+	std::string ret = rpl_wel + rpl_yoh;
+	client->_register = 1;
+	reponse.push_back(ret);
 	return (reponse);
 }
 /*
@@ -126,12 +116,21 @@ std::vector<std::string>	Commands::nick_cmd(Client *client)
 	return (reponse);
 }
 
-std::string	Commands::pass_cmd(Client *client){
-	if (client->_register == 1)
-		return (err_alreadyregistered(client->getNick()));
-	else
+std::vector<std::string>	Commands::pass_cmd(Client *client){
+	if (client->_register == 1){
+		reponse.push_back(err_alreadyregistered(client->getNick()));
+		return (reponse);
+	}
+	else{
 		client->SetPass(_cmd_args[0]);
-	return "";
+		if (server.password != client->getPass()){
+			reponse.push_back(err_passwdmismatch(client->getNick()));
+			this->check_pass = 1;
+			return (reponse);
+		}
+		reponse.push_back("");
+		return (reponse);
+	}
 }
 
 std::vector<std::string>	Commands::launcher(std::map<int, Client *> client_list)
@@ -163,8 +162,7 @@ std::vector<std::string>	Commands::launcher(std::map<int, Client *> client_list)
 		return (reponse);
 	if (_cmd == "PASS")
 	{
-		reponse.push_back(this->pass_cmd(client_list[_fd_co]));
-		return (reponse);
+		return (this->pass_cmd(client_list[_fd_co]));
 	}
 //	if (_cmd == "TOPIC")
 //		return (this->topic_cmd(client_list[_fd_co]));
@@ -208,6 +206,9 @@ void	Commands::cmd_manager(std::map<int, Client *> client_list)
 		reponse = launcher(client_list);
 		sender(reponse, "");
 		reponse.clear();
+		if (this->check_pass == 1)
+			return ;
+
 	}
 }
 

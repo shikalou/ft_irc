@@ -6,7 +6,7 @@
 /*   By: ldinaut <ldinaut@student.42.fr>            +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2023/05/29 13:25:21 by ldinaut           #+#    #+#             */
-/*   Updated: 2023/07/03 16:27:46 by ldinaut          ###   ########.fr       */
+/*   Updated: 2023/07/04 14:13:34 by mcouppe          ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -28,6 +28,7 @@
 #include <utility>
 #include "Channel.hpp"
 #include "ft_error.hpp"
+#include "Colors.hpp"
 
 #define NICK_TOOBIG "abcdefghijk"
 
