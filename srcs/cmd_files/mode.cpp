@@ -6,7 +6,7 @@
 /*   By: ldinaut <ldinaut@student.42.fr>            +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2023/07/04 13:05:18 by ldinaut           #+#    #+#             */
-/*   Updated: 2023/07/05 19:36:11 by ldinaut          ###   ########.fr       */
+/*   Updated: 2023/07/06 00:29:22 by mcouppe          ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -65,9 +65,8 @@ void	Commands::mode_o(int mode, Channel *chan, Client *client)
 			if (it != chan->_operators.end())
 				chan->_operators.erase(it);
 			std::string res = ":ircserv MODE " + chan->getTitle() + " -o\r\n";
-			std::string ret = "481 : You are not an IRC operator\r\n";
 			reponse.push_back(res);
-			reponse.push_back(ret);
+			reponse.push_back(err_chanoprivsneeded(client->getNick(), chan->getTitle()));
 		}
 		if (_cmd_args.size() == 3)
 		{
@@ -85,9 +84,7 @@ void	Commands::mode_o(int mode, Channel *chan, Client *client)
 			}
 			if (ite == chan->_operators.end())
 			{
-				std::string res = "481 " + client->getNick() + " :Permission denied- You're not channel operator\r\n";
-				reponse.push_back(res);
-				std::cout << "ERR_NOPRIV A FAIRE\n";
+				reponse.push_back(err_chanoprivsneeded(client->getNick(), chan->getTitle()));
 				return ;
 			}
 			for (ite = chan->_clients.begin(); ite != chan->_clients.end(); ++ite)
@@ -104,9 +101,8 @@ void	Commands::mode_o(int mode, Channel *chan, Client *client)
 			if (it != chan->_operators.end())
 				chan->_operators.erase(it);
 			std::string res = ":ircserv MODE " + chan->getTitle() + " -o\r\n";
-			std::string ret = "481 : You are not an IRC operator\r\n";
 			reponse.push_back(res);
-			reponse.push_back(ret);
+			reponse.push_back(err_chanoprivsneeded(client->getNick(), chan->getTitle()));
 		}
 	}
 	else if (mode == 1)
@@ -122,10 +118,8 @@ void	Commands::mode_o(int mode, Channel *chan, Client *client)
 			if (it == chan->_operators.end())
 				chan->_operators.push_back(client);
 			std::string res = ":ircserv MODE " + chan->getTitle() + " +o\r\n";
-			std::string ret = "381 : You are now an IRC operator\r\n";
-			std::cout << "COMMAND A FAIRE RPL_YOUREOPER\n";
 			reponse.push_back(res);
-			reponse.push_back(ret);
+			reponse.push_back(rpl_youreoper(client->getNick()));
 		}
 		if (_cmd_args.size() == 3)
 		{
@@ -143,9 +137,7 @@ void	Commands::mode_o(int mode, Channel *chan, Client *client)
 			}
 			if (ite == chan->_operators.end())
 			{
-				std::string res = "481 " + client->getNick() + " :Permission denied- You're not channel operator\r\n";
-				reponse.push_back(res);
-				std::cout << "ERR_NOPRIV A FAIRE\n";
+				reponse.push_back(err_chanoprivsneeded(client->getNick(), chan->getTitle()));
 				return ;
 			}
 			for (ite = chan->_clients.begin(); ite != chan->_clients.end(); ++ite)
@@ -162,10 +154,8 @@ void	Commands::mode_o(int mode, Channel *chan, Client *client)
 				chan->_operators.push_back((*ite));
 			_fd_co = (*ite)->_sock;
 			std::string res = ":ircserv MODE " + chan->getTitle() + " +o\r\n";
-			std::string ret = "381 : You are now an IRC operator\r\n";
-			std::cout << "COMMAND A FAIRE RPL_YOUREOPER\n";
 			reponse.push_back(res);
-			reponse.push_back(ret);
+			reponse.push_back(rpl_youreoper(client->getNick()));
 		}
 	}
 }
