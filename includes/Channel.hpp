@@ -6,7 +6,7 @@
 /*   By: ldinaut <ldinaut@student.42.fr>            +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2023/06/23 15:11:22 by ldinaut           #+#    #+#             */
-/*   Updated: 2023/07/05 14:24:37 by ldinaut          ###   ########.fr       */
+/*   Updated: 2023/07/05 14:45:46 by mcouppe          ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -26,7 +26,9 @@ class Channel
 
 		std::string getTitle() const {return (_title);};
 		std::string getTopic() const {return (_topic);};
+		bool		getTopicBool(void) const;
 		void		setTopic(std::string topic);
+		void		setTopicBool(bool setter);
 
 		bool getInviteOnly() const {return (_invit_only);};
 		int	isOperator(Client *client);
