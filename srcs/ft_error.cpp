@@ -3,10 +3,10 @@
 /*                                                        :::      ::::::::   */
 /*   ft_error.cpp                                       :+:      :+:    :+:   */
 /*                                                    +:+ +:+         +:+     */
-/*   By: ldinaut <ldinaut@student.42.fr>            +#+  +:+       +#+        */
+/*   By: mcouppe <mcouppe@student.42.fr>            +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2023/06/21 12:15:45 by mcouppe           #+#    #+#             */
-/*   Updated: 2023/07/05 16:13:24 by ldinaut          ###   ########.fr       */
+/*   Updated: 2023/07/05 18:08:56 by mcouppe          ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -18,6 +18,12 @@ std::string	err_nosuchnick(const std::string &nick){
 }
 
 std::string	err_nosuchchannel(const std::string &sender, const std::string &channel){
+	if (channel[0] != '#')
+	{
+		std::string	tmp = "#";
+		tmp.append(channel);
+		return ("403 " + sender + " " + tmp + " :No such channel\r\n");
+	}
 	return ("403 " + sender + " " + channel + " :No such channel\r\n");
 }
 

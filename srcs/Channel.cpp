@@ -6,7 +6,7 @@
 /*   By: ldinaut <ldinaut@student.42.fr>            +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2023/06/23 15:11:42 by ldinaut           #+#    #+#             */
-/*   Updated: 2023/07/05 19:45:56 by ldinaut          ###   ########.fr       */
+/*   Updated: 2023/07/05 20:07:16 by ldinaut          ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -16,7 +16,7 @@ Channel::Channel(std::string title) : _title(title), _invit_only(false)
 {
 	max_client = -1;
 	// _title.erase(_title.size() - 2, _title.size());
-
+	this->_topic_set = 0;
 }
 
 Channel::Channel(Channel *cpy)
@@ -43,6 +43,15 @@ Channel	Channel::operator=(const Channel *egal)
 
 void	Channel::setTopic(std::string topic){
 	this->_topic = topic;
+	this->setTopicBool(1);
+}
+
+void	Channel::setTopicBool(bool setter){
+	this->_topic_set = setter;
+}
+
+bool	Channel::getTopicBool(void) const {
+	return (this->_topic_set);
 }
 
 Channel::~Channel()
