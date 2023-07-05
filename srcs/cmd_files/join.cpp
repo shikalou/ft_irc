@@ -6,7 +6,7 @@
 /*   By: ldinaut <ldinaut@student.42.fr>            +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2023/07/04 12:30:12 by mcouppe           #+#    #+#             */
-/*   Updated: 2023/07/05 14:26:22 by ldinaut          ###   ########.fr       */
+/*   Updated: 2023/07/05 17:11:56 by ldinaut          ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -24,7 +24,6 @@ void	aff_vector(std::vector<Channel *> toto)
 std::vector<std::string>	Commands::join_chan(Client *client)
 {
 	int f = 0;
-	//_cmd_args[0].erase(_cmd_args[0].size() - 2, _cmd_args[0].size());
 	if (_cmd_args.size() <= 0)
 	{
 		reponse.push_back(err_needmoreparams(_cmd));
@@ -58,13 +57,27 @@ std::vector<std::string>	Commands::join_chan(Client *client)
 	}
 	else
 	{
-			std::cout << "3333333333333\n";
+		std::cout << "3333333333333\n";
 		for (size_t i = 0; i < (*it)->_clients.size(); ++i)
 		{
 			if (client->_sock == (*it)->_clients[i]->_sock)
+				return (reponse);
+		}
+		if ((*it)->getInviteOnly() == true)
+		{
+			std::vector<Client *>::iterator ita = (*it)->_invites.begin();
+			for (;ita != (*it)->_invites.end(); ++ita)
 			{
+				if (client->getNick() == (*ita)->getNick())
+					break;
+			}
+			if (ita == (*it)->_invites.end())
+			{
+				//reponse.push_back(err_inviteonlychan());
+				std::cout << "COMMANDE A FAIRE\nERR_INVITEONLYCHAN\n";
 				return (reponse);
 			}
+			
 		}
 		(*it)->_clients.push_back(client);
 		// std::vector<Client *>::iterator t = (*it)->_clients.begin();

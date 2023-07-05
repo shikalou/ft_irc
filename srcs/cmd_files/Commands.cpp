@@ -3,10 +3,10 @@
 /*                                                        :::      ::::::::   */
 /*   Commands.cpp                                       :+:      :+:    :+:   */
 /*                                                    +:+ +:+         +:+     */
-/*   By: ldinaut <ldinaut@student.42.fr>            +#+  +:+       +#+        */
+/*   By: mcouppe <mcouppe@student.42.fr>            +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2023/06/19 14:09:45 by ldinaut           #+#    #+#             */
-/*   Updated: 2023/07/05 18:00:52 by mcouppe          ###   ########.fr       */
+/*   Updated: 2023/07/05 18:10:27 by mcouppe          ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -201,9 +201,11 @@ std::vector<std::string>	Commands::launcher(std::map<int, Client *> client_list)
 	if (_cmd == "CAP")
 		return (reponse);
 	if (_cmd == "MODE")
-		return (reponse);
+		return (this->mode(client_list[_fd_co]));
 	if (_cmd == "PASS")
 		return (this->pass_cmd(client_list[_fd_co]));
+	if (_cmd == "INVITE")
+		return (this->invite_cmd(client_list[_fd_co]));
 // debug en cours
 	if (_cmd == "TOPIC")
 		return (this->topic_cmd(client_list[_fd_co]));

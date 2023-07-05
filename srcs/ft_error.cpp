@@ -3,10 +3,10 @@
 /*                                                        :::      ::::::::   */
 /*   ft_error.cpp                                       :+:      :+:    :+:   */
 /*                                                    +:+ +:+         +:+     */
-/*   By: mcouppe <marvin@42.fr>                     +#+  +:+       +#+        */
+/*   By: mcouppe <mcouppe@student.42.fr>            +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2023/06/21 12:15:45 by mcouppe           #+#    #+#             */
-/*   Updated: 2023/07/05 15:05:51 by mcouppe          ###   ########.fr       */
+/*   Updated: 2023/07/05 18:08:56 by mcouppe          ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -55,7 +55,7 @@ std::string	err_usernotinchannel(std::string &sender, std::string &nick, std::st
 	return ("441 " + sender + " " + nick + " " + channel + " :They aren't on that channel\r\n");
 }
 
-std::string	err_notonchannel(std::string &sender, std::string &channel){
+std::string	err_notonchannel(const std::string &sender, std::string &channel){
 	return ("443 " + sender + " " + channel + " :You're not on that channel\r\n");
 }
 
