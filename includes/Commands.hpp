@@ -6,7 +6,7 @@
 /*   By: ldinaut <ldinaut@student.42.fr>            +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2023/06/19 14:10:05 by ldinaut           #+#    #+#             */
-/*   Updated: 2023/07/03 19:53:47 by ldinaut          ###   ########.fr       */
+/*   Updated: 2023/07/04 13:10:46 by ldinaut          ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -39,7 +39,7 @@ class Commands
 		std::vector<std::string>	join_chan(Client *client);
 //		void	kick(void);
 //		void	invite(void);
-//		void	mode(void);
+		std::vector<std::string>	mode(Client *client);
 		std::vector<std::string>	privmsg(Client *client);
 	//	void	part(void);
 		std::vector<std::string>	quit(void);

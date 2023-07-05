@@ -3,10 +3,10 @@
 /*                                                        :::      ::::::::   */
 /*   join.cpp                                           :+:      :+:    :+:   */
 /*                                                    +:+ +:+         +:+     */
-/*   By: mcouppe <marvin@42.fr>                     +#+  +:+       +#+        */
+/*   By: ldinaut <ldinaut@student.42.fr>            +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2023/07/04 12:30:12 by mcouppe           #+#    #+#             */
-/*   Updated: 2023/07/04 12:38:22 by mcouppe          ###   ########.fr       */
+/*   Updated: 2023/07/04 13:06:33 by ldinaut          ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -20,7 +20,6 @@ void	aff_vector(std::vector<Channel *> toto)
 	for(; it != toto.end(); ++it)
 		std::cout << "channel = " << (*it)->getTitle() << "\n";
 }
-
 
 std::vector<std::string>	Commands::join_chan(Client *client)
 {
@@ -129,5 +128,3 @@ std::vector<std::string>	Commands::join_chan(Client *client)
 	reponse.push_back(res);
 	return (reponse);
 }
-
-
