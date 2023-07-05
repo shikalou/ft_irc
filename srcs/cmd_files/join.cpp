@@ -6,7 +6,7 @@
 /*   By: ldinaut <ldinaut@student.42.fr>            +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2023/07/04 12:30:12 by mcouppe           #+#    #+#             */
-/*   Updated: 2023/07/04 13:06:33 by ldinaut          ###   ########.fr       */
+/*   Updated: 2023/07/05 14:26:22 by ldinaut          ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -101,10 +101,18 @@ std::vector<std::string>	Commands::join_chan(Client *client)
 	}
 	//std::string ret = client->getNick() + " has joined the llllllchannel " + strdup(_cmd_args[0].c_str() + 1) + "\r\n";
 	std::string ret = ":" + client->getNick() + "!" + client->getNick() + "@localhost JOIN :" + (*itrecup)->getTitle() + "\r\n";
-	//ret += rpl_notopic(client->getNick(), (*itrecup)->getTopic());
 	// std::string ret = "JOIN " + (*itrecup)->getTitle() + "\r\n";
 	// ret += "331 " + client->getNick() + (*itrecup)->getTopic() + "\r\n";
 	std::string recup = "";
+// check if topic is set for rpl
+/*	if (((*itrecup)->getTopic()).length() > 1){
+		std::cout << ORANGE << "[DEBUG]\nin join = there is already a topic" << RESET << std::endl;
+		reponse.push_back(rpl_topic(client->getNick(), (*itrecup)->getTitle(), (*itrecup)->getTopic()));
+	}
+	else{
+		std::cout << GREEN << "no topic" << RESET << std::endl;
+	}
+*/
 //	 ret += "users =";//+ client->getNick() + (*it)->getTopic() + "\n";
 	for(std::vector<Client *>::iterator itdeb = test.begin(); itdeb != test.end(); ++itdeb)
 	 	recup += (*itdeb)->getNick() + " ";
@@ -117,7 +125,7 @@ std::vector<std::string>	Commands::join_chan(Client *client)
 	// ret += ":@" + client->getNick() + "\r\n";
 	// ret += "366 " + client->getNick() + " " + (*itrecup)->getTitle() + " :End of /NAMES list\r\n";
 	// ret += client->getNick() + " has join the channel\n\r";
-	 std::string res = recup + "has joined the chnnel " + _cmd_args[0] + "\r\n";
+	 std::string res = recup + "has joined the channel " + _cmd_args[0] + "\r\n";
 	//_cmd_args[1] = recup;
 	//send(client->_sock, res.c_str(), res.length(), 0);
 	

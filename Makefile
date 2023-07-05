@@ -6,7 +6,7 @@
 #    By: ldinaut <ldinaut@student.42.fr>            +#+  +:+       +#+         #
 #                                                 +#+#+#+#+#+   +#+            #
 #    Created: 2023/06/23 11:58:02 by ldinaut           #+#    #+#              #
-#    Updated: 2023/07/04 13:07:25 by ldinaut          ###   ########.fr        #
+#    Updated: 2023/07/05 14:24:42 by ldinaut          ###   ########.fr        #
 #                                                                              #
 # **************************************************************************** #
 
@@ -17,7 +17,7 @@ SRCS_FILES	=	main.cpp Client.cpp Server.cpp cmd_files/Commands.cpp cmd_files/joi
 
 SRCS	=	$(addprefix srcs/, $(SRCS_FILES))
 
-INC_FILES	=	 Client.hpp Server.hpp Commands.hpp Channel.hpp
+INC_FILES	=	 Client.hpp Server.hpp Commands.hpp Channel.hpp Colors.hpp
 
 #SRCS	=	$(addprefix ./, $(SRCS_FILES))
 

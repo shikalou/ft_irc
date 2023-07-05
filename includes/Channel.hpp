@@ -6,7 +6,7 @@
 /*   By: ldinaut <ldinaut@student.42.fr>            +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2023/06/23 15:11:22 by ldinaut           #+#    #+#             */
-/*   Updated: 2023/07/05 14:20:31 by ldinaut          ###   ########.fr       */
+/*   Updated: 2023/07/05 14:24:37 by ldinaut          ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -23,8 +23,11 @@ class Channel
 		~Channel();
 
 		std::vector<Client *> getClients() const {return (_clients);};
+
 		std::string getTitle() const {return (_title);};
 		std::string getTopic() const {return (_topic);};
+		void		setTopic(std::string topic);
+
 		bool getInviteOnly() const {return (_invit_only);};
 		int	isOperator(Client *client);
 

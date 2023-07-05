@@ -6,7 +6,7 @@
 /*   By: ldinaut <ldinaut@student.42.fr>            +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2023/06/19 14:10:05 by ldinaut           #+#    #+#             */
-/*   Updated: 2023/07/04 13:10:46 by ldinaut          ###   ########.fr       */
+/*   Updated: 2023/07/05 14:26:05 by ldinaut          ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -18,6 +18,7 @@
 #include <sys/socket.h>
 #include <string>
 #include "ft_error.hpp"
+#include "Colors.hpp"
 
 
 class Commands
@@ -29,10 +30,9 @@ class Commands
 		Commands(Commands *cpy);
 		Commands operator=(const Commands *egal);
 
-		void	cmd_manager(std::map<int, Client *> clients);
+		void						cmd_manager(std::map<int, Client *> clients);
 		std::vector<std::string>	launcher(std::map<int, Client *> client_list);
-	//	int		parser(void);
-		void	sender(std::vector<std::string> cmd, std::string args);
+		void						sender(std::vector<std::string> cmd, std::string args);
 
 // CMDS FUNCTIONS
 		std::vector<std::string>	pong(void);
@@ -46,25 +46,17 @@ class Commands
 	//	void	squit(void);// quit only server
 		std::vector<std::string>	nick_cmd(Client *client);
 		std::vector<std::string>	user_cmd(Client *client);
-		std::string	pass_cmd(Client *client);
-
-
+		std::vector<std::string>	pass_cmd(Client *client);
+		std::vector<std::string>	topic_cmd(Client *client);
 		std::vector<int>			fd_users;
-	//	void	pass_cmd();
+
 	private :
-/*
-	explications :
-		_str_rcv est la string brute envoyée par irssi
-		_cmd est la commande identifiee (ex: "JOIN") 
-		_cmd_args est ce qui suit apres "JOIN " par exemple
-*/
-		std::vector<std::string> reponse;
-		std::string	_str_rcv;
-		std::string	_cmd;
+		std::vector<std::string>	reponse;
+		std::string					_str_rcv;
+		std::string					_cmd;
 		std::vector<std::string>	_cmd_args;
-		int			_fd_co;
-	//	std::string _cmd_send;
-	//	std::string	_cmd_send_args;
+		int							_fd_co;
+		int							check_pass;
 };
 std::vector<std::string> split(std::string str, std::string delim);
 
