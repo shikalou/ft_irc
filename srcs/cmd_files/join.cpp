@@ -6,7 +6,7 @@
 /*   By: ldinaut <ldinaut@student.42.fr>            +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2023/07/04 12:30:12 by mcouppe           #+#    #+#             */
-/*   Updated: 2023/07/05 17:11:56 by ldinaut          ###   ########.fr       */
+/*   Updated: 2023/07/05 20:02:39 by ldinaut          ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -43,16 +43,29 @@ std::vector<std::string>	Commands::join_chan(Client *client)
 		{
 			std::cout << "11111111111\n";
 			f = 1;
-			server._channels.push_back(new Channel(_cmd_args[0]));
-			client->_chans.push_back(new Channel(_cmd_args[0]));
+			Channel *chan = new Channel(_cmd_args[0]);
+			if (_cmd_args.size() > 1)
+			{
+				chan->setPassSet(true);
+				chan->setPass(_cmd_args[1]);
+			}
+			server._channels.push_back(chan);
+			client->_chans.push_back(new Channel(chan));
 			server._channels.back()->getClients().push_back(client);
+
 		}
 	}
 	if (it == ite && f == 0)
 	{
-			std::cout << "222222222222222\n";
-		server._channels.push_back(new Channel(_cmd_args[0]));
-		client->_chans.push_back(new Channel(_cmd_args[0]));
+		std::cout << "222222222222222\n";
+		Channel *chan = new Channel(_cmd_args[0]);
+		if (_cmd_args.size() > 1)
+		{
+			chan->setPassSet(true);
+			chan->setPass(_cmd_args[1]);
+		}
+		server._channels.push_back(chan);
+		client->_chans.push_back(new Channel(chan));
 		server._channels.back()->_clients.push_back(client);
 	}
 	else
@@ -78,6 +91,25 @@ std::vector<std::string>	Commands::join_chan(Client *client)
 				return (reponse);
 			}
 			
+		}
+		if ((*it)->getPassSet() == true)
+		{
+			std::cout << "laaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaa\n\n\n";
+			if (_cmd_args[1] != (*it)->getPass())
+			{
+				std::string ret = "475 " + client->getNick() + " " + _cmd_args[0] + " :Cannot join channel (+k)\r\n";
+				reponse.push_back(ret);
+				return (reponse);
+			}
+		}
+		if ((*it)->getLimitClient() == true)
+		{
+			if ((*it)->_clients.size() >= (size_t)(*it)->getMaxClient())
+			{
+				std::string ret = "471 " + client->getNick() + " " + _cmd_args[0] + " :Cannot join channel (+l)\r\n";
+				reponse.push_back(ret);
+				return (reponse);
+			}
 		}
 		(*it)->_clients.push_back(client);
 		// std::vector<Client *>::iterator t = (*it)->_clients.begin();

@@ -6,7 +6,7 @@
 /*   By: ldinaut <ldinaut@student.42.fr>            +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2023/06/19 14:10:05 by ldinaut           #+#    #+#             */
-/*   Updated: 2023/07/05 16:04:50 by ldinaut          ###   ########.fr       */
+/*   Updated: 2023/07/05 17:39:18 by ldinaut          ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -42,7 +42,7 @@ class Commands
 		std::vector<std::string>	mode(Client *client);
 		void	mode_i(int mode, Channel *chan);
 		void	mode_t(int mode, Channel *chan);
-		void	mode_o(int mode, Channel *chan);
+		void	mode_o(int mode, Channel *chan, Client *client);
 		void	mode_k(int mode, Channel *chan);
 		void	mode_l(int mode, Channel *chan);
 
