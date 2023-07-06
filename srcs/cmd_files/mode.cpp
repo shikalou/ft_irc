@@ -6,7 +6,7 @@
 /*   By: ldinaut <ldinaut@student.42.fr>            +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2023/07/04 13:05:18 by ldinaut           #+#    #+#             */
-/*   Updated: 2023/07/06 13:32:06 by ldinaut          ###   ########.fr       */
+/*   Updated: 2023/07/06 17:18:11 by ldinaut          ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -254,13 +254,13 @@ std::vector<std::string>	Commands::mode(Client *client)
 	{
 		if (_cmd_args[1][1] == 'i')
 			mode_i(1, chan);
-		if (_cmd_args[1][1] == 't')
+		else if (_cmd_args[1][1] == 't')
 			mode_t(1, chan);
-		if (_cmd_args[1][1] == 'l')
+		else if (_cmd_args[1][1] == 'l')
 			mode_l(1, chan);
-		if (_cmd_args[1][1] == 'o')
+		else if (_cmd_args[1][1] == 'o')
 			mode_o(1, chan, client);
-		if (_cmd_args[1][1] == 'k')
+		else if (_cmd_args[1][1] == 'k')
 			mode_k(1, chan);
 		else
 			reponse.push_back(err_unknownmode(_cmd_args[0], _cmd_args[1]));
@@ -269,13 +269,13 @@ std::vector<std::string>	Commands::mode(Client *client)
 	{
 		if (_cmd_args[1][1] == 'i')
 			mode_i(0, chan);
-		if (_cmd_args[1][1] == 't')
+		else if (_cmd_args[1][1] == 't')
 			mode_t(0, chan);
-		if (_cmd_args[1][1] == 'k')
+		else if (_cmd_args[1][1] == 'k')
 			mode_k(0, chan);
-		if (_cmd_args[1][1] == 'l')
+		else if (_cmd_args[1][1] == 'l')
 			mode_l(0, chan);
-		if (_cmd_args[1][1] == 'o')
+		else if (_cmd_args[1][1] == 'o')
 			mode_o(0, chan, client);
 		else
 			reponse.push_back(err_unknownmode(_cmd_args[0], _cmd_args[1]));

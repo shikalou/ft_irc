@@ -6,7 +6,7 @@
 /*   By: ldinaut <ldinaut@student.42.fr>            +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2023/06/09 14:30:46 by ldinaut           #+#    #+#             */
-/*   Updated: 2023/07/06 13:10:56 by ldinaut          ###   ########.fr       */
+/*   Updated: 2023/07/06 18:08:19 by ldinaut          ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -120,8 +120,17 @@ int	Server::run_serv()
 					Commands *cmd = new Commands(_clients[ev[k].data.fd]->_recv, ev[k].data.fd);
 					_clients[ev[k].data.fd]->_cmd = cmd;
 					_clients[ev[k].data.fd]->_cmd->cmd_manager(_clients);
-					if (read(ev[k].data.fd, &buffer[0], 0) != -1)
-						_clients[ev[k].data.fd]->_recv.erase();
+					delete _clients[ev[k].data.fd]->_cmd;
+				//	if (read(ev[k].data.fd, &buffer[0], 0) != -1)
+					try
+					{
+						_clients.at(ev[k].data.fd)->_recv.erase();
+					}
+					catch(const std::exception& e)
+					{
+						std::cerr << e.what() << '\n';
+					}
+					
 				}
 			}
 		}
