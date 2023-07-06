@@ -6,7 +6,7 @@
 /*   By: ldinaut <ldinaut@student.42.fr>            +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2023/05/29 13:25:21 by ldinaut           #+#    #+#             */
-/*   Updated: 2023/07/04 14:13:34 by mcouppe          ###   ########.fr       */
+/*   Updated: 2023/07/06 20:22:53 by ldinaut          ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -29,6 +29,7 @@
 #include "Channel.hpp"
 #include "ft_error.hpp"
 #include "Colors.hpp"
+#include <signal.h>
 
 #define NICK_TOOBIG "abcdefghijk"
 
@@ -49,11 +50,14 @@ class Server
 		int			port;
 		int			epoll_fd;
 		int			fd_co;
+		int			_end;
 		std::string	network;
+		std::vector<epoll_event> ev;
 
 		std::map<int, Client*>	_clients;
 		std::vector<Channel *> _channels;
 
+		void	kill_cmd(std::map<int, Client *> client_list);
 		void	accept_newclient(sockaddr_in sockaddr);
 		void	add_epoll(int new_fd, int i);
 		int		init_serv();

@@ -6,7 +6,7 @@
 /*   By: ldinaut <ldinaut@student.42.fr>            +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2023/06/19 14:10:05 by ldinaut           #+#    #+#             */
-/*   Updated: 2023/07/06 18:27:16 by ldinaut          ###   ########.fr       */
+/*   Updated: 2023/07/06 21:09:52 by ldinaut          ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -55,7 +55,6 @@ class Commands
 		std::vector<std::string>	user_cmd(Client *client);
 		std::vector<std::string>	pass_cmd(Client *client);
 		std::vector<std::string>	kick_cmd(Client *client);
-		std::vector<std::string>	kill_cmd(Client *client);
 		std::vector<std::string>	topic_cmd(Client *client);
 		std::string					setting_topic(std::vector<Channel *>::iterator it, Client *client);
 		std::string					topic_from_client(Client *client, std::string chan_input);
@@ -65,6 +64,7 @@ class Commands
 
 		std::vector<int>			fd_users;
 		bool						isQuit;
+		std::vector<std::string>	reponse;
 
 		// VERIF FUNCTIONS
 		Client	*isOperator(std::vector<Client *> operators, std::string client);
@@ -75,7 +75,6 @@ class Commands
 
 
 	private :
-		std::vector<std::string>	reponse;
 		std::string					_str_rcv;
 		std::string					_cmd;
 		std::vector<std::string>	_cmd_args;

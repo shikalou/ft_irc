@@ -6,7 +6,7 @@
 /*   By: ldinaut <ldinaut@student.42.fr>            +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2023/06/09 14:30:46 by ldinaut           #+#    #+#             */
-/*   Updated: 2023/07/06 18:08:19 by ldinaut          ###   ########.fr       */
+/*   Updated: 2023/07/06 21:04:45 by ldinaut          ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -17,8 +17,9 @@ Server::Server()
 {
 }
 
-Server::Server(int port, std::string pass):password(pass), port(port)
+Server::Server(int port, std::string pass):password(pass), port(port), ev(5)
 {
+	_end = 1;
 }
 
 Server::~Server()
@@ -57,7 +58,8 @@ void	Server::accept_newclient(sockaddr_in sockaddr)
 	int fd_accept = accept(this->sock, (struct sockaddr*)&sockaddr, (socklen_t*)&addrlen);
 	fcntl(fd_accept, F_GETFL, O_NONBLOCK);
 	add_epoll(fd_accept, 2);
-	_clients.insert(std::make_pair(fd_accept, new Client(fd_accept)));
+	Client *test = new Client(fd_accept);
+	_clients.insert(std::make_pair(fd_accept, test));
 }
 
 int	Server::init_serv()
@@ -87,12 +89,19 @@ int	Server::init_serv()
 	return (0);
 }
 
+void	sig_handler(int sig)
+{
+	if (sig == 2)
+		server.kill_cmd(server._clients);
+}
+
 int	Server::run_serv()
 {
-	std::vector<epoll_event> ev(5);
 	
-	while (1)
+	while (_end)
 	{	
+		signal(SIGQUIT, SIG_IGN);
+		signal(SIGINT, sig_handler);
 		int event = epoll_wait(this->epoll_fd, ev.data(), 5, 1000);
 		if (event < 0)
 			return (ft_error(std::string(strerror(errno))));
@@ -120,7 +129,8 @@ int	Server::run_serv()
 					Commands *cmd = new Commands(_clients[ev[k].data.fd]->_recv, ev[k].data.fd);
 					_clients[ev[k].data.fd]->_cmd = cmd;
 					_clients[ev[k].data.fd]->_cmd->cmd_manager(_clients);
-					delete _clients[ev[k].data.fd]->_cmd;
+					if (cmd_str.find("QUIT"))
+						delete _clients[ev[k].data.fd]->_cmd;
 				//	if (read(ev[k].data.fd, &buffer[0], 0) != -1)
 					try
 					{
@@ -135,4 +145,5 @@ int	Server::run_serv()
 			}
 		}
 	}
+	return (0);
 }

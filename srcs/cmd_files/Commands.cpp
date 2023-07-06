@@ -6,7 +6,7 @@
 /*   By: ldinaut <ldinaut@student.42.fr>            +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2023/06/19 14:09:45 by ldinaut           #+#    #+#             */
-/*   Updated: 2023/07/06 18:27:20 by ldinaut          ###   ########.fr       */
+/*   Updated: 2023/07/06 21:22:38 by ldinaut          ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -94,6 +94,10 @@ std::vector<std::string>	Commands::user_cmd(Client *client)
 	// 	reponse.push_back(err_alreadyregistered(client->getNick()));
 	// 	return (reponse);
 	// }
+	if (this->check_pass == 1)
+	{
+			return (reponse);
+	}
 	if (_cmd_args.size() <= 0)
 	{
 		reponse.push_back(err_needmoreparams("[empty]"));
@@ -150,7 +154,7 @@ std::vector<std::string>	Commands::pass_cmd(Client *client){
 			this->check_pass = 1;
 			return (reponse);
 		}
-		reponse.push_back("");
+		// reponse.push_back("");
 		return (reponse);
 	}
 }
@@ -183,8 +187,6 @@ std::vector<std::string>	Commands::launcher(std::map<int, Client *> client_list)
 		return (this->topic_cmd(client_list[_fd_co]));
 	if (_cmd == "KICK")
 		return (this->kick_cmd(client_list[_fd_co]));
-	if (_cmd == "KILL")
-		return (this->kill_cmd(client_list[_fd_co]));
 	std::cout << "cmd =" << _cmd << "$" << std::endl;
 //	std::cout << "Not pong nor quit nor privmsg :((( == " << this->_str_rcv << std::endl;
 
@@ -208,6 +210,13 @@ std::vector<std::string> split(std::string str, std::string delim)
 	return (ret);
 }
 
+void	aff_vector(std::vector<std::string> toto)
+{
+	std::vector<std::string>::iterator it = toto.begin();
+	for(; it != toto.end(); ++it)
+		std::cout << "channel = " << (*it) << "\n";
+}
+
 void	Commands::cmd_manager(std::map<int, Client *> client_list)
 {
 	std::vector<std::string> split_nl = split(_str_rcv, "\r\n");
@@ -221,19 +230,24 @@ void	Commands::cmd_manager(std::map<int, Client *> client_list)
 		{
 			std::cout << "split = " << *it << std::endl;
 		}
-		std::string ret;
 		reponse = launcher(client_list);
 		if (isQuit == true)
+		{
 			sender_all(client_list);
+		}
 		else
 			sender(reponse, "");
+		reponse.erase(reponse.begin(), reponse.end());
 		reponse.clear();
-		isQuit = false;
-		if (this->check_pass == 1)
-			return ;
+		if (isQuit == true)
+		{
+			delete client_list[_fd_co];
+			delete this;
+		}
 	}
 }
 
-Commands::~Commands(void){
+Commands::~Commands(void)
+{
 	return ;
 }

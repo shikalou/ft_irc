@@ -6,7 +6,7 @@
 /*   By: ldinaut <ldinaut@student.42.fr>            +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2023/06/19 16:07:39 by mcouppe           #+#    #+#             */
-/*   Updated: 2023/07/03 16:14:51 by ldinaut          ###   ########.fr       */
+/*   Updated: 2023/07/06 21:01:47 by ldinaut          ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -16,6 +16,7 @@ Client::Client(int sock_cli): _sock(sock_cli){
 	(void)this->_sock;
 	_register = 0;
 	_recv = "";
+	_cmd = NULL;
 	//_cmd = new Commands();
 //	std::cout << "[CLIENT CONSTRUCTOR]\nsock_cli = " << this->_sock << std::endl;
 	return;
@@ -23,6 +24,7 @@ Client::Client(int sock_cli): _sock(sock_cli){
 
 Client::~Client(void){
 //	std::cout << "[CLIENT DESTRUCTOR]" << std::endl;
+	// delete _cmd;
 	return ;
 }
 
