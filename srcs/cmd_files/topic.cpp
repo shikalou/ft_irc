@@ -6,25 +6,37 @@
 /*   By: mcouppe <marvin@42.fr>                     +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2023/07/05 16:17:14 by mcouppe           #+#    #+#             */
-/*   Updated: 2023/07/06 19:02:29 by mcouppe          ###   ########.fr       */
+/*   Updated: 2023/07/06 20:27:53 by mcouppe          ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
 # include "Commands.hpp"
 # include "Client.hpp"
 # include "ft_error.hpp"
+/*
+void	Commands::set_topic_for_all(std::vector<Channel *>::iterator it_chan, std::string topic){
+	std::string	chan_name = it_chan.getTitle();
+
+	std::vector<Client *>::iterator it_cli = (it_chan->getClients()).begin();
+	for (; it_cli != (it_chan->getClients()).end(); ++it_cli){
+		(*it_cli)->_chans
+	}
+
+}*/
 
 std::string	Commands::setting_topic(std::vector<Channel *>::iterator it, Client *client){
 	if (_cmd_args.size() >= 3 && _cmd_args[2].length() > 1){
-	//	std::cout << GREEN << "[DEBUG]\nsetting topic..." << RESET << std::endl;
+		std::cout << GREEN << "[DEBUG]\nsetting topic..." << RESET << std::endl;
+	//	set_topic_for_all(it, _cmd_args[2]);
 		(*it)->setTopic(_cmd_args[2]);
 		(*it)->setTopicBool(true);
 		return (rpl_topic(client->getNick(), (*it)->getTitle(), (*it)->getTopic()));
 	}
 	else {
-	//	std::cout << ORANGE << "[DEBUG]\nno topic provided" << RESET << std::endl;
+		std::cout << ORANGE << "[DEBUG]\nno topic provided" << RESET << std::endl;
 		if ((*it)->getTopicBool()){
-	//		std::cout << RED << "[DEBUG]\nerasing topic" << RESET << std::endl;
+			std::cout << RED << "[DEBUG]\nerasing topic" << RESET << std::endl;
+//			set_topic_for_all(it, " ");
 			(*it)->setTopic(" ");
 			(*it)->setTopicBool(false);
 			return (rpl_topic(client->getNick(), (*it)->getTitle(), (*it)->getTopic()));
@@ -43,7 +55,9 @@ std::string	Commands::topic_from_client(Client *client, std::string chan_input){
 					if (_cmd_args[0][0] == '#'){
 						std::string	tmp = _cmd_args[0];
 						tmp.erase(0, 1);
+						std::cout << GREEN << "\n[DEBUG]\ntmp =" << tmp << "$ et _cmd_args[1] =" << _cmd_args[1] << "$\n"<< RESET << std::endl;
 						if (tmp == _cmd_args[1]){
+							std::cout << RED << "\n\nSETTING TOPIC\n" << RESET << std::endl;
 							return (setting_topic(serv_it, client));
 						}
 						else{
@@ -54,6 +68,7 @@ std::string	Commands::topic_from_client(Client *client, std::string chan_input){
 									return (rpl_notopic(client->getNick(), (*serv_it)->getTitle()));
 							}
 							else {
+						//		set_topic_for_all(serv_it, _cmd_args[1]);
 								(*serv_it)->setTopic(_cmd_args[1]);
 								(*serv_it)->setTopicBool(true);
 								return (rpl_topic(client->getNick(), (*serv_it)->getTitle(), (*serv_it)->getTopic()));
