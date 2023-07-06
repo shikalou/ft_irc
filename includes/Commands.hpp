@@ -6,7 +6,7 @@
 /*   By: ldinaut <ldinaut@student.42.fr>            +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2023/06/19 14:10:05 by ldinaut           #+#    #+#             */
-/*   Updated: 2023/07/06 21:09:52 by ldinaut          ###   ########.fr       */
+/*   Updated: 2023/07/06 21:38:13 by ldinaut          ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -48,7 +48,8 @@ class Commands
 		void	mode_l(int mode, Channel *chan);
 
 		std::vector<std::string>	privmsg(Client *client);
-	//	void	part(void);
+		std::vector<std::string>	part(Client *client);
+		void						remove_cli_chan(const std::string &chan_title, Client *client);
 		std::vector<std::string>	quit(Client *client);
 	//	void	squit(void);// quit only server
 		std::vector<std::string>	nick_cmd(Client *client);
@@ -79,7 +80,7 @@ class Commands
 		std::string					_cmd;
 		std::vector<std::string>	_cmd_args;
 		int							_fd_co;
-		int							check_pass;
+		bool						_check_pass;
 };
 std::vector<std::string> split(std::string str, std::string delim);
 Channel	*channel_exists(std::string chan_name);

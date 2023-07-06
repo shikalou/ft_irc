@@ -6,7 +6,7 @@
 /*   By: ldinaut <ldinaut@student.42.fr>            +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2023/06/19 14:09:45 by ldinaut           #+#    #+#             */
-/*   Updated: 2023/07/06 21:22:38 by ldinaut          ###   ########.fr       */
+/*   Updated: 2023/07/06 21:40:02 by ldinaut          ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -20,8 +20,8 @@ Commands::Commands()
 }
 
 Commands::Commands(std::string cmd_str, int fd_co):  fd_users(), reponse(), _str_rcv(cmd_str), _fd_co(fd_co) {
-	this->check_pass = 0;
 	isQuit = false;
+	this->_check_pass = true;
 	std::cout << "[COMMAND CONSTRUCTOR]"  << std::endl;
 	return ;
 }
@@ -94,7 +94,7 @@ std::vector<std::string>	Commands::user_cmd(Client *client)
 	// 	reponse.push_back(err_alreadyregistered(client->getNick()));
 	// 	return (reponse);
 	// }
-	if (this->check_pass == 1)
+	if (this->_check_pass == 1)
 	{
 			return (reponse);
 	}
@@ -143,20 +143,12 @@ std::vector<std::string>	Commands::nick_cmd(Client *client)
 }
 
 std::vector<std::string>	Commands::pass_cmd(Client *client){
-	if (client->_register == 1){
-		reponse.push_back(err_alreadyregistered(client->getNick()));
+	if (server.password != _cmd_args[0]){
+		reponse.push_back(err_passwdmismatch(client->getNick()));
+		this->_check_pass = false;
 		return (reponse);
 	}
-	else{
-		client->SetPass(_cmd_args[0]);
-		if (server.password != client->getPass()){
-			reponse.push_back(err_passwdmismatch(client->getNick()));
-			this->check_pass = 1;
-			return (reponse);
-		}
-		// reponse.push_back("");
-		return (reponse);
-	}
+	return (reponse);
 }
 
 std::vector<std::string>	Commands::launcher(std::map<int, Client *> client_list)
@@ -185,10 +177,11 @@ std::vector<std::string>	Commands::launcher(std::map<int, Client *> client_list)
 // debug en cours
 	if (_cmd == "TOPIC")
 		return (this->topic_cmd(client_list[_fd_co]));
+	if (_cmd == "PART")
+		return (this->part(client_list[_fd_co]));
 	if (_cmd == "KICK")
 		return (this->kick_cmd(client_list[_fd_co]));
 	std::cout << "cmd =" << _cmd << "$" << std::endl;
-//	std::cout << "Not pong nor quit nor privmsg :((( == " << this->_str_rcv << std::endl;
 
 //	WHEN NOT IN DEBUG : 
 //	return (err_unknowncommand("Irssi", _cmd));

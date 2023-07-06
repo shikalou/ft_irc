@@ -6,7 +6,7 @@
 /*   By: ldinaut <ldinaut@student.42.fr>            +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2023/06/19 16:07:39 by mcouppe           #+#    #+#             */
-/*   Updated: 2023/07/06 21:01:47 by ldinaut          ###   ########.fr       */
+/*   Updated: 2023/07/06 21:38:17 by ldinaut          ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -28,11 +28,6 @@ Client::~Client(void){
 	return ;
 }
 
-void	Client::SetPass(std::string new_pass)
-{
-	this->_pass = new_pass;
-}
-
 void	Client::SetNick(std::string new_nick)
 {
 	this->_nick = new_nick;
@@ -41,11 +36,6 @@ void	Client::SetNick(std::string new_nick)
 void	Client::SetUser(std::string new_user)
 {
 	this->_user = new_user;
-}
-
-std::string	Client::getPass() const
-{
-	return (_pass);
 }
 
 std::string	Client::getNick() const
