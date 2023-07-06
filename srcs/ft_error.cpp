@@ -3,10 +3,10 @@
 /*                                                        :::      ::::::::   */
 /*   ft_error.cpp                                       :+:      :+:    :+:   */
 /*                                                    +:+ +:+         +:+     */
-/*   By: mcouppe <mcouppe@student.42.fr>            +#+  +:+       +#+        */
+/*   By: ldinaut <ldinaut@student.42.fr>            +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2023/06/21 12:15:45 by mcouppe           #+#    #+#             */
-/*   Updated: 2023/07/06 15:26:17 by mcouppe          ###   ########.fr       */
+/*   Updated: 2023/07/06 17:04:39 by ldinaut          ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -55,8 +55,9 @@ std::string	err_nicknameinuse(const std::string &sender, std::string nick){
 	return ("433 " + sender + " " + nick + " :Nickname is already in use\r\n");
 }
 
-std::string	err_usernotinchannel(const std::string &sender, std::string &channel){
-	return ("441 " + sender + " " + channel + " :They aren't on that channel\r\n");
+std::string	err_usernotinchannel(const std::string &sender, const std::string &nick, const std::string &channel)
+{
+	return ("441 " + sender + " " + nick + " " + channel + " :They aren't on that channel\r\n");
 }
 
 std::string	err_notonchannel(const std::string &sender, const std::string &channel){

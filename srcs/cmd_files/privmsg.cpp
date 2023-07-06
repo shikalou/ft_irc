@@ -3,10 +3,10 @@
 /*                                                        :::      ::::::::   */
 /*   privmsg.cpp                                        :+:      :+:    :+:   */
 /*                                                    +:+ +:+         +:+     */
-/*   By: mcouppe <marvin@42.fr>                     +#+  +:+       +#+        */
+/*   By: ldinaut <ldinaut@student.42.fr>            +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2023/07/04 12:31:55 by mcouppe           #+#    #+#             */
-/*   Updated: 2023/07/04 13:01:28 by mcouppe          ###   ########.fr       */
+/*   Updated: 2023/07/06 17:44:08 by ldinaut          ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -81,7 +81,7 @@ std::vector<std::string>	Commands::privmsg(Client *client)
 				arg = regroup_mess(_cmd_args, client, 1);
 				arg += "\r\n";
 				reponse.push_back(arg);
-				std::cout << "arg = " << arg << (*it).first << " nick = " << (*it).second->getNick() << std::endl;
+				//std::cout << "arg = " << arg << (*it).first << " nick = " << (*it).second->getNick() << std::endl;
 				_fd_co = (*it).second->_sock;
 				check++;
 				break ;
@@ -96,4 +96,3 @@ std::vector<std::string>	Commands::privmsg(Client *client)
 	//std::cout << (*itrecup)->getTitle() << std::endl;
 	return (reponse);
 }
-

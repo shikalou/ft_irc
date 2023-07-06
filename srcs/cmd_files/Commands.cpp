@@ -6,7 +6,7 @@
 /*   By: ldinaut <ldinaut@student.42.fr>            +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2023/06/19 14:09:45 by ldinaut           #+#    #+#             */
-/*   Updated: 2023/07/06 13:03:32 by ldinaut          ###   ########.fr       */
+/*   Updated: 2023/07/06 18:27:20 by ldinaut          ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -89,11 +89,11 @@ std::vector<std::string>	Commands::pong(void){
 
 std::vector<std::string>	Commands::user_cmd(Client *client)
 {
-	if (client->_register == 1)
-	{
-		reponse.push_back(err_alreadyregistered(client->getNick()));
-		return (reponse);
-	}
+	// if (client->_register == 1)
+	// {
+	// 	reponse.push_back(err_alreadyregistered(client->getNick()));
+	// 	return (reponse);
+	// }
 	if (_cmd_args.size() <= 0)
 	{
 		reponse.push_back(err_needmoreparams("[empty]"));
@@ -108,67 +108,29 @@ std::vector<std::string>	Commands::user_cmd(Client *client)
 	reponse.push_back(ret);
 	return (reponse);
 }
-/*
-std::vector<std::string>	Commands::topic_cmd(Client *client){
-	// if no parameter : ERR_NEEDMOREPARAMS
-	if (_cmd_args.size() < 2){
-		reponse.push_back(err_needmoreparams(this->_cmd));
-		return (reponse);
-	}
-	std::string	chan_input = "#";
-	std::cout << LILAC << "[DEBUG]\ncheck cmd_arg size =" << _cmd_args.size() << RESET << std::endl;
-	if (_cmd_args[1].length() > 1){
-		std::cout << RED << "LA PUTAIN DE TA RACE" << RESET << std::endl;
-		std::cout << RED << "LA PUTAIN DE TA RACE" << RESET << std::endl;
-		std::cout << RED << "LA PUTAIN DE TA RACE" << RESET << std::endl;
-		_cmd_args[1].erase(0, 1);
-		chan_input += _cmd_args[1];
-	}
-//	la je parcours les chans du client le soucis c que le client est dependant des caracteristiques de son propre chan et voit pas qu'un autre client a update un chan donc mauvais bail
-	for (std::vector<Channel *>::iterator it = server._channels.begin(); it != server._channels.end(); ++it){
-		std::cout << LIGHT_BLUE << "\n[DEBUG]\nchan_input =" << chan_input << "$\n(*it)->getTitle()="<< (*it)->getTitle() << "$" << RESET << std::endl;
-		if (chan_input.length() > 1 && chan_input == (*it)->getTitle()){*/
-		/*(ici etoile)	if (_cmd_args[2].length() > 1 && _cmd_args[2] == (*it)->getTopic()){
-				std::cout << GREEN << "[DEBUG]\nOMG c le bon channel et le bon topic" << RESET << std::endl;
-				reponse.push_back(rpl_topic(client->getNick(), (*it)->getTitle(), (*it)->getTopic()));
-				return (reponse);
-			}*/
-		/*	if (_cmd_args[2].length() > 1){
-				std::cout << GREEN << "[DEBUG]\nc le bon channel mais pas le topic va etre set" << RESET << std::endl;
-				(*it)->setTopic(_cmd_args[2]);
-				(*it)->setTopicBool(true);
-				reponse.push_back(rpl_topic(client->getNick(), (*it)->getTitle(), (*it)->getTopic()));
-				// ici RPL_TOPICWHOTIME ?
-		//	je pense sans TOPICWHOTIME pas de possibilite d'erase un topic et de go back a letat sans topic set purreeeee
-				return (reponse);
-			}
-			else {
-				std::cout << ORANGE << "[DEBUG]\npas de topic en param" << RESET << std::endl;
-				if ((*it)->getTopicBool()){
-					std::cout << RED << "[DEBUG]\nerasing topic to empty string ????" << RESET << std::endl;
-					(*it)->setTopic(" ");
-					(*it)->setTopicBool(true);
-					reponse.push_back(rpl_topic(client->getNick(), (*it)->getTitle(), (*it)->getTopic()));
-				}
-				reponse.push_back(rpl_notopic(client->getNick(), (*it)->getTitle()));
-				return (reponse);
-			}
-			//else topic clearer
-		}
-	}
 
-// il faudrait un moyen ici de parcourir les chans generaux
-// pour differencier channel non-existant et chan non join
-	std::cout << RED << "[DEBUG]\nchannel introuvable" << RESET << std::endl;
-	reponse.push_back(err_nosuchchannel(client->getNick(), _cmd_args[1]));
-	return (reponse);
-	//	parcourir client->_chans --> if _cmd_args[0] == _chans.getTitle() --> access topic de ce chan (RPL_TOPIC or RPL NOTOPIC) if TOPIC existe mais == "" (length < 1) --> NO_TOPIC (clear topic)
-	// pour CLEAR TOPIC --> peut etre un topic checker ? --> if topic_check == 1 --> topic else pas topic ?
-	// if client l'a pas ds ses _chans --> ERR_NOTONCHANNEL
-}
-*/
 std::vector<std::string>	Commands::nick_cmd(Client *client)
 {
+	if (_cmd_args[0].size() > 20)
+	{
+		std::cout << "nick nw = |" << _cmd_args[0] << "|"<< "\n\n\n";
+		reponse.push_back(err_erroneusnickname(client->getNick(), _cmd_args[0]));
+		send(client->_sock, reponse[0].c_str(), reponse[0].length(), 0);
+		close(client->_sock);
+		reponse.clear();
+		return (reponse);
+	}
+	std::map<int, Client *>::iterator it = server._clients.begin();
+	for (; it != server._clients.end(); ++it)
+	{
+		if ((*it).second->getNick() == _cmd_args[0])
+		{
+			reponse.push_back(err_nicknameinuse(client->getNick(), _cmd_args[0]));
+			//send(client->_sock, reponse[0].c_str(), reponse[0].length(), 0);
+			//close(client->_sock);
+			return (reponse);
+		}
+	}
 	std::string ret;
 	client->SetNick(_cmd_args[0]);
 	ret = ":*!@localhost NICK " + client->getNick() + "\r\n";
@@ -219,6 +181,10 @@ std::vector<std::string>	Commands::launcher(std::map<int, Client *> client_list)
 // debug en cours
 	if (_cmd == "TOPIC")
 		return (this->topic_cmd(client_list[_fd_co]));
+	if (_cmd == "KICK")
+		return (this->kick_cmd(client_list[_fd_co]));
+	if (_cmd == "KILL")
+		return (this->kill_cmd(client_list[_fd_co]));
 	std::cout << "cmd =" << _cmd << "$" << std::endl;
 //	std::cout << "Not pong nor quit nor privmsg :((( == " << this->_str_rcv << std::endl;
 
@@ -265,7 +231,6 @@ void	Commands::cmd_manager(std::map<int, Client *> client_list)
 		isQuit = false;
 		if (this->check_pass == 1)
 			return ;
-
 	}
 }
 

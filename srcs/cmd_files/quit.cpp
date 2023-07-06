@@ -6,7 +6,7 @@
 /*   By: ldinaut <ldinaut@student.42.fr>            +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2023/07/06 12:35:07 by ldinaut           #+#    #+#             */
-/*   Updated: 2023/07/06 13:17:49 by ldinaut          ###   ########.fr       */
+/*   Updated: 2023/07/06 14:17:05 by ldinaut          ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -16,7 +16,6 @@
 
 std::vector<std::string>	Commands::quit(Client *client)
 {
-	client->_recv.erase();
 	isQuit = true;
 	server._clients.erase(client->_sock);
 	close(client->_sock);
