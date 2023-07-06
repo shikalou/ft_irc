@@ -6,7 +6,7 @@
 /*   By: mcouppe <mcouppe@student.42.fr>            +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2023/06/21 12:15:45 by mcouppe           #+#    #+#             */
-/*   Updated: 2023/07/06 14:19:01 by mcouppe          ###   ########.fr       */
+/*   Updated: 2023/07/06 15:26:17 by mcouppe          ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -59,7 +59,7 @@ std::string	err_usernotinchannel(const std::string &sender, std::string &channel
 	return ("441 " + sender + " " + channel + " :They aren't on that channel\r\n");
 }
 
-std::string	err_notonchannel(const std::string &sender, std::string &channel){
+std::string	err_notonchannel(const std::string &sender, const std::string &channel){
 	return ("442 " + sender + " " + channel + " :You're not on that channel\r\n");
 }
 
