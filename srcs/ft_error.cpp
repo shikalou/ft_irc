@@ -6,7 +6,7 @@
 /*   By: mcouppe <mcouppe@student.42.fr>            +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2023/06/21 12:15:45 by mcouppe           #+#    #+#             */
-/*   Updated: 2023/07/06 00:56:06 by mcouppe          ###   ########.fr       */
+/*   Updated: 2023/07/06 14:02:51 by mcouppe          ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -17,7 +17,7 @@ std::string	err_nosuchnick(const std::string &nick){
 	return ("401 " + nick + " :No such nick/channel\r\n");
 }
 
-std::string	err_nosuchchannel(const std::string &sender, const std::string &channel){
+std::string	err_nosuchchannel(const std::string &sender, std::string &channel){
 	if (channel[0] != '#')
 	{
 		std::string	tmp = "#";
@@ -55,15 +55,15 @@ std::string	err_nicknameinuse(const std::string &sender, std::string nick){
 	return ("433 " + sender + " " + nick + " :Nickname is already in use\r\n");
 }
 
-std::string	err_usernotinchannel(const std::string &sender, std::string &nick, std::string &channel){
-	return ("441 " + sender + " " + nick + " " + channel + " :They aren't on that channel\r\n");
+std::string	err_usernotinchannel(const std::string &sender, std::string &channel){
+	return ("441 " + sender + " " + channel + " :They aren't on that channel\r\n");
 }
 
 std::string	err_useronchannel(const std::string &sender, std::string &channel){
 	return ("443 " + sender + " " + channel + " :is already on channel\r\n");
 }
 
-std::string	err_notonchannel(const std::string &sender, std::string &channel){
+std::string	err_notonchannel(const std::string &sender, const std::string &channel){
 	return ("443 " + sender + " " + channel + " :You're not on that channel\r\n");
 }
 

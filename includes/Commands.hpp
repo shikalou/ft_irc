@@ -6,7 +6,7 @@
 /*   By: ldinaut <ldinaut@student.42.fr>            +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2023/06/19 14:10:05 by ldinaut           #+#    #+#             */
-/*   Updated: 2023/07/05 20:07:10 by ldinaut          ###   ########.fr       */
+/*   Updated: 2023/07/06 13:37:28 by mcouppe          ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -54,7 +54,10 @@ class Commands
 		std::vector<std::string>	user_cmd(Client *client);
 		std::vector<std::string>	pass_cmd(Client *client);
 		std::vector<std::string>	topic_cmd(Client *client);
-		std::vector<std::string>	setting_topic(std::vector<Channel *>::iterator it, Client *client);
+		std::string					setting_topic(std::vector<Channel *>::iterator it, Client *client);
+		std::string					topic_from_client(Client *client, std::string chan_input);
+		std::string					topic_from_server(Client *client, std::string chan_input);
+		
 		std::vector<std::string>	invite_cmd(Client *client);
 
 		std::vector<int>			fd_users;
