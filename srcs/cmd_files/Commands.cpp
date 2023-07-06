@@ -3,10 +3,10 @@
 /*                                                        :::      ::::::::   */
 /*   Commands.cpp                                       :+:      :+:    :+:   */
 /*                                                    +:+ +:+         +:+     */
-/*   By: mcouppe <mcouppe@student.42.fr>            +#+  +:+       +#+        */
+/*   By: ldinaut <ldinaut@student.42.fr>            +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2023/06/19 14:09:45 by ldinaut           #+#    #+#             */
-/*   Updated: 2023/07/05 18:10:27 by mcouppe          ###   ########.fr       */
+/*   Updated: 2023/07/06 13:03:32 by ldinaut          ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -17,6 +17,13 @@
 Commands::Commands()
 {
 	// std::cout << "default constructor called" << std::endl;
+}
+
+Commands::Commands(std::string cmd_str, int fd_co):  fd_users(), reponse(), _str_rcv(cmd_str), _fd_co(fd_co) {
+	this->check_pass = 0;
+	isQuit = false;
+	std::cout << "[COMMAND CONSTRUCTOR]"  << std::endl;
+	return ;
 }
 
 Commands::Commands(Commands *cpy)
@@ -32,13 +39,23 @@ Commands	Commands::operator=(const Commands *egal)
 	this->_str_rcv = egal->_str_rcv;
 	this->reponse = egal->reponse;
 	this->fd_users = egal->fd_users;
+	this->isQuit = egal->isQuit;
 	return (*this);
 }
 
-Commands::Commands(std::string cmd_str, int fd_co):  fd_users(), reponse(), _str_rcv(cmd_str), _fd_co(fd_co) {
-	this->check_pass = 0;
-	std::cout << "[COMMAND CONSTRUCTOR]"  << std::endl;
-	return ;
+void	Commands::sender_all(std::map<int, Client *> client_list)
+{
+	std::map<int, Client *>::iterator it = client_list.begin();
+	for (size_t i = 0; i < reponse.size(); ++i)
+	{
+		if (client_list.size() > 1)
+		{
+			for (; it != client_list.end(); ++it)
+			{
+				send((*it).first, reponse[i].c_str(), reponse[i].length(), 0);
+			}
+		}
+	}
 }
 
 void	Commands::sender(std::vector<std::string> cmd, std::string args){
@@ -67,13 +84,6 @@ void	Commands::sender(std::vector<std::string> cmd, std::string args){
 
 std::vector<std::string>	Commands::pong(void){
 	reponse.push_back("PONG 127.0.0.1\r\n");
-	return (reponse);
-}
-
-std::vector<std::string>	Commands::quit(void){
-	std::cout << "[DISCONNECTED]" << std::endl;
-//	ne pas faire d'exit ?
-	exit (1);
 	return (reponse);
 }
 
@@ -189,7 +199,7 @@ std::vector<std::string>	Commands::launcher(std::map<int, Client *> client_list)
 	if (_cmd == "PING")
 		return (this->pong());
 	if (_cmd == "QUIT")
-		return (this->quit());
+		return (this->quit(client_list[_fd_co]));
 	if (_cmd == "PRIVMSG")
 		return (this->privmsg(client_list[_fd_co]));
 	if (_cmd == "JOIN")
@@ -247,8 +257,12 @@ void	Commands::cmd_manager(std::map<int, Client *> client_list)
 		}
 		std::string ret;
 		reponse = launcher(client_list);
-		sender(reponse, "");
+		if (isQuit == true)
+			sender_all(client_list);
+		else
+			sender(reponse, "");
 		reponse.clear();
+		isQuit = false;
 		if (this->check_pass == 1)
 			return ;
 

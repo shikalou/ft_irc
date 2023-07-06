@@ -6,7 +6,7 @@
 /*   By: ldinaut <ldinaut@student.42.fr>            +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2023/07/05 15:56:38 by ldinaut           #+#    #+#             */
-/*   Updated: 2023/07/06 00:13:14 by mcouppe          ###   ########.fr       */
+/*   Updated: 2023/07/06 12:08:44 by ldinaut          ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -30,12 +30,16 @@ std::vector<std::string>	Commands::invite_cmd(Client *client)
 	std::vector<Client *>::iterator ite = chan->_clients.begin();
 	for (; ite != chan->_clients.end(); ++ite)
 	{
-		std::cout << "|" << (*ite)->getNick() << "|  |" << client->getNick() << "|\n";
 		if ((*ite)->getNick() == client->getNick())
 			break ;
-		if ((*ite)->getNick() == _cmd_args[0])
+	}
+	std::vector<Client *>::iterator ita = chan->_clients.begin();
+	for (; ita != chan->_clients.end(); ++ita)
+	{
+		std::cout << "|" << (*ita)->getNick() << "|  |" << _cmd_args[0] << "|\n";
+		if ((*ita)->getNick() == _cmd_args[0])
 		{
-			reponse.push_back(err_useronchannel(client->getNick(), _cmd_args[1]));
+			reponse.push_back(err_useronchannel(client->getNick(), _cmd_args[0]));
 			return (reponse);
 		}
 	}

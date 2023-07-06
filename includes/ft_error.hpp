@@ -3,10 +3,10 @@
 /*                                                        :::      ::::::::   */
 /*   ft_error.hpp                                       :+:      :+:    :+:   */
 /*                                                    +:+ +:+         +:+     */
-/*   By: ldinaut <ldinaut@student.42.fr>            +#+  +:+       +#+        */
+/*   By: mcouppe <mcouppe@student.42.fr>            +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2023/07/03 10:43:51 by mcouppe           #+#    #+#             */
-/*   Updated: 2023/07/06 14:11:46 by mcouppe          ###   ########.fr       */
+/*   Updated: 2023/07/06 14:17:46 by mcouppe          ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -35,7 +35,12 @@ std::string	err_passwdmismatch(const std::string &sender);
 std::string	err_noprivileges(const std::string &sender);
 std::string	err_chanoprivsneeded(const std::string &sender, const std::string &channel);
 std::string	err_usersdontmatch(const std::string &sender);
-std::string err_umodeunknownflag(const std::string &sender);
+std::string	err_umodeunknownflag(const std::string &sender);
+std::string	err_unknownmode(const std::string &sender, const std::string modechar);
+std::string	err_inviteonlychan(const std::string &sender, const std::string &channel);
+std::string	err_badchannelkey(const std::string &sender, const std::string &channel);
+std::string	err_channelisfull(const std::string client, const std::string channel);
+
 
 //RPL
 std::string	rpl_welcome(const std::string &nick, const std::string &user, const std::string &host);

@@ -6,7 +6,7 @@
 /*   By: ldinaut <ldinaut@student.42.fr>            +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2023/07/04 12:30:12 by mcouppe           #+#    #+#             */
-/*   Updated: 2023/07/05 20:02:39 by ldinaut          ###   ########.fr       */
+/*   Updated: 2023/07/06 12:21:00 by ldinaut          ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -86,8 +86,7 @@ std::vector<std::string>	Commands::join_chan(Client *client)
 			}
 			if (ita == (*it)->_invites.end())
 			{
-				//reponse.push_back(err_inviteonlychan());
-				std::cout << "COMMANDE A FAIRE\nERR_INVITEONLYCHAN\n";
+				reponse.push_back(err_inviteonlychan(client->getNick(), _cmd_args[0]));
 				return (reponse);
 			}
 			
@@ -97,8 +96,7 @@ std::vector<std::string>	Commands::join_chan(Client *client)
 			std::cout << "laaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaa\n\n\n";
 			if (_cmd_args[1] != (*it)->getPass())
 			{
-				std::string ret = "475 " + client->getNick() + " " + _cmd_args[0] + " :Cannot join channel (+k)\r\n";
-				reponse.push_back(ret);
+				reponse.push_back(err_badchannelkey(client->getNick(), _cmd_args[0]));
 				return (reponse);
 			}
 		}
@@ -106,8 +104,7 @@ std::vector<std::string>	Commands::join_chan(Client *client)
 		{
 			if ((*it)->_clients.size() >= (size_t)(*it)->getMaxClient())
 			{
-				std::string ret = "471 " + client->getNick() + " " + _cmd_args[0] + " :Cannot join channel (+l)\r\n";
-				reponse.push_back(ret);
+				reponse.push_back(err_channelisfull(client->getNick(), _cmd_args[0]));
 				return (reponse);
 			}
 		}

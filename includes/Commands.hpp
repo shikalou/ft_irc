@@ -3,10 +3,10 @@
 /*                                                        :::      ::::::::   */
 /*   Commands.hpp                                       :+:      :+:    :+:   */
 /*                                                    +:+ +:+         +:+     */
-/*   By: ldinaut <ldinaut@student.42.fr>            +#+  +:+       +#+        */
+/*   By: mcouppe <mcouppe@student.42.fr>            +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2023/06/19 14:10:05 by ldinaut           #+#    #+#             */
-/*   Updated: 2023/07/06 13:37:28 by mcouppe          ###   ########.fr       */
+/*   Updated: 2023/07/06 14:17:54 by mcouppe          ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -33,6 +33,7 @@ class Commands
 		void						cmd_manager(std::map<int, Client *> clients);
 		std::vector<std::string>	launcher(std::map<int, Client *> client_list);
 		void						sender(std::vector<std::string> cmd, std::string args);
+		void						sender_all(std::map<int, Client *> client_list);
 
 // CMDS FUNCTIONS
 		std::vector<std::string>	pong(void);
@@ -48,7 +49,7 @@ class Commands
 
 		std::vector<std::string>	privmsg(Client *client);
 	//	void	part(void);
-		std::vector<std::string>	quit(void);
+		std::vector<std::string>	quit(Client *client);
 	//	void	squit(void);// quit only server
 		std::vector<std::string>	nick_cmd(Client *client);
 		std::vector<std::string>	user_cmd(Client *client);
@@ -61,6 +62,7 @@ class Commands
 		std::vector<std::string>	invite_cmd(Client *client);
 
 		std::vector<int>			fd_users;
+		bool						isQuit;
 
 	private :
 		std::vector<std::string>	reponse;

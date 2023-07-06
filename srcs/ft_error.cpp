@@ -6,7 +6,7 @@
 /*   By: mcouppe <mcouppe@student.42.fr>            +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2023/06/21 12:15:45 by mcouppe           #+#    #+#             */
-/*   Updated: 2023/07/06 14:02:51 by mcouppe          ###   ########.fr       */
+/*   Updated: 2023/07/06 14:19:01 by mcouppe          ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -59,28 +59,48 @@ std::string	err_usernotinchannel(const std::string &sender, std::string &channel
 	return ("441 " + sender + " " + channel + " :They aren't on that channel\r\n");
 }
 
-std::string	err_useronchannel(const std::string &sender, std::string &channel){
-	return ("443 " + sender + " " + channel + " :is already on channel\r\n");
+std::string	err_notonchannel(const std::string &sender, std::string &channel){
+	return ("442 " + sender + " " + channel + " :You're not on that channel\r\n");
 }
 
-std::string	err_notonchannel(const std::string &sender, const std::string &channel){
-	return ("443 " + sender + " " + channel + " :You're not on that channel\r\n");
+std::string	err_useronchannel(const std::string &sender, std::string &channel){
+	return ("443 " + sender + " " + channel + " :is already on channel\r\n");
 }
 
 std::string	err_notregistered(const std::string &sender){
 	return ("451 " + sender + " :You have not registered\r\n");
 }
 
-std::string	err_alreadyregistered(const std::string &sender){
-	return ("462 " + sender + " :You may not reregister\r\n");
-}
-
 std::string	err_needmoreparams(std::string command){
 	return ("461 Irssi " + command + " :Not enough parameters\r\n");
 }
 
+std::string	err_alreadyregistered(const std::string &sender){
+	return ("462 " + sender + " :You may not reregister\r\n");
+}
+
 std::string	err_passwdmismatch(const std::string &sender){
 	return ("464 " + sender + " :Password incorrect\r\n");
+}
+
+std::string	err_channelisfull(const std::string sender, const std::string channel)
+{
+	return ("471 " + sender + " " + channel + " :Cannot join channel (+l)\r\n");
+}
+
+std::string	err_unknownmode(const std::string &sender, const std::string modechar)
+{
+	return ("472 " + sender + " " + modechar + " :is unknown mode char to me\r\n");
+}
+
+std::string err_inviteonlychan(const std::string &sender, const std::string &channel)
+{
+	return ("473 " + sender + " " + channel + " :Cannot join channel (+i)\r\n");
+}
+
+std::string	err_badchannelkey(const std::string &sender, const std::string &channel)
+{
+	return ("475 " + sender + " " + channel + " :Cannot join channel (+k)\r\n");
 }
 
 std::string	err_noprivileges(const std::string &sender){
@@ -98,6 +118,7 @@ std::string	err_usersdontmatch(const std::string &sender){
 std::string err_umodeunknownflag(const std::string &sender){
 	return ("501 " + sender + " :Unknown MODE flag\r\n");
 }
+
 
 // RPL
 
