@@ -6,7 +6,7 @@
 /*   By: ldinaut <ldinaut@student.42.fr>            +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2023/07/04 13:05:18 by ldinaut           #+#    #+#             */
-/*   Updated: 2023/07/06 00:29:22 by mcouppe          ###   ########.fr       */
+/*   Updated: 2023/07/06 13:32:06 by ldinaut          ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -75,6 +75,12 @@ void	Commands::mode_o(int mode, Channel *chan, Client *client)
 			{
 				if ((*it)->getNick() == _cmd_args[2])
 					break ;
+			}
+			if (it == chan->_operators.end())
+			{
+				std::string ret = _cmd_args[2] + " is not an IRC operator\r\n";
+				reponse.push_back(ret);
+				return ;
 			}
 			std::vector<Client *>::iterator ite = chan->_operators.begin();
 			for (; ite != chan->_operators.end(); ++ite)
@@ -198,7 +204,7 @@ void	Commands::mode_l(int mode, Channel *chan)
 			chan->setMaxClient(atoi(_cmd_args[2].c_str()));
 			chan->setLimitClient(true);
 			std::string res = ":ircserv MODE " + chan->getTitle() + " +l\r\n";
-			std::string ret = "Number of max cients for " + chan->getTitle() + " was changed to " + _cmd_args[2] + "\r\n";
+			std::string ret = "Number of max clients for " + chan->getTitle() + " was changed to " + _cmd_args[2] + "\r\n";
 			reponse.push_back(res);
 			reponse.push_back(ret);
 		}
@@ -256,6 +262,8 @@ std::vector<std::string>	Commands::mode(Client *client)
 			mode_o(1, chan, client);
 		if (_cmd_args[1][1] == 'k')
 			mode_k(1, chan);
+		else
+			reponse.push_back(err_unknownmode(_cmd_args[0], _cmd_args[1]));
 	}
 	else if (_cmd_args[1][0] == '-')
 	{
@@ -269,6 +277,8 @@ std::vector<std::string>	Commands::mode(Client *client)
 			mode_l(0, chan);
 		if (_cmd_args[1][1] == 'o')
 			mode_o(0, chan, client);
+		else
+			reponse.push_back(err_unknownmode(_cmd_args[0], _cmd_args[1]));
 	}
 	return (reponse);
 }
