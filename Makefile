@@ -6,7 +6,7 @@
 #    By: ldinaut <ldinaut@student.42.fr>            +#+  +:+       +#+         #
 #                                                 +#+#+#+#+#+   +#+            #
 #    Created: 2023/06/23 11:58:02 by ldinaut           #+#    #+#              #
-#    Updated: 2023/07/06 12:37:24 by ldinaut          ###   ########.fr        #
+#    Updated: 2023/07/06 17:01:51 by mcouppe          ###   ########.fr        #
 #                                                                              #
 # **************************************************************************** #
 
@@ -14,7 +14,8 @@ NAME	=	ircserv
 
 SRCS_FILES	=	main.cpp Client.cpp Server.cpp cmd_files/Commands.cpp cmd_files/join.cpp \
 				cmd_files/privmsg.cpp cmd_files/mode.cpp cmd_files/invite.cpp \
-				Channel.cpp ft_error.cpp cmd_files/topic.cpp cmd_files/quit.cpp
+				Channel.cpp ft_error.cpp cmd_files/topic.cpp cmd_files/quit.cpp \
+				cmd_files/part.cpp
 
 SRCS	=	$(addprefix srcs/, $(SRCS_FILES))
 
