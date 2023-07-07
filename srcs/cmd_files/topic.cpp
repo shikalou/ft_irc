@@ -6,39 +6,41 @@
 /*   By: mcouppe <marvin@42.fr>                     +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2023/07/05 16:17:14 by mcouppe           #+#    #+#             */
-/*   Updated: 2023/07/07 13:20:32 by mcouppe          ###   ########.fr       */
+/*   Updated: 2023/07/07 14:47:12 by mcouppe          ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
 # include "Commands.hpp"
 # include "Client.hpp"
 # include "ft_error.hpp"
-/*
-void	Commands::set_topic_for_all(std::vector<Channel *>::iterator it_chan, std::string topic){
-	std::string	chan_name = it_chan.getTitle();
-
-	std::vector<Client *>::iterator it_cli = (it_chan->getClients()).begin();
-	for (; it_cli != (it_chan->getClients()).end(); ++it_cli){
-		(*it_cli)->_chans
-	}
-
-}*/
 
 std::string	Commands::setting_topic(std::vector<Channel *>::iterator it, Client *client){
 	if (_cmd_args.size() >= 2 && _cmd_args[1].length() > 1){
-		std::cout << GREEN << "[DEBUG]\nsetting topic..." << RESET << std::endl;
-	//	set_topic_for_all(it, _cmd_args[2]);
+//		std::cout << GREEN << "[DEBUG]\nsetting topic..." << RESET << std::endl;
 		(*it)->setTopic(_cmd_args[1]);
 		(*it)->setTopicBool(true);
+		std::vector<Channel *>::iterator serv_it = server._channels.begin();
+		for (; serv_it != server._channels.end(); ++serv_it){
+			if ((*serv_it)->getTitle() == (*it)->getTitle()){
+				(*serv_it)->setTopic(_cmd_args[1]);
+				(*serv_it)->setTopicBool(true);
+			}
+		}
 		return (rpl_topic(client->getNick(), (*it)->getTitle(), (*it)->getTopic()));
 	}
 	else {
-		std::cout << ORANGE << "[DEBUG]\nno topic provided" << RESET << std::endl;
+//		std::cout << ORANGE << "[DEBUG]\nno topic provided" << RESET << std::endl;
 		if ((*it)->getTopicBool()){
-			std::cout << RED << "[DEBUG]\nerasing topic" << RESET << std::endl;
-//			set_topic_for_all(it, " ");
+//			std::cout << RED << "[DEBUG]\nerasing topic" << RESET << std::endl;
 			(*it)->setTopic(" ");
 			(*it)->setTopicBool(false);
+			std::vector<Channel *>::iterator serv_it = server._channels.begin();
+			for (; serv_it != server._channels.end(); ++serv_it){
+				if ((*serv_it)->getTitle() == (*it)->getTitle()){
+					(*serv_it)->setTopic(_cmd_args[1]);
+					(*serv_it)->setTopicBool(true);
+				}
+			}
 			return (rpl_topic(client->getNick(), (*it)->getTitle(), (*it)->getTopic()));
 		}
 	}
@@ -48,19 +50,6 @@ std::string	Commands::setting_topic(std::vector<Channel *>::iterator it, Client 
 std::string	Commands::topic_from_client(Client *client, std::string chan_input){
 	for (std::vector<Channel *>::iterator it = client->_chans.begin(); it != client->_chans.end(); ++it){
 		if (chan_input == (*it)->getTitle()){
-	//		for (std::vector<Channel *>::iterator serv_it = server._channels.begin(); serv_it != server._channels.end(); ++serv_it){
-	//			if ((*serv_it)->getTitle() == chan_input){
-		/*	if (_cmd_args[1].length() > 1)
-				_cmd_args[1].erase(0, 1);
-			if (_cmd_args[0][0] == '#'){
-				std::string	tmp = _cmd_args[0];
-				tmp.erase(0, 1);
-				std::cout << GREEN << "\n[DEBUG]\ntmp =" << tmp << "$ et _cmd_args[1] =" << _cmd_args[1] << "$\n"<< RESET << std::endl;
-				if (tmp == _cmd_args[1]){
-					std::cout << RED << "\n\nSETTING TOPIC\n" << RESET << std::endl;
-					return (setting_topic(*it, client));
-				}
-				else{*/
 			if (_cmd_args.size() == 0){
 				if ((*it)->getTopicBool())
 					return (rpl_topic(client->getNick(), (*it)->getTitle(), (*it)->getTopic()));
@@ -80,7 +69,6 @@ std::string	Commands::topic_from_client(Client *client, std::string chan_input){
 				(*it)->setTopic(_cmd_args[1]);
 				(*it)->setTopicBool(true);
 				adding_fd_users((*it));
-			//	isPart = true;
 				return (rpl_topic(client->getNick(), (*it)->getTitle(), (*it)->getTopic()));	
 			}
 		}
@@ -98,22 +86,12 @@ std::string	Commands::topic_from_server(Client *client, std::string chan_input){
 }
 
 std::vector<std::string>	Commands::topic_cmd(Client *client){
-/*	std::size_t	i = 0;
-	while (i < _cmd_args.size()){
-		std::cout << GREEN << _cmd_args[i] << RESET << std::endl;
-		i++;
-	}*/
 	if ((_cmd_args[0]).length() <= 1){
 		reponse.push_back(err_needmoreparams(this->_cmd));
 		return (reponse);
 	}
-	/*std::string	chan_input;
-	if (_cmd_args[0][0] == '#')
-		chan_input = _cmd_args[0];
-	else{
-		chan_input = "#";
-		chan_input += _cmd_args[0];
-	}*/
+	if ((_cmd_args.size() > 1) && (_cmd_args[1].length() > 1))
+		_cmd_args[1] = joining_args(_cmd_args);
 	std::string	rep_from_client = this->topic_from_client(client, _cmd_args[0]);
 	if (rep_from_client.length() > 1){
 		reponse.push_back(rep_from_client);

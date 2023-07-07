@@ -6,13 +6,23 @@
 /*   By: ldinaut <ldinaut@student.42.fr>            +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2023/07/06 15:44:14 by ldinaut           #+#    #+#             */
-/*   Updated: 2023/07/06 16:33:23 by ldinaut          ###   ########.fr       */
+/*   Updated: 2023/07/07 14:44:59 by mcouppe          ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
 #include "Commands.hpp"
 #include "Client.hpp"
 #include "Channel.hpp"
+
+std::string	Commands::joining_args(std::vector<std::string> args_vec){
+	std::string	result = "";
+	for (std::size_t i = 1; i < args_vec.size(); ++i){
+		result += args_vec[i];
+		if (i + 1 < args_vec.size())
+			result += " ";
+	}
+	return (result);
+}
 
 Client	*Commands::isOperator(std::vector<Client *> operators, std::string client)
 {

@@ -6,7 +6,7 @@
 /*   By: mcouppe <mcouppe@student.42.fr>            +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2023/06/19 14:09:45 by ldinaut           #+#    #+#             */
-/*   Updated: 2023/07/07 13:24:43 by mcouppe          ###   ########.fr       */
+/*   Updated: 2023/07/07 14:34:48 by mcouppe          ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -23,7 +23,6 @@ Commands::Commands(std::string cmd_str, int fd_co):  fd_users(), reponse(), _str
 {
 	_cmd = "";
 	isQuit = false;
-//	isPart = false;
 	this->_check_pass = true;
 	std::cout << "[COMMAND CONSTRUCTOR]"  << std::endl;
 	return ;
@@ -43,7 +42,6 @@ Commands	Commands::operator=(const Commands *egal)
 	this->reponse = egal->reponse;
 	this->fd_users = egal->fd_users;
 	this->isQuit = egal->isQuit;
-//	this->isPart = egal->isPart;
 	return (*this);
 }
 
@@ -177,7 +175,6 @@ std::vector<std::string>	Commands::launcher(std::map<int, Client *> client_list)
 		return (this->pass_cmd(client_list[_fd_co]));
 	if (_cmd == "INVITE")
 		return (this->invite_cmd(client_list[_fd_co]));
-// debug en cours
 	if (_cmd == "TOPIC")
 		return (this->topic_cmd(client_list[_fd_co]));
 	if (_cmd == "PART")
@@ -227,7 +224,7 @@ void	Commands::cmd_manager(std::map<int, Client *> client_list)
 			std::cout << "split = " << *it << std::endl;
 		}
 		reponse = launcher(client_list);
-		if (isQuit == true/* || isPart == true*/)
+		if (isQuit == true)
 		{
 			sender_all(client_list);
 		}

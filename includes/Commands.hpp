@@ -6,7 +6,7 @@
 /*   By: mcouppe <mcouppe@student.42.fr>            +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2023/06/19 14:10:05 by ldinaut           #+#    #+#             */
-/*   Updated: 2023/07/07 13:24:07 by mcouppe          ###   ########.fr       */
+/*   Updated: 2023/07/07 14:48:09 by mcouppe          ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -56,13 +56,13 @@ class Commands
 		std::vector<std::string>	kick_cmd(Client *client);
 		std::vector<std::string>	topic_cmd(Client *client);
 		std::vector<std::string>	invite_cmd(Client *client);
+		std::string					joining_args(std::vector<std::string> args_vec);
 		std::string					setting_topic(std::vector<Channel *>::iterator it, Client *client);
 		std::string					topic_from_client(Client *client, std::string chan_input);
 		std::string					topic_from_server(Client *client, std::string chan_input);
 
 		std::vector<int>			fd_users;
 		bool						isQuit;
-	//	bool						isPart;
 		std::vector<std::string>	reponse;
 
 		// VERIF FUNCTIONS
