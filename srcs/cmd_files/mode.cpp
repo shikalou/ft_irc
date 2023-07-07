@@ -6,7 +6,7 @@
 /*   By: ldinaut <ldinaut@student.42.fr>            +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2023/07/04 13:05:18 by ldinaut           #+#    #+#             */
-/*   Updated: 2023/07/06 17:18:11 by ldinaut          ###   ########.fr       */
+/*   Updated: 2023/07/07 12:55:59 by ldinaut          ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -27,11 +27,6 @@ Channel *channel_exists(std::string chan_name)
 	return (NULL);
 }
 
-// int	Channel::isOperator(Client *client)
-// {
-	
-// }
-
 void	Commands::mode_i(int mode, Channel *chan)
 {
 	if (mode > 0)
@@ -45,9 +40,7 @@ void	Commands::mode_i(int mode, Channel *chan)
 		chan->setInviteOnly(false);
 		std::string ret = ":ircserv MODE " + chan->getTitle() + " -i\r\n";
 		reponse.push_back(ret);
-
 	}
-	
 }
 
 void	Commands::mode_o(int mode, Channel *chan, Client *client)
@@ -236,49 +229,72 @@ void	Commands::mode_t(int mode, Channel *chan)
 	}
 }
 
+std::string	regroup_mode(Channel *channel)
+{
+	std::string ret = "+";
+	if (channel->getTopicRestrict() == true)
+		ret += "t";
+	if (channel->getInviteOnly() == true)
+		ret += "i";
+	if (channel->getPassSet() == true)
+		ret += "k";
+	if (channel->getLimitClient() == true)
+		ret += "l";
+	std::cout << "END REGROUP MODE " << "|" << ret << "|\n" << std::endl;
+	return (ret);
+}
+
 std::vector<std::string>	Commands::mode(Client *client)
 {
-	// if (_cmd_args.size() == 1)
-	// 	return (rpl_channelmodeis());
-	Channel *chan = channel_exists(_cmd_args[0]);
-	if (!chan)
+	if (_cmd_args.size() < 1)
 	{
-		reponse.push_back(err_nosuchchannel(client->getNick(), _cmd_args[0]));
+		reponse.push_back(err_needmoreparams(_cmd));
 		return (reponse);
 	}
-	// if (_cmd_args.size() == 2 && chan.isOperator(client))
-	// {
-		
-	// }
-	if (_cmd_args[1][0] == '+')
+	if (_cmd_args[0][0] == '#')
 	{
-		if (_cmd_args[1][1] == 'i')
-			mode_i(1, chan);
-		else if (_cmd_args[1][1] == 't')
-			mode_t(1, chan);
-		else if (_cmd_args[1][1] == 'l')
-			mode_l(1, chan);
-		else if (_cmd_args[1][1] == 'o')
-			mode_o(1, chan, client);
-		else if (_cmd_args[1][1] == 'k')
-			mode_k(1, chan);
-		else
-			reponse.push_back(err_unknownmode(_cmd_args[0], _cmd_args[1]));
-	}
-	else if (_cmd_args[1][0] == '-')
-	{
-		if (_cmd_args[1][1] == 'i')
-			mode_i(0, chan);
-		else if (_cmd_args[1][1] == 't')
-			mode_t(0, chan);
-		else if (_cmd_args[1][1] == 'k')
-			mode_k(0, chan);
-		else if (_cmd_args[1][1] == 'l')
-			mode_l(0, chan);
-		else if (_cmd_args[1][1] == 'o')
-			mode_o(0, chan, client);
-		else
-			reponse.push_back(err_unknownmode(_cmd_args[0], _cmd_args[1]));
+		Channel *chan = channel_exists(_cmd_args[0]);
+		if (!chan)
+		{
+			reponse.push_back(err_nosuchchannel(client->getNick(), _cmd_args[0]));
+			return (reponse);
+		}
+		if (_cmd_args.size() == 1)
+		{
+			std::string mode = regroup_mode(chan);
+			reponse.push_back(rpl_channelmodeis(client->getNick(), _cmd_args[0], mode, ""));
+			return (reponse);
+		}
+		if (_cmd_args[1][0] == '+')
+		{
+			if (_cmd_args[1][1] == 'i')
+				mode_i(1, chan);
+			else if (_cmd_args[1][1] == 't')
+				mode_t(1, chan);
+			else if (_cmd_args[1][1] == 'l')
+				mode_l(1, chan);
+			else if (_cmd_args[1][1] == 'o')
+				mode_o(1, chan, client);
+			else if (_cmd_args[1][1] == 'k')
+				mode_k(1, chan);
+			else
+				reponse.push_back(err_unknownmode(_cmd_args[0], _cmd_args[1]));
+		}
+		else if (_cmd_args[1][0] == '-')
+		{
+			if (_cmd_args[1][1] == 'i')
+				mode_i(0, chan);
+			else if (_cmd_args[1][1] == 't')
+				mode_t(0, chan);
+			else if (_cmd_args[1][1] == 'k')
+				mode_k(0, chan);
+			else if (_cmd_args[1][1] == 'l')
+				mode_l(0, chan);
+			else if (_cmd_args[1][1] == 'o')
+				mode_o(0, chan, client);
+			else
+				reponse.push_back(err_unknownmode(_cmd_args[0], _cmd_args[1]));
+		}
 	}
 	return (reponse);
 }

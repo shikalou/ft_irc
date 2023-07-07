@@ -3,10 +3,10 @@
 /*                                                        :::      ::::::::   */
 /*   ft_error.cpp                                       :+:      :+:    :+:   */
 /*                                                    +:+ +:+         +:+     */
-/*   By: ldinaut <ldinaut@student.42.fr>            +#+  +:+       +#+        */
+/*   By: mcouppe <mcouppe@student.42.fr>            +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2023/06/21 12:15:45 by mcouppe           #+#    #+#             */
-/*   Updated: 2023/07/07 12:45:39 by mcouppe          ###   ########.fr       */
+/*   Updated: 2023/07/07 13:24:19 by mcouppe          ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -155,8 +155,8 @@ std::string	rpl_youreoper(const std::string &nick){
 	return ("381 " + nick + " :You are now an IRC operator\r\n");
 }
 
-std::string	rpl_channelmodeis(const std::string &chan, const std::string &mode, const std::string &mode_params){
-	return ("324 " + chan + " " + mode + " " + mode_params + "\r\n");
+std::string	rpl_channelmodeis(const std::string &sender, const std::string &chan, const std::string &mode, const std::string &mode_params){
+	return ("324 " + sender + " " + chan + " " + mode + " " + mode_params + "\r\n");
 }
 
 std::string	rpl_umodeis(const std::string &nick, std::string &modes){

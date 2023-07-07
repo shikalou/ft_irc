@@ -6,7 +6,7 @@
 /*   By: ldinaut <ldinaut@student.42.fr>            +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2023/07/03 10:43:51 by mcouppe           #+#    #+#             */
-/*   Updated: 2023/07/06 17:02:51 by ldinaut          ###   ########.fr       */
+/*   Updated: 2023/07/07 12:00:27 by ldinaut          ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -48,7 +48,7 @@ std::string	rpl_yourhost(const std::string &nick, const std::string &host);
 std::string	rpl_notopic(const std::string &nick, const std::string &channel);
 std::string	rpl_topic(const std::string &nick, const std::string &channel, const std::string &topic);
 std::string	rpl_youreoper(const std::string &nick);
-std::string	rpl_channelmodeis(const std::string &chan, const std::string &mode, const std::string &mode_params);
+std::string	rpl_channelmodeis(const std::string &sender, const std::string &chan, const std::string &mode, const std::string &mode_params);
 std::string	rpl_umodeis(const std::string &nick, std::string &modes);
 std::string	rpl_inviting(const std::string &sender, const std::string &nick, const std::string &chan);
 std::string	rpl_invitelist(const std::string &nick, const std::string &chan);

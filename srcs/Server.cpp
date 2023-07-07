@@ -6,7 +6,7 @@
 /*   By: ldinaut <ldinaut@student.42.fr>            +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2023/06/09 14:30:46 by ldinaut           #+#    #+#             */
-/*   Updated: 2023/07/06 21:04:45 by ldinaut          ###   ########.fr       */
+/*   Updated: 2023/07/07 13:09:02 by ldinaut          ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -20,6 +20,7 @@ Server::Server()
 Server::Server(int port, std::string pass):password(pass), port(port), ev(5)
 {
 	_end = 1;
+	i = 0;
 }
 
 Server::~Server()
@@ -34,9 +35,11 @@ Server Server::operator=(const Server *egal)
 	this->epoll_fd = egal->epoll_fd;
 	this->fd_co = egal->fd_co;
 	this->network = egal->network;
+	this->ev = egal->ev;
 	this->_clients = egal->_clients;
 	this->_channels = egal->_channels;
 	this->_sockaddr = egal->_sockaddr;
+	this->i = egal->i;
 	return (*this);
 }
 
