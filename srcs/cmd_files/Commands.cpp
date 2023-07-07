@@ -6,7 +6,7 @@
 /*   By: ldinaut <ldinaut@student.42.fr>            +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2023/06/19 14:09:45 by ldinaut           #+#    #+#             */
-/*   Updated: 2023/07/06 21:40:02 by ldinaut          ###   ########.fr       */
+/*   Updated: 2023/07/07 13:21:16 by mcouppe          ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -21,6 +21,7 @@ Commands::Commands()
 
 Commands::Commands(std::string cmd_str, int fd_co):  fd_users(), reponse(), _str_rcv(cmd_str), _fd_co(fd_co) {
 	isQuit = false;
+//	isPart = false;
 	this->_check_pass = true;
 	std::cout << "[COMMAND CONSTRUCTOR]"  << std::endl;
 	return ;
@@ -40,6 +41,7 @@ Commands	Commands::operator=(const Commands *egal)
 	this->reponse = egal->reponse;
 	this->fd_users = egal->fd_users;
 	this->isQuit = egal->isQuit;
+//	this->isPart = egal->isPart;
 	return (*this);
 }
 
@@ -94,10 +96,10 @@ std::vector<std::string>	Commands::user_cmd(Client *client)
 	// 	reponse.push_back(err_alreadyregistered(client->getNick()));
 	// 	return (reponse);
 	// }
-	if (this->_check_pass == 1)
+/*	if (this->_check_pass == )
 	{
 			return (reponse);
-	}
+	}*/
 	if (_cmd_args.size() <= 0)
 	{
 		reponse.push_back(err_needmoreparams("[empty]"));
@@ -145,7 +147,9 @@ std::vector<std::string>	Commands::nick_cmd(Client *client)
 std::vector<std::string>	Commands::pass_cmd(Client *client){
 	if (server.password != _cmd_args[0]){
 		reponse.push_back(err_passwdmismatch(client->getNick()));
+		send(client->_sock, reponse[0].c_str(), reponse[0].length(), 0);
 		this->_check_pass = false;
+		close(client->_sock);
 		return (reponse);
 	}
 	return (reponse);
@@ -224,7 +228,7 @@ void	Commands::cmd_manager(std::map<int, Client *> client_list)
 			std::cout << "split = " << *it << std::endl;
 		}
 		reponse = launcher(client_list);
-		if (isQuit == true)
+		if (isQuit == true/* || isPart == true*/)
 		{
 			sender_all(client_list);
 		}

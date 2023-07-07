@@ -6,7 +6,7 @@
 /*   By: ldinaut <ldinaut@student.42.fr>            +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2023/07/04 12:30:12 by mcouppe           #+#    #+#             */
-/*   Updated: 2023/07/06 12:21:00 by ldinaut          ###   ########.fr       */
+/*   Updated: 2023/07/07 11:05:36 by mcouppe          ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -167,7 +167,12 @@ std::vector<std::string>	Commands::join_chan(Client *client)
 	// ret += ":@" + client->getNick() + "\r\n";
 	// ret += "366 " + client->getNick() + " " + (*itrecup)->getTitle() + " :End of /NAMES list\r\n";
 	// ret += client->getNick() + " has join the channel\n\r";
-	 std::string res = recup + "has joined the channel " + _cmd_args[0] + "\r\n";
+	std::string	rpl_top;
+	if ((*itrecup)->getTopicBool() == true)
+		rpl_top = rpl_topic(client->getNick(), (*itrecup)->getTitle(), (*itrecup)->getTopic());
+	else
+		rpl_top = rpl_notopic(client->getNick(), (*itrecup)->getTitle());
+	std::string res = recup + "has joined the channel " + _cmd_args[0] + "\r\n";
 	//_cmd_args[1] = recup;
 	//send(client->_sock, res.c_str(), res.length(), 0);
 	
@@ -175,6 +180,7 @@ std::vector<std::string>	Commands::join_chan(Client *client)
 	//send(this->_fd_co, res.c_str(), res.length(), 0);
 	std::cout << "aaaaaaaaa = " << ret << "\n\n\n";
 	reponse.push_back(ret);
+	reponse.push_back(rpl_top);
 	reponse.push_back(res);
 	return (reponse);
 }

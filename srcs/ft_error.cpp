@@ -6,7 +6,7 @@
 /*   By: ldinaut <ldinaut@student.42.fr>            +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2023/06/21 12:15:45 by mcouppe           #+#    #+#             */
-/*   Updated: 2023/07/06 17:04:39 by ldinaut          ###   ########.fr       */
+/*   Updated: 2023/07/07 12:45:39 by mcouppe          ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -18,12 +18,6 @@ std::string	err_nosuchnick(const std::string &nick){
 }
 
 std::string	err_nosuchchannel(const std::string &sender, std::string &channel){
-	if (channel[0] != '#')
-	{
-		std::string	tmp = "#";
-		tmp.append(channel);
-		return ("403 " + sender + " " + tmp + " :No such channel\r\n");
-	}
 	return ("403 " + sender + " " + channel + " :No such channel\r\n");
 }
 
