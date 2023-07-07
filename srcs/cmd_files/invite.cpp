@@ -6,7 +6,7 @@
 /*   By: ldinaut <ldinaut@student.42.fr>            +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2023/07/05 15:56:38 by ldinaut           #+#    #+#             */
-/*   Updated: 2023/07/06 12:08:44 by ldinaut          ###   ########.fr       */
+/*   Updated: 2023/07/07 18:01:44 by ldinaut          ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -53,6 +53,11 @@ std::vector<std::string>	Commands::invite_cmd(Client *client)
 	{
 		if ((*it).second->getNick() == _cmd_args[0])
 			break;
+	}
+	if (it == server._clients.end())
+	{
+		reponse.push_back(err_nosuchnick(_cmd_args[0]));
+		return (reponse);
 	}
 	chan->_invites.push_back((*it).second);
 	_fd_co = (*it).first;

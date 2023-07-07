@@ -6,7 +6,7 @@
 /*   By: ldinaut <ldinaut@student.42.fr>            +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2023/06/09 14:30:46 by ldinaut           #+#    #+#             */
-/*   Updated: 2023/07/07 16:26:25 by ldinaut          ###   ########.fr       */
+/*   Updated: 2023/07/07 18:04:39 by ldinaut          ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -141,7 +141,6 @@ int	Server::run_serv()
 					}
 					catch(const std::exception& e)
 					{
-						std::cerr << e.what() << '\n';
 					}
 					
 				}

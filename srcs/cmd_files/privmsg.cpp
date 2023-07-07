@@ -6,7 +6,7 @@
 /*   By: ldinaut <ldinaut@student.42.fr>            +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2023/07/04 12:31:55 by mcouppe           #+#    #+#             */
-/*   Updated: 2023/07/07 15:57:26 by ldinaut          ###   ########.fr       */
+/*   Updated: 2023/07/07 18:33:05 by ldinaut          ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -53,7 +53,6 @@ std::vector<std::string>	Commands::privmsg(Client *client)
 		int j = 0;
 		for (size_t k = 0; k < (*itrecup)->_clients.size(); ++k)
 		{
-			std::cout << "arg = " << arg << " sock = " << (*itrecup)->_clients[k]->getNick() << "\n\n\n";
 			if (client->_sock != (*itrecup)->_clients[k]->_sock)
 			{
 				arg = regroup_mess(_cmd_args, client, 0);
