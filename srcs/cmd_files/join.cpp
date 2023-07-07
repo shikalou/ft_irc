@@ -3,10 +3,10 @@
 /*                                                        :::      ::::::::   */
 /*   join.cpp                                           :+:      :+:    :+:   */
 /*                                                    +:+ +:+         +:+     */
-/*   By: ldinaut <ldinaut@student.42.fr>            +#+  +:+       +#+        */
+/*   By: mcouppe <mcouppe@student.42.fr>            +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2023/07/04 12:30:12 by mcouppe           #+#    #+#             */
-/*   Updated: 2023/07/07 17:15:06 by ldinaut          ###   ########.fr       */
+/*   Updated: 2023/07/07 18:52:34 by mcouppe          ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -114,7 +114,7 @@ std::vector<std::string>	Commands::join_chan(Client *client)
 		// {
 		// 	std::cout << (*t)->getNick() << "\n\n\n";
 		// }
-		client->_chans.push_back(new Channel(*it));
+		client->_chans.push_back(*it);
 	}
 
 				/////////////////// DEBUG ///////////////////

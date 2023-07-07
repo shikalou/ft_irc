@@ -6,7 +6,7 @@
 /*   By: ldinaut <ldinaut@student.42.fr>            +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2023/06/19 14:09:45 by ldinaut           #+#    #+#             */
-/*   Updated: 2023/07/07 17:23:43 by ldinaut          ###   ########.fr       */
+/*   Updated: 2023/07/07 17:50:45 by mcouppe          ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -66,7 +66,6 @@ void	Commands::sender(std::vector<std::string> cmd, std::string args){
 	//std::cout << "in sener = [" << cmd << "]" << "\n";
 	for (size_t i = 0; i < reponse.size(); ++i)
 	{
-		usleep(6000);
 		std::cout << "in sender = [" << cmd[i] << "]" << "\n";
 		if (fd_users.size() > 1)
 		{
