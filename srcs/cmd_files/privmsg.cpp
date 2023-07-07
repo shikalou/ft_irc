@@ -6,7 +6,7 @@
 /*   By: ldinaut <ldinaut@student.42.fr>            +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2023/07/04 12:31:55 by mcouppe           #+#    #+#             */
-/*   Updated: 2023/07/06 17:44:08 by ldinaut          ###   ########.fr       */
+/*   Updated: 2023/07/07 15:57:26 by ldinaut          ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -17,16 +17,14 @@
 std::string regroup_mess(std::vector<std::string> vec, Client *client, int mode)
 {
 	(void)client;
+	(void)mode;
 	std::string ret;
-	if (mode == 0)
-		ret = ":" + client->getNick() + "!~" + client->getNick() + "@localhost PRIVMSG ";
-	else
-		ret = ":" + client->getNick() + " PRIVMSG ";
-
+	ret = ":" + client->getNick() + "!~" + client->getNick() + "@127.0.0.1 PRIVMSG ";
 	for (size_t i = 0; i < vec.size(); ++i)
 	{
 		ret += vec[i];
-		ret += " ";
+		if (i + 1 < vec.size())
+			ret += " ";
 	}
 	return (ret);
 }

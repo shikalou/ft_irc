@@ -3,10 +3,10 @@
 /*                                                        :::      ::::::::   */
 /*   Commands.cpp                                       :+:      :+:    :+:   */
 /*                                                    +:+ +:+         +:+     */
-/*   By: mcouppe <mcouppe@student.42.fr>            +#+  +:+       +#+        */
+/*   By: ldinaut <ldinaut@student.42.fr>            +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2023/06/19 14:09:45 by ldinaut           #+#    #+#             */
-/*   Updated: 2023/07/07 14:34:48 by mcouppe          ###   ########.fr       */
+/*   Updated: 2023/07/07 17:23:43 by ldinaut          ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -66,6 +66,7 @@ void	Commands::sender(std::vector<std::string> cmd, std::string args){
 	//std::cout << "in sener = [" << cmd << "]" << "\n";
 	for (size_t i = 0; i < reponse.size(); ++i)
 	{
+		usleep(6000);
 		std::cout << "in sender = [" << cmd[i] << "]" << "\n";
 		if (fd_users.size() > 1)
 		{
@@ -83,6 +84,7 @@ void	Commands::sender(std::vector<std::string> cmd, std::string args){
 	}
 	return ;
 }
+
 
 std::vector<std::string>	Commands::pong(void){
 	reponse.push_back("PONG 127.0.0.1\r\n");
@@ -141,7 +143,8 @@ std::vector<std::string>	Commands::nick_cmd(Client *client)
 	return (reponse);
 }
 
-std::vector<std::string>	Commands::pass_cmd(Client *client){
+std::vector<std::string>	Commands::pass_cmd(Client *client)
+{
 	if (server.password != _cmd_args[0]){
 		reponse.push_back(err_passwdmismatch(client->getNick()));
 		send(client->_sock, reponse[0].c_str(), reponse[0].length(), 0);
@@ -210,6 +213,49 @@ void	aff_vector(std::vector<std::string> toto)
 		std::cout << "channel = " << (*it) << "\n";
 }
 
+void	Server::deleteClient(Client *client)
+{
+	//server._channels// boucle sur ca 
+	// boucle sur client de chaque channel
+	// check si il est dedans - operator ? delete
+	std::vector<Channel *>::iterator	servchan_it = server._channels.begin();
+	std::vector<Channel *>::iterator	clichan_it = client->_chans.begin();
+	std::vector<Client *>::iterator		oper_it;
+	std::vector<Client *>::iterator		invit_it;
+	for (; servchan_it != server._channels.end(); ++servchan_it)
+	{
+		for (; clichan_it != client->_chans.end(); ++clichan_it)
+		{
+			if ((*servchan_it)->getTitle() == (*clichan_it)->getTitle())
+			{
+				for (oper_it = (*clichan_it)->_operators.begin(); oper_it != (*clichan_it)->_operators.end(); ++oper_it)
+				{
+					if ((*oper_it)->getNick() == client->getNick())
+						(*clichan_it)->_operators.erase(oper_it);
+				}
+				for (invit_it = (*clichan_it)->_invites.begin(); invit_it != (*clichan_it)->_invites.end(); ++invit_it)
+				{
+					if ((*invit_it)->getNick() == client->getNick())
+						(*clichan_it)->_invites.erase(invit_it);
+				}
+				for (oper_it = (*servchan_it)->_operators.begin(); oper_it != (*servchan_it)->_operators.end(); ++oper_it)
+				{
+					if ((*oper_it)->getNick() == client->getNick())
+						(*servchan_it)->_operators.erase(oper_it);
+				}
+				for (invit_it = (*servchan_it)->_invites.begin(); invit_it != (*servchan_it)->_invites.end(); ++invit_it)
+				{
+					if ((*invit_it)->getNick() == client->getNick())
+						(*servchan_it)->_invites.erase(invit_it);
+				}
+			}
+			delete (*clichan_it);
+		}
+	}
+	server._clients.erase(client->_sock);
+	delete client;
+}
+
 void	Commands::cmd_manager(std::map<int, Client *> client_list)
 {
 	std::vector<std::string> split_nl = split(_str_rcv, "\r\n");
@@ -234,7 +280,7 @@ void	Commands::cmd_manager(std::map<int, Client *> client_list)
 		reponse.clear();
 		if (isQuit == true)
 		{
-			delete client_list[_fd_co];
+			server.deleteClient(client_list[_fd_co]);
 			delete this;
 		}
 	}

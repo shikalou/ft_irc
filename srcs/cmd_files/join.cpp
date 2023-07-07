@@ -6,7 +6,7 @@
 /*   By: ldinaut <ldinaut@student.42.fr>            +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2023/07/04 12:30:12 by mcouppe           #+#    #+#             */
-/*   Updated: 2023/07/07 11:05:36 by mcouppe          ###   ########.fr       */
+/*   Updated: 2023/07/07 17:15:06 by ldinaut          ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -114,7 +114,7 @@ std::vector<std::string>	Commands::join_chan(Client *client)
 		// {
 		// 	std::cout << (*t)->getNick() << "\n\n\n";
 		// }
-		client->_chans.push_back(*it);
+		client->_chans.push_back(new Channel(*it));
 	}
 
 				/////////////////// DEBUG ///////////////////
@@ -180,7 +180,7 @@ std::vector<std::string>	Commands::join_chan(Client *client)
 	//send(this->_fd_co, res.c_str(), res.length(), 0);
 	std::cout << "aaaaaaaaa = " << ret << "\n\n\n";
 	reponse.push_back(ret);
-	reponse.push_back(rpl_top);
 	reponse.push_back(res);
+	reponse.push_back(rpl_top);
 	return (reponse);
 }

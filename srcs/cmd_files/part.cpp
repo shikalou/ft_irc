@@ -3,10 +3,10 @@
 /*                                                        :::      ::::::::   */
 /*   part.cpp                                           :+:      :+:    :+:   */
 /*                                                    +:+ +:+         +:+     */
-/*   By: mcouppe <marvin@42.fr>                     +#+  +:+       +#+        */
+/*   By: ldinaut <ldinaut@student.42.fr>            +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2023/07/06 16:05:48 by mcouppe           #+#    #+#             */
-/*   Updated: 2023/07/07 14:51:50 by mcouppe          ###   ########.fr       */
+/*   Updated: 2023/07/07 16:12:39 by ldinaut          ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -25,6 +25,7 @@ void	Commands::remove_cli_chan(const std::string &chan_title, Client *client){
 					break ;
 				}
 			}
+			delete *it_chan;
 			client->_chans.erase(it_chan);
 			break ;
 		}

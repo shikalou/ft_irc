@@ -6,7 +6,7 @@
 /*   By: ldinaut <ldinaut@student.42.fr>            +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2023/06/23 15:11:42 by ldinaut           #+#    #+#             */
-/*   Updated: 2023/07/07 12:21:22 by ldinaut          ###   ########.fr       */
+/*   Updated: 2023/07/07 17:22:02 by ldinaut          ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -24,7 +24,7 @@ Channel::Channel(std::string title) : _title(title)
 	_limit_set = false;
 }
 
-Channel::Channel(Channel *cpy)
+Channel::Channel(Channel *cpy): _clients(cpy->_clients), _invites(cpy->_invites)
 {
 	*this = cpy;
 }
@@ -40,8 +40,6 @@ Channel	Channel::operator=(const Channel *egal)
 	_topic_set = egal->_topic_set;
 	_pass_set = egal->_pass_set;
 	_limit_set = egal->_limit_set;
-	_clients = egal->_clients;
-	_invites = egal->_invites;
 	_operators = egal->_operators;
 	return (*this);
 }
