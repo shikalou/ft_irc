@@ -6,7 +6,7 @@
 /*   By: mcouppe <marvin@42.fr>                     +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2023/07/06 16:05:48 by mcouppe           #+#    #+#             */
-/*   Updated: 2023/07/07 14:51:50 by mcouppe          ###   ########.fr       */
+/*   Updated: 2023/07/07 17:23:24 by mcouppe          ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -44,11 +44,13 @@ void	Commands::remove_cli_chan(const std::string &chan_title, Client *client){
 	}
 }
 
-void						Commands::adding_fd_users(Channel* chan){
+void			Commands::adding_fd_users(Channel* chan, int client_sock){
 	std::vector<Client *>::iterator	it = chan->_clients.begin();
+//	(void)client_sock;
 	for (; it != chan->_clients.end(); ++it){
 	//	std::cout << ORANGE << "on envoie part @ " << (*it)->getNick() << RESET << std::endl;
-		this->fd_users.push_back((*it)->_sock);
+		if ((*it)->_sock != client_sock)
+			this->fd_users.push_back((*it)->_sock);
 	}
 }
 
@@ -61,7 +63,8 @@ std::vector<std::string>	Commands::part(Client *client){
 			for (; chan_cli != client->_chans.end(); ++chan_cli){
 				if ((*chan_cli)->getTitle() == _cmd_args[0]){
 					std::string	reason = _cmd_args[1];
-					adding_fd_users((*it));
+					this->fd_users.push_back(client->_sock);
+					adding_fd_users((*it), client->_sock);
 					remove_cli_chan((*chan_cli)->getTitle(), client);
 					std::string ret = ":" + client->getNick() + "!" + client->getUser() + "@localhost PART " + (*it)->getTitle() + " "+ reason + "\r\n"; 
 					reponse.push_back(ret);
