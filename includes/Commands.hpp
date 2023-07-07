@@ -6,7 +6,7 @@
 /*   By: ldinaut <ldinaut@student.42.fr>            +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2023/06/19 14:10:05 by ldinaut           #+#    #+#             */
-/*   Updated: 2023/07/06 21:38:13 by ldinaut          ###   ########.fr       */
+/*   Updated: 2023/07/07 12:31:54 by ldinaut          ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -36,32 +36,28 @@ class Commands
 		void						sender_all(std::map<int, Client *> client_list);
 
 // CMDS FUNCTIONS
-		std::vector<std::string>	pong(void);
-		std::vector<std::string>	join_chan(Client *client);
-//		void	kick(void);
-//		void	invite(void);
-		std::vector<std::string>	mode(Client *client);
 		void	mode_i(int mode, Channel *chan);
 		void	mode_t(int mode, Channel *chan);
 		void	mode_o(int mode, Channel *chan, Client *client);
 		void	mode_k(int mode, Channel *chan);
 		void	mode_l(int mode, Channel *chan);
 
+		std::vector<std::string>	pong(void);
+		std::vector<std::string>	join_chan(Client *client);
+		std::vector<std::string>	mode(Client *client);
 		std::vector<std::string>	privmsg(Client *client);
 		std::vector<std::string>	part(Client *client);
-		void						remove_cli_chan(const std::string &chan_title, Client *client);
 		std::vector<std::string>	quit(Client *client);
-	//	void	squit(void);// quit only server
 		std::vector<std::string>	nick_cmd(Client *client);
 		std::vector<std::string>	user_cmd(Client *client);
 		std::vector<std::string>	pass_cmd(Client *client);
 		std::vector<std::string>	kick_cmd(Client *client);
 		std::vector<std::string>	topic_cmd(Client *client);
+		std::vector<std::string>	invite_cmd(Client *client);
 		std::string					setting_topic(std::vector<Channel *>::iterator it, Client *client);
 		std::string					topic_from_client(Client *client, std::string chan_input);
 		std::string					topic_from_server(Client *client, std::string chan_input);
-		
-		std::vector<std::string>	invite_cmd(Client *client);
+		void						remove_cli_chan(const std::string &chan_title, Client *client);
 
 		std::vector<int>			fd_users;
 		bool						isQuit;
@@ -72,14 +68,11 @@ class Commands
 		Channel	*channel_exists(std::string chan_name);
 		Client	*nick_exists(std::string nick_name, std::vector<Client *> clients);
 
-
-
-
 	private :
 		std::string					_str_rcv;
 		std::string					_cmd;
-		std::vector<std::string>	_cmd_args;
 		int							_fd_co;
+		std::vector<std::string>	_cmd_args;
 		bool						_check_pass;
 };
 std::vector<std::string> split(std::string str, std::string delim);

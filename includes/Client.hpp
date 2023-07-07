@@ -6,7 +6,7 @@
 /*   By: ldinaut <ldinaut@student.42.fr>            +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2023/06/16 14:47:29 by ldinaut           #+#    #+#             */
-/*   Updated: 2023/07/06 21:38:09 by ldinaut          ###   ########.fr       */
+/*   Updated: 2023/07/07 12:23:55 by ldinaut          ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -24,13 +24,13 @@ class Client{
 		Client(int sock_cli);
 		Client(Client *cpy)
 		{
-			_nick = cpy->getNick();
+			_nick = cpy->_nick;
+			_user = cpy->_user;
+			_chans = cpy->_chans;
 			_cmd = cpy->_cmd;
 			_sock = cpy->_sock;
 			_register = cpy->_register;
 			_recv = cpy->_recv;
-			_chans = cpy->_chans;
-			_user = cpy->_user;
 		}
 		~Client(void);
 

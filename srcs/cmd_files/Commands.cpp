@@ -6,7 +6,7 @@
 /*   By: ldinaut <ldinaut@student.42.fr>            +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2023/06/19 14:09:45 by ldinaut           #+#    #+#             */
-/*   Updated: 2023/07/06 21:40:02 by ldinaut          ###   ########.fr       */
+/*   Updated: 2023/07/07 13:19:01 by ldinaut          ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -19,7 +19,9 @@ Commands::Commands()
 	// std::cout << "default constructor called" << std::endl;
 }
 
-Commands::Commands(std::string cmd_str, int fd_co):  fd_users(), reponse(), _str_rcv(cmd_str), _fd_co(fd_co) {
+Commands::Commands(std::string cmd_str, int fd_co):  fd_users(), reponse(), _str_rcv(cmd_str), _fd_co(fd_co), _cmd_args(0)
+{
+	_cmd = "";
 	isQuit = false;
 	this->_check_pass = true;
 	std::cout << "[COMMAND CONSTRUCTOR]"  << std::endl;
@@ -89,23 +91,16 @@ std::vector<std::string>	Commands::pong(void){
 
 std::vector<std::string>	Commands::user_cmd(Client *client)
 {
-	// if (client->_register == 1)
-	// {
-	// 	reponse.push_back(err_alreadyregistered(client->getNick()));
-	// 	return (reponse);
-	// }
-	if (this->_check_pass == 1)
-	{
-			return (reponse);
-	}
-	if (_cmd_args.size() <= 0)
+	if (_cmd_args.size() <= 0 && _cmd == "USER")
 	{
 		reponse.push_back(err_needmoreparams("[empty]"));
 		return (reponse);
 	}
-	client->SetUser(_cmd_args[0]);
-	server.network = _cmd_args[2];
-	std::string rpl_wel = rpl_welcome(client->getNick(), client->getUser(), server.network);
+	client->SetUser(client->getNick());
+	if (server.i == 1)
+		return (reponse);
+	server.network = "ircserv";
+	std::string rpl_wel = rpl_welcome(client->getNick(), client->getNick(), server.network);
 	std::string	rpl_yoh = rpl_yourhost(client->getNick(), server.network);
 	std::string ret = rpl_wel + rpl_yoh;
 	client->_register = 1;
@@ -117,7 +112,6 @@ std::vector<std::string>	Commands::nick_cmd(Client *client)
 {
 	if (_cmd_args[0].size() > 20)
 	{
-		std::cout << "nick nw = |" << _cmd_args[0] << "|"<< "\n\n\n";
 		reponse.push_back(err_erroneusnickname(client->getNick(), _cmd_args[0]));
 		send(client->_sock, reponse[0].c_str(), reponse[0].length(), 0);
 		close(client->_sock);
@@ -127,11 +121,11 @@ std::vector<std::string>	Commands::nick_cmd(Client *client)
 	std::map<int, Client *>::iterator it = server._clients.begin();
 	for (; it != server._clients.end(); ++it)
 	{
+		std::cout << "nick nw = |" << (*it).second->getNick() << "|" << " " << "|" << _cmd_args[0] << "|" << "\n\n\n";
 		if ((*it).second->getNick() == _cmd_args[0])
 		{
-			reponse.push_back(err_nicknameinuse(client->getNick(), _cmd_args[0]));
-			//send(client->_sock, reponse[0].c_str(), reponse[0].length(), 0);
-			//close(client->_sock);
+			reponse.push_back(err_nicknameinuse(_cmd_args[0], _cmd_args[0]));
+			server.i = 1;
 			return (reponse);
 		}
 	}
@@ -139,13 +133,20 @@ std::vector<std::string>	Commands::nick_cmd(Client *client)
 	client->SetNick(_cmd_args[0]);
 	ret = ":*!@localhost NICK " + client->getNick() + "\r\n";
 	reponse.push_back(ret);
+	if (server.i == 1)
+	{
+		server.i = 0;
+		user_cmd(client);
+	}
 	return (reponse);
 }
 
 std::vector<std::string>	Commands::pass_cmd(Client *client){
 	if (server.password != _cmd_args[0]){
 		reponse.push_back(err_passwdmismatch(client->getNick()));
+		send(client->_sock, reponse[0].c_str(), reponse[0].length(), 0);
 		this->_check_pass = false;
+		close(client->_sock);
 		return (reponse);
 	}
 	return (reponse);

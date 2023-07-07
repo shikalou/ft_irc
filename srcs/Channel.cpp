@@ -6,17 +6,22 @@
 /*   By: ldinaut <ldinaut@student.42.fr>            +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2023/06/23 15:11:42 by ldinaut           #+#    #+#             */
-/*   Updated: 2023/07/05 20:07:16 by ldinaut          ###   ########.fr       */
+/*   Updated: 2023/07/07 12:21:22 by ldinaut          ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
 #include "Channel.hpp"
 
-Channel::Channel(std::string title) : _title(title), _invit_only(false)
+Channel::Channel(std::string title) : _title(title)
 {
 	max_client = -1;
-	// _title.erase(_title.size() - 2, _title.size());
-	this->_topic_set = 0;
+	_topic = "";
+	_pass = "";
+	_topic_restrict = false;
+	_invit_only = false;
+	_topic_set = false;
+	_pass_set = false;
+	_limit_set = false;
 }
 
 Channel::Channel(Channel *cpy)

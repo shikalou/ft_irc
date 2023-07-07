@@ -6,7 +6,7 @@
 /*   By: ldinaut <ldinaut@student.42.fr>            +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2023/06/23 15:11:22 by ldinaut           #+#    #+#             */
-/*   Updated: 2023/07/05 20:07:05 by ldinaut          ###   ########.fr       */
+/*   Updated: 2023/07/07 12:19:03 by ldinaut          ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -32,7 +32,6 @@ class Channel
 		void		setTopic(std::string topic);
 		void		setTopicBool(bool setter);
 
-
 		bool	getInviteOnly() const {return (_invit_only);} 
 		void	setInviteOnly(bool mode) {_invit_only = mode;};
 		bool	getTopicRestrict() const {return (_topic_restrict);} 
@@ -53,7 +52,6 @@ class Channel
 
 	private:
 		int						max_client;
-		std::vector<Client *>	_banned;
 		std::string				_title;
 		std::string				_topic;
 		std::string				_pass;
