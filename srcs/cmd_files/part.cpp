@@ -3,10 +3,10 @@
 /*                                                        :::      ::::::::   */
 /*   part.cpp                                           :+:      :+:    :+:   */
 /*                                                    +:+ +:+         +:+     */
-/*   By: mcouppe <marvin@42.fr>                     +#+  +:+       +#+        */
+/*   By: mcouppe <mcouppe@student.42.fr>            +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2023/07/06 16:05:48 by mcouppe           #+#    #+#             */
-/*   Updated: 2023/07/07 17:23:24 by mcouppe          ###   ########.fr       */
+/*   Updated: 2023/07/07 18:45:34 by mcouppe          ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -25,6 +25,7 @@ void	Commands::remove_cli_chan(const std::string &chan_title, Client *client){
 					break ;
 				}
 			}
+			delete *it_chan;
 			client->_chans.erase(it_chan);
 			break ;
 		}
@@ -44,14 +45,15 @@ void	Commands::remove_cli_chan(const std::string &chan_title, Client *client){
 	}
 }
 
-void			Commands::adding_fd_users(Channel* chan, int client_sock){
+std::vector<int>	Commands::adding_fd_users(Channel* chan, int client_sock){
 	std::vector<Client *>::iterator	it = chan->_clients.begin();
-//	(void)client_sock;
-	for (; it != chan->_clients.end(); ++it){
-	//	std::cout << ORANGE << "on envoie part @ " << (*it)->getNick() << RESET << std::endl;
+	(void)client_sock;
+for (; it != chan->_clients.end(); ++it){
+		std::cout << ORANGE << "on envoie part @ " << (*it)->getNick() << RESET << std::endl;
 		if ((*it)->_sock != client_sock)
 			this->fd_users.push_back((*it)->_sock);
 	}
+	return (fd_users);
 }
 
 std::vector<std::string>	Commands::part(Client *client){

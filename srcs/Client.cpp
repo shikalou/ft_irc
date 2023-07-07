@@ -6,19 +6,16 @@
 /*   By: ldinaut <ldinaut@student.42.fr>            +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2023/06/19 16:07:39 by mcouppe           #+#    #+#             */
-/*   Updated: 2023/07/07 12:23:16 by ldinaut          ###   ########.fr       */
+/*   Updated: 2023/07/07 16:19:30 by ldinaut          ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
 # include "Client.hpp"
 
-Client::Client(int sock_cli): _sock(sock_cli)
+Client::Client(int sock_cli): _sock(sock_cli), _recv(), _nick(), _user()
 {
 	_register = 0;
-	_recv = "";
 	_cmd = NULL;
-	_nick = "";
-	_user = "";
 }
 
 Client::~Client(void)
