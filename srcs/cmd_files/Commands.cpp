@@ -6,7 +6,7 @@
 /*   By: ldinaut <ldinaut@student.42.fr>            +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2023/06/19 14:09:45 by ldinaut           #+#    #+#             */
-/*   Updated: 2023/07/07 17:50:45 by mcouppe          ###   ########.fr       */
+/*   Updated: 2023/07/07 19:52:03 by ldinaut          ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -229,23 +229,43 @@ void	Server::deleteClient(Client *client)
 			{
 				for (oper_it = (*clichan_it)->_operators.begin(); oper_it != (*clichan_it)->_operators.end(); ++oper_it)
 				{
-					if ((*oper_it)->getNick() == client->getNick())
-						(*clichan_it)->_operators.erase(oper_it);
+					if ((*clichan_it)->_operators.size())
+					{
+						if ((*oper_it)->getNick() == client->getNick())
+							(*clichan_it)->_operators.erase(oper_it);
+					}
+					else
+						break ;
 				}
 				for (invit_it = (*clichan_it)->_invites.begin(); invit_it != (*clichan_it)->_invites.end(); ++invit_it)
 				{
-					if ((*invit_it)->getNick() == client->getNick())
-						(*clichan_it)->_invites.erase(invit_it);
+					if ((*clichan_it)->_invites.size())
+					{
+						if ((*invit_it)->getNick() == client->getNick())
+							(*clichan_it)->_invites.erase(invit_it);
+					}
+					else
+						break ;
 				}
 				for (oper_it = (*servchan_it)->_operators.begin(); oper_it != (*servchan_it)->_operators.end(); ++oper_it)
 				{
-					if ((*oper_it)->getNick() == client->getNick())
-						(*servchan_it)->_operators.erase(oper_it);
+					if ((*servchan_it)->_operators.size())
+					{
+						if ((*oper_it)->getNick() == client->getNick())
+							(*servchan_it)->_operators.erase(oper_it);
+					}
+					else
+						break ;
 				}
 				for (invit_it = (*servchan_it)->_invites.begin(); invit_it != (*servchan_it)->_invites.end(); ++invit_it)
 				{
-					if ((*invit_it)->getNick() == client->getNick())
-						(*servchan_it)->_invites.erase(invit_it);
+					if ((*servchan_it)->_invites.size())
+					{
+						if ((*invit_it)->getNick() == client->getNick())
+							(*servchan_it)->_invites.erase(invit_it);
+					}
+					else
+						break ;
 				}
 			}
 			delete (*clichan_it);
