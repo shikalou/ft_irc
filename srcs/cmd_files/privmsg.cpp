@@ -6,7 +6,7 @@
 /*   By: ldinaut <ldinaut@student.42.fr>            +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2023/07/04 12:31:55 by mcouppe           #+#    #+#             */
-/*   Updated: 2023/07/07 18:33:05 by ldinaut          ###   ########.fr       */
+/*   Updated: 2023/07/07 20:36:45 by ldinaut          ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -14,7 +14,7 @@
 # include "Client.hpp"
 # include "ft_error.hpp"
 
-std::string regroup_mess(std::vector<std::string> vec, Client *client, int mode)
+std::string Commands::regroup_mess(std::vector<std::string> vec, Client *client, int mode)
 {
 	(void)client;
 	(void)mode;
@@ -74,11 +74,11 @@ std::vector<std::string>	Commands::privmsg(Client *client)
 		for (; it != server._clients.end(); ++it) 
 		{
 			if ((*it).second->getNick() == _cmd_args[0])
+				// std::cout << "arg = " << arg << (*it).first << " nick = " << (*it).second->getNick() << std::endl;
 			{
 				arg = regroup_mess(_cmd_args, client, 1);
 				arg += "\r\n";
 				reponse.push_back(arg);
-				//std::cout << "arg = " << arg << (*it).first << " nick = " << (*it).second->getNick() << std::endl;
 				_fd_co = (*it).second->_sock;
 				check++;
 				break ;

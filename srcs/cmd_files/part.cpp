@@ -6,7 +6,7 @@
 /*   By: ldinaut <ldinaut@student.42.fr>            +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2023/07/06 16:05:48 by mcouppe           #+#    #+#             */
-/*   Updated: 2023/07/07 19:35:34 by ldinaut          ###   ########.fr       */
+/*   Updated: 2023/07/08 17:37:07 by ldinaut          ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -25,8 +25,8 @@ void	Commands::remove_cli_chan(const std::string &chan_title, Client *client){
 					break ;
 				}
 			}
-			// delete *it_chan;
-			// client->_chans.erase(it_chan);
+//			delete *it_chan;
+			//client->_chans.erase(it_chan);
 			break ;
 		}
 	}

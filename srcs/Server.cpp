@@ -6,7 +6,7 @@
 /*   By: ldinaut <ldinaut@student.42.fr>            +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2023/06/09 14:30:46 by ldinaut           #+#    #+#             */
-/*   Updated: 2023/07/07 18:04:39 by ldinaut          ###   ########.fr       */
+/*   Updated: 2023/07/08 16:52:32 by ldinaut          ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -63,6 +63,8 @@ void	Server::accept_newclient(sockaddr_in sockaddr)
 	add_epoll(fd_accept, 2);
 	Client *test = new Client(fd_accept);
 	_clients.insert(std::make_pair(fd_accept, test));
+	if(_clients.size())
+		std::cout << "\n\n\n\n\nici" << (*_clients.begin()).first <<  "\n\n\n\n\n\n";
 }
 
 int	Server::init_serv()
@@ -100,9 +102,8 @@ void	sig_handler(int sig)
 
 int	Server::run_serv()
 {
-	
 	while (_end)
-	{	
+	{
 		signal(SIGQUIT, SIG_IGN);
 		signal(SIGINT, sig_handler);
 		int event = epoll_wait(this->epoll_fd, ev.data(), 5, 1000);
@@ -134,7 +135,6 @@ int	Server::run_serv()
 					_clients[ev[k].data.fd]->_cmd->cmd_manager(_clients);
 					if (cmd_str.find("QUIT"))
 						delete _clients[ev[k].data.fd]->_cmd;
-				//	if (read(ev[k].data.fd, &buffer[0], 0) != -1)
 					try
 					{
 						_clients.at(ev[k].data.fd)->_recv.erase();
@@ -142,7 +142,6 @@ int	Server::run_serv()
 					catch(const std::exception& e)
 					{
 					}
-					
 				}
 			}
 		}

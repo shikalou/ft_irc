@@ -6,7 +6,7 @@
 /*   By: ldinaut <ldinaut@student.42.fr>            +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2023/05/29 13:25:21 by ldinaut           #+#    #+#             */
-/*   Updated: 2023/07/07 16:28:43 by ldinaut          ###   ########.fr       */
+/*   Updated: 2023/07/08 16:45:44 by ldinaut          ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -58,6 +58,7 @@ class Server
 		std::map<int, Client*>	_clients;
 		std::vector<Channel *> _channels;
 
+		void	initBot(void);
 		void	deleteClient(Client *client);
 		void	kill_cmd(std::map<int, Client *> client_list);
 		void	accept_newclient(sockaddr_in sockaddr);
@@ -70,6 +71,5 @@ class Server
 };
 
 extern Server server;
-
 
 #endif

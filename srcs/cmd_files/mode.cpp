@@ -6,7 +6,7 @@
 /*   By: ldinaut <ldinaut@student.42.fr>            +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2023/07/04 13:05:18 by ldinaut           #+#    #+#             */
-/*   Updated: 2023/07/07 12:55:59 by ldinaut          ###   ########.fr       */
+/*   Updated: 2023/07/08 17:04:54 by ldinaut          ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -47,7 +47,7 @@ void	Commands::mode_o(int mode, Channel *chan, Client *client)
 {
 	if (mode == 0)
 	{
-		if (_cmd_args.size() == 2) // mode +o sur le client qui fait la commande
+		if (_cmd_args.size() == 2)
 		{
 			std::vector<Client *>::iterator it = chan->_operators.begin();
 			for (; it != chan->_operators.end(); ++it)
@@ -106,7 +106,7 @@ void	Commands::mode_o(int mode, Channel *chan, Client *client)
 	}
 	else if (mode == 1)
 	{
-		if (_cmd_args.size() == 2) // mode -o sur le client qui fait la commande
+		if (_cmd_args.size() == 2)
 		{
 			std::vector<Client *>::iterator it = chan->_operators.begin();
 			for (; it != chan->_operators.end(); ++it)

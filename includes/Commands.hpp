@@ -3,10 +3,10 @@
 /*                                                        :::      ::::::::   */
 /*   Commands.hpp                                       :+:      :+:    :+:   */
 /*                                                    +:+ +:+         +:+     */
-/*   By: mcouppe <mcouppe@student.42.fr>            +#+  +:+       +#+        */
+/*   By: ldinaut <ldinaut@student.42.fr>            +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2023/06/19 14:10:05 by ldinaut           #+#    #+#             */
-/*   Updated: 2023/07/07 17:58:24 by mcouppe          ###   ########.fr       */
+/*   Updated: 2023/07/07 20:04:58 by ldinaut          ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -67,6 +67,7 @@ class Commands
 		std::vector<std::string>	reponse;
 
 		// VERIF FUNCTIONS
+		std::string regroup_mess(std::vector<std::string> vec, Client *client, int mode);
 		Client	*isOperator(std::vector<Client *> operators, std::string client);
 		Channel	*channel_exists(std::string chan_name);
 		Client	*nick_exists(std::string nick_name, std::vector<Client *> clients);
