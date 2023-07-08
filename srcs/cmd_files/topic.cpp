@@ -3,10 +3,10 @@
 /*                                                        :::      ::::::::   */
 /*   topic.cpp                                          :+:      :+:    :+:   */
 /*                                                    +:+ +:+         +:+     */
-/*   By: mcouppe <marvin@42.fr>                     +#+  +:+       +#+        */
+/*   By: ldinaut <ldinaut@student.42.fr>            +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2023/07/05 16:17:14 by mcouppe           #+#    #+#             */
-/*   Updated: 2023/07/07 19:05:25 by mcouppe          ###   ########.fr       */
+/*   Updated: 2023/07/08 18:18:21 by ldinaut          ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -49,10 +49,8 @@ bool	Commands::check_topic_mode(Client *client, const std::string &chan){
 	for (; it != server._channels.end(); ++it){
 		if ((*it)->getTitle() == chan && (*it)->getTopicRestrict() == true){
 			if (isOperator((*it)->_operators, client->getNick()) != NULL){
-				std::cout << GREEN << "\n\n\n\n\nOPERATOR\n\n\n\n" << RESET << std::endl;
 				return (true);
 			}
-			std::cout << RED << "\n\n\n\nNOT OPE\n\n\n\n" << RESET << std::endl; 
 			return (false);
 		}
 	} 
@@ -71,15 +69,12 @@ std::string	Commands::topic_from_client(Client *client, std::string chan_input){
 			else {
 				if (check_topic_mode(client, (*it)->getTitle()) == false)
 					return (err_chanoprivsneeded(client->getNick(), (*it)->getTitle()));
-	//	ici 2 setting topic ?
 				setting_topic(it, client);
 				std::map<int, Client *>::iterator	all_cli = server._clients.begin();
 				for (; all_cli != server._clients.end(); ++all_cli){
 					std::vector<Channel *>::iterator	chan_cli = (*all_cli).second->_chans.begin();
-				std::cout << LAVENDER << "size = " << (*chan_cli)->_clients.size() << "\n\n\n" << RESET;
 					for (;chan_cli != (*all_cli).second->_chans.end(); ++chan_cli){
 						if (chan_input == (*chan_cli)->getTitle()){
-							std::cout << RED << "\n\n\n\nLALALALALALALAL\n\n\n" << RESET << std::endl;
 							setting_topic(chan_cli, (*all_cli).second);
 							all_cli = server._clients.end();
 							all_cli--;
@@ -89,12 +84,10 @@ std::string	Commands::topic_from_client(Client *client, std::string chan_input){
 						}
 					}
 				}
-				std::cout << GREEN << "ICCCCCCCCCCCCCCCCCCCCCCCCCCCCCI\n" << RESET;
 				this->fd_users.push_back(client->_sock);
 				fd_users = adding_fd_users((*it), client->_sock);
 				for (std::vector<int>::iterator o = fd_users.begin(); o != fd_users.end(); ++o)
 {
-std::cout << "\n\n\n\n\n\n" << (*o) << "\n\n\n\n\n\n";
 }
 				return (rpl_topic(client->getNick(), (*it)->getTitle(), (*it)->getTopic()));	
 			}

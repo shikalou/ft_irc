@@ -6,7 +6,7 @@
 /*   By: ldinaut <ldinaut@student.42.fr>            +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2023/07/06 16:05:48 by mcouppe           #+#    #+#             */
-/*   Updated: 2023/07/08 17:37:07 by ldinaut          ###   ########.fr       */
+/*   Updated: 2023/07/08 18:17:30 by ldinaut          ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -49,7 +49,6 @@ std::vector<int>	Commands::adding_fd_users(Channel* chan, int client_sock){
 	std::vector<Client *>::iterator	it = chan->_clients.begin();
 	(void)client_sock;
 for (; it != chan->_clients.end(); ++it){
-		std::cout << ORANGE << "on envoie part @ " << (*it)->getNick() << RESET << std::endl;
 		if ((*it)->_sock != client_sock)
 			this->fd_users.push_back((*it)->_sock);
 	}

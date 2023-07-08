@@ -6,7 +6,7 @@
 /*   By: ldinaut <ldinaut@student.42.fr>            +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2023/06/19 14:09:45 by ldinaut           #+#    #+#             */
-/*   Updated: 2023/07/08 17:40:22 by ldinaut          ###   ########.fr       */
+/*   Updated: 2023/07/08 18:24:04 by ldinaut          ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -16,7 +16,6 @@
 
 Commands::Commands()
 {
-	// std::cout << "default constructor called" << std::endl;
 }
 
 Commands::Commands(std::string cmd_str, int fd_co):  fd_users(), reponse(), _str_rcv(cmd_str), _fd_co(fd_co), _cmd_args(0)
@@ -24,7 +23,6 @@ Commands::Commands(std::string cmd_str, int fd_co):  fd_users(), reponse(), _str
 	_cmd = "";
 	isQuit = false;
 	this->_check_pass = true;
-	std::cout << "[COMMAND CONSTRUCTOR]"  << std::endl;
 	return ;
 }
 
@@ -60,26 +58,19 @@ void	Commands::sender_all(std::map<int, Client *> client_list)
 	}
 }
 
-void	Commands::sender(std::vector<std::string> cmd, std::string args){
-	//cmd += args;
+void	Commands::sender(std::vector<std::string> cmd, std::string args)
+{
 	(void)args;
-	//std::cout << "in sener = [" << cmd << "]" << "\n";
 	for (size_t i = 0; i < reponse.size(); ++i)
 	{
-		std::cout << "in sender = [" << cmd[i] << "]" << "\n";
+		std::cout << LIGHT_BLUE << "server = [" << cmd[i] << "]" << "\n" << RESET;
 		if (fd_users.size() > 1)
 		{
 			for (std::vector<int>::iterator it = fd_users.begin(); it != fd_users.end(); ++it)
-			{
-				if (send(*it, cmd[i].c_str(), cmd[i].length(), 0/*MSG_DONTWAIT | MSG_NOSIGNAL*/) != (ssize_t)cmd[i].length())
-					std::cout << "send error : clc" << std::endl;		
-			}
+				send(*it, cmd[i].c_str(), cmd[i].length(), 0);
 		}
 		else
-		{
-			if (send(this->_fd_co, cmd[i].c_str(), cmd[i].length(), 0/*MSG_DONTWAIT | MSG_NOSIGNAL*/) != (ssize_t)cmd[i].length())
-				std::cout << "send error : clc" << std::endl;
-		}
+			send(this->_fd_co, cmd[i].c_str(), cmd[i].length(), 0);
 	}
 	return ;
 }
@@ -122,7 +113,6 @@ std::vector<std::string>	Commands::nick_cmd(Client *client)
 	std::map<int, Client *>::iterator it = server._clients.begin();
 	for (; it != server._clients.end(); ++it)
 	{
-		std::cout << "nick nw = |" << (*it).second->getNick() << "|" << " " << "|" << _cmd_args[0] << "|" << "\n\n\n";
 		if ((*it).second->getNick() == _cmd_args[0])
 		{
 			reponse.push_back(err_nicknameinuse(_cmd_args[0], _cmd_args[0]));
@@ -156,7 +146,6 @@ std::vector<std::string>	Commands::pass_cmd(Client *client)
 
 std::vector<std::string>	Commands::launcher(std::map<int, Client *> client_list)
 {
-	std::cout << "DANS LAUNCHER >> " << _cmd << std::endl << _cmd_args[0] << std::endl;
 	if (_cmd == "PING")
 		return (this->pong());
 	if (_cmd == "QUIT")
@@ -183,10 +172,11 @@ std::vector<std::string>	Commands::launcher(std::map<int, Client *> client_list)
 		return (this->part(client_list[_fd_co]));
 	if (_cmd == "KICK")
 		return (this->kick_cmd(client_list[_fd_co]));
-	std::cout << "cmd =" << _cmd << "$" << std::endl;
-
-//	WHEN NOT IN DEBUG : 
-//	return (err_unknowncommand("Irssi", _cmd));
+	else
+	{
+		reponse.push_back(err_unknowncommand("Irssi", _cmd));
+		return (reponse);
+	}
 	return (reponse);
 }
 
@@ -283,11 +273,6 @@ void	Commands::cmd_manager(std::map<int, Client *> client_list)
 		_cmd_args = split(split_nl[i], " ");
 		_cmd = _cmd_args[0];
 		_cmd_args.erase(_cmd_args.begin());
-		std::cout << "split [0] = " << _cmd << std::endl;
-		for (std::vector<std::string>::iterator it = _cmd_args.begin(); it != _cmd_args.end(); it++)
-		{
-			std::cout << "split = " << *it << std::endl;
-		}
 		reponse = launcher(client_list);
 		if (isQuit == true)
 		{

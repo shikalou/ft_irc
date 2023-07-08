@@ -6,7 +6,7 @@
 /*   By: ldinaut <ldinaut@student.42.fr>            +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2023/07/05 15:56:38 by ldinaut           #+#    #+#             */
-/*   Updated: 2023/07/07 19:24:32 by ldinaut          ###   ########.fr       */
+/*   Updated: 2023/07/08 18:15:14 by ldinaut          ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -36,7 +36,6 @@ std::vector<std::string>	Commands::invite_cmd(Client *client)
 	std::vector<Client *>::iterator ita = chan->_clients.begin();
 	for (; ita != chan->_clients.end(); ++ita)
 	{
-		std::cout << "|" << (*ita)->getNick() << "|  |" << _cmd_args[0] << "|\n";
 		if ((*ita)->getNick() == _cmd_args[0])
 		{
 			reponse.push_back(err_useronchannel(client->getNick(), _cmd_args[0]));

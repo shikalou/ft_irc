@@ -6,7 +6,7 @@
 /*   By: ldinaut <ldinaut@student.42.fr>            +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2023/06/09 14:30:46 by ldinaut           #+#    #+#             */
-/*   Updated: 2023/07/08 16:52:32 by ldinaut          ###   ########.fr       */
+/*   Updated: 2023/07/08 18:21:52 by ldinaut          ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -63,8 +63,6 @@ void	Server::accept_newclient(sockaddr_in sockaddr)
 	add_epoll(fd_accept, 2);
 	Client *test = new Client(fd_accept);
 	_clients.insert(std::make_pair(fd_accept, test));
-	if(_clients.size())
-		std::cout << "\n\n\n\n\nici" << (*_clients.begin()).first <<  "\n\n\n\n\n\n";
 }
 
 int	Server::init_serv()
@@ -113,7 +111,6 @@ int	Server::run_serv()
 		{
 			if (this->sock == ev[k].data.fd)
 			{
-				std::cout << "NOUVEAU CLIENT" << std::endl;
 				this->accept_newclient(_sockaddr);
 			}
 			else if (ev[k].events)
@@ -127,9 +124,9 @@ int	Server::run_serv()
 				}
 				std::string	cmd_str(&buffer[0], ret);
 				_clients[ev[k].data.fd]->_recv += cmd_str;
+				std::cout << LAVENDER << "from client [" << cmd_str << "]" << RESET << std::endl;
 				if (_clients[ev[k].data.fd]->_recv.find('\n') != _clients[ev[k].data.fd]->_recv.npos)
 				{
-					std::cout << "dans la boucle = " << _clients[ev[k].data.fd]->_recv << std::endl << std::endl;
 					Commands *cmd = new Commands(_clients[ev[k].data.fd]->_recv, ev[k].data.fd);
 					_clients[ev[k].data.fd]->_cmd = cmd;
 					_clients[ev[k].data.fd]->_cmd->cmd_manager(_clients);

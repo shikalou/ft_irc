@@ -6,7 +6,7 @@
 /*   By: ldinaut <ldinaut@student.42.fr>            +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2023/07/04 13:05:18 by ldinaut           #+#    #+#             */
-/*   Updated: 2023/07/08 17:04:54 by ldinaut          ###   ########.fr       */
+/*   Updated: 2023/07/08 18:17:18 by ldinaut          ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -19,7 +19,6 @@ Channel *channel_exists(std::string chan_name)
 	std::vector<Channel *>::iterator it = server._channels.begin();
 	while (it != server._channels.end())
 	{
-		std::cout << "|"<< chan_name << "|  |" << (*it)->getTitle() << "|\n";
 		if (chan_name == (*it)->getTitle())
 			return (*it);
 		it++;
@@ -240,7 +239,6 @@ std::string	regroup_mode(Channel *channel)
 		ret += "k";
 	if (channel->getLimitClient() == true)
 		ret += "l";
-	std::cout << "END REGROUP MODE " << "|" << ret << "|\n" << std::endl;
 	return (ret);
 }
 

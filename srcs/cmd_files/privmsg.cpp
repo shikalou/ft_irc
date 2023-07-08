@@ -6,7 +6,7 @@
 /*   By: ldinaut <ldinaut@student.42.fr>            +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2023/07/04 12:31:55 by mcouppe           #+#    #+#             */
-/*   Updated: 2023/07/07 20:36:45 by ldinaut          ###   ########.fr       */
+/*   Updated: 2023/07/08 18:17:59 by ldinaut          ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -32,10 +32,6 @@ std::string Commands::regroup_mess(std::vector<std::string> vec, Client *client,
 
 std::vector<std::string>	Commands::privmsg(Client *client)
 {
-	for (size_t i = 0; i < _cmd_args.size(); ++i)
-	{
-		std::cout << "i = " << i << " arg = " << _cmd_args[i] << "\n";
-	}
 	int f = 0;
 	std::string arg;
 	std::vector<Channel *> recupname = server._channels;
@@ -62,8 +58,6 @@ std::vector<std::string>	Commands::privmsg(Client *client)
 				j = 1;
 				_fd_co = (*itrecup)->_clients[k]->_sock;
 				fd_users.push_back(_fd_co);
-				//send((*itrecup)->_clients[k]->_sock, arg.c_str(), arg.size(), 0);
-				//return (reponse);
 			}
 		}
 	}
@@ -74,7 +68,6 @@ std::vector<std::string>	Commands::privmsg(Client *client)
 		for (; it != server._clients.end(); ++it) 
 		{
 			if ((*it).second->getNick() == _cmd_args[0])
-				// std::cout << "arg = " << arg << (*it).first << " nick = " << (*it).second->getNick() << std::endl;
 			{
 				arg = regroup_mess(_cmd_args, client, 1);
 				arg += "\r\n";
@@ -85,11 +78,9 @@ std::vector<std::string>	Commands::privmsg(Client *client)
 			}
 		}
 		if (check == 0){
-	// ERR_NOSUCHNICK
 			reponse.push_back(err_nosuchnick(_cmd_args[0]));
 			return (reponse);
 		}
 	}
-	//std::cout << (*itrecup)->getTitle() << std::endl;
 	return (reponse);
 }
