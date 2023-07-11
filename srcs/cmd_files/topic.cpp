@@ -6,7 +6,7 @@
 /*   By: ldinaut <ldinaut@student.42.fr>            +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2023/07/05 16:17:14 by mcouppe           #+#    #+#             */
-/*   Updated: 2023/07/08 18:18:21 by ldinaut          ###   ########.fr       */
+/*   Updated: 2023/07/11 18:37:30 by mcouppe          ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -16,6 +16,7 @@
 
 std::string	Commands::setting_topic(std::vector<Channel *>::iterator it, Client *client){
 	if (_cmd_args.size() >= 2 && _cmd_args[1].length() > 1){
+		std::cout << LIGHT_PINK << "PREMIERE BOUCLE" << RESET << std::endl;
 		(*it)->setTopic(_cmd_args[1]);
 		(*it)->setTopicBool(true);
 		std::vector<Channel *>::iterator serv_it = server._channels.begin();
@@ -28,6 +29,7 @@ std::string	Commands::setting_topic(std::vector<Channel *>::iterator it, Client 
 		return (rpl_topic(client->getNick(), (*it)->getTitle(), (*it)->getTopic()));
 	}
 	else {
+		std::cout << LIGHT_PINK << "DEUXIEME BOUCLE" << RESET << std::endl;
 		if ((*it)->getTopicBool()){
 			(*it)->setTopic(" ");
 			(*it)->setTopicBool(false);
@@ -41,6 +43,7 @@ std::string	Commands::setting_topic(std::vector<Channel *>::iterator it, Client 
 			return (rpl_topic(client->getNick(), (*it)->getTitle(), (*it)->getTopic()));
 		}
 	}
+	std::cout << LIGHT_PINK << "SORTIE EN RPL ?" << RESET << std::endl;
 	return (rpl_notopic(client->getNick(), (*it)->getTitle()));
 }
 
@@ -58,6 +61,7 @@ bool	Commands::check_topic_mode(Client *client, const std::string &chan){
 }
 
 std::string	Commands::topic_from_client(Client *client, std::string chan_input){
+
 	for (std::vector<Channel *>::iterator it = client->_chans.begin(); it != client->_chans.end(); ++it){
 		if (chan_input == (*it)->getTitle()){
 			if (_cmd_args.size() == 0){
@@ -67,6 +71,7 @@ std::string	Commands::topic_from_client(Client *client, std::string chan_input){
 					return (rpl_notopic(client->getNick(), (*it)->getTitle()));
 			}
 			else {
+				std::cout << RED << "DANS LE ELSE DE TOPIC FROM CLIENT" << RESET << std::endl;
 				if (check_topic_mode(client, (*it)->getTitle()) == false)
 					return (err_chanoprivsneeded(client->getNick(), (*it)->getTitle()));
 				setting_topic(it, client);
@@ -75,20 +80,22 @@ std::string	Commands::topic_from_client(Client *client, std::string chan_input){
 					std::vector<Channel *>::iterator	chan_cli = (*all_cli).second->_chans.begin();
 					for (;chan_cli != (*all_cli).second->_chans.end(); ++chan_cli){
 						if (chan_input == (*chan_cli)->getTitle()){
+							std::cout << RED << "dans la allcli loop cli =" << (*all_cli).second->getNick() << RESET << std::endl;
 							setting_topic(chan_cli, (*all_cli).second);
-							all_cli = server._clients.end();
+					/*		all_cli = server._clients.end();
 							all_cli--;
 							it = chan_cli;
-							
+							*/
 							break ;
 						}
 					}
 				}
-				this->fd_users.push_back(client->_sock);
-				fd_users = adding_fd_users((*it), client->_sock);
-				for (std::vector<int>::iterator o = fd_users.begin(); o != fd_users.end(); ++o)
+		//		this->fd_users.push_back(client->_sock);
+				adding_fd_users((*it), client->_sock);
+				/*for (std::vector<int>::iterator o = fd_users.begin(); o != fd_users.end(); ++o)
 {
-}
+}*/
+
 				return (rpl_topic(client->getNick(), (*it)->getTitle(), (*it)->getTopic()));	
 			}
 		}

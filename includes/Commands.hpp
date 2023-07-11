@@ -6,7 +6,7 @@
 /*   By: ldinaut <ldinaut@student.42.fr>            +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2023/06/19 14:10:05 by ldinaut           #+#    #+#             */
-/*   Updated: 2023/07/07 20:04:58 by ldinaut          ###   ########.fr       */
+/*   Updated: 2023/07/11 18:13:34 by mcouppe          ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -48,7 +48,7 @@ class Commands
 		std::vector<std::string>	privmsg(Client *client);
 		std::vector<std::string>	part(Client *client);
 		void						remove_cli_chan(const std::string &chan_title, Client *client);
-		std::vector<int>			adding_fd_users(Channel* chan, int client_sock);
+		void						adding_fd_users(Channel* chan, int client_sock);
 		std::vector<std::string>	quit(Client *client);
 		std::vector<std::string>	nick_cmd(Client *client);
 		std::vector<std::string>	user_cmd(Client *client);

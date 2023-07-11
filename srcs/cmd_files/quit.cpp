@@ -6,7 +6,7 @@
 /*   By: ldinaut <ldinaut@student.42.fr>            +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2023/07/06 12:35:07 by ldinaut           #+#    #+#             */
-/*   Updated: 2023/07/08 17:57:05 by ldinaut          ###   ########.fr       */
+/*   Updated: 2023/07/11 17:53:15 by mcouppe          ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -38,7 +38,7 @@ std::vector<std::string>	Commands::quit(Client *client)
 		}
 	}
 	ret += "\r\n";
-	reponse[0].erase();
+	reponse.clear();
 	reponse.push_back(ret);
 	server._clients.erase(client->_sock);
 	return (reponse);
