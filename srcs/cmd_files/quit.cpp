@@ -6,7 +6,7 @@
 /*   By: ldinaut <ldinaut@student.42.fr>            +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2023/07/06 12:35:07 by ldinaut           #+#    #+#             */
-/*   Updated: 2023/07/11 17:53:15 by mcouppe          ###   ########.fr       */
+/*   Updated: 2023/07/11 22:36:21 by mcouppe          ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -18,12 +18,16 @@ std::vector<std::string>	Commands::quit(Client *client)
 {
 	std::vector<std::string> stock(_cmd_args);
 	_cmd_args.clear();
-	
+	std::size_t	size = client->_chans.size();
+	std::size_t	i = 0;
 	for (std::vector<Channel *>::iterator it = client->_chans.begin(); it != client->_chans.end(); ++it)
 	{
 		_cmd_args[0] = (*it)->getTitle();
 		part(client);
 		sender(reponse, "");
+		i++;
+		if (i == size)
+			break;
 	}
 	_cmd_args = stock;
 	isQuit = true;
@@ -38,7 +42,7 @@ std::vector<std::string>	Commands::quit(Client *client)
 		}
 	}
 	ret += "\r\n";
-	reponse.clear();
+//	reponse.clear();
 	reponse.push_back(ret);
 	server._clients.erase(client->_sock);
 	return (reponse);
