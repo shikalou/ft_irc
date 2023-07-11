@@ -31,7 +31,8 @@ CPPFLAGS	=	-Wall -Wextra -Werror -std=c++98 -g3 -pedantic -I includes/
 
 OBJS_FILES	=	$(SRCS_FILES:%.cpp=%.o)
 
-OBJS	=	$(addprefix objs/, $(OBJS_FILES))
+OBJ_DIR =	objs/
+OBJS	=	$(addprefix $(OBJ_DIR), $(OBJS_FILES))
 
 DEP		=	$(OBJS:%.o=%.d)
 
@@ -42,17 +43,19 @@ $(NAME)	:	$(OBJS)
 
 
 clean	:
-	rm -rf $(OBJS) $(DEP)
-	rm -rf objs/
+	rm -rf $(OBJ_DIR)
 
 fclean	:	clean
 	rm -rf $(NAME)
 
 re	:	fclean all
 
-objs/%.o	: srcs/%.cpp $(INCS)
-	mkdir -p objs
-	mkdir -p objs/cmd_files
+-include $(DEP)
+
+objs/%.o	: srcs/%.cpp | $(OBJ_DIR)
 	$(CXX) $(CPPFLAGS) -MMD -o $@ -c $<
+
+$(OBJ_DIR):
+	mkdir -p objs/cmd_files
 
 .PHONY: all clean fclean re
