@@ -6,7 +6,7 @@
 /*   By: ldinaut <ldinaut@student.42.fr>            +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2023/06/19 14:09:45 by ldinaut           #+#    #+#             */
-/*   Updated: 2023/07/12 13:00:43 by ldinaut          ###   ########.fr       */
+/*   Updated: 2023/07/12 15:59:29 by jtaravel         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -237,7 +237,7 @@ void	Server::deleteClient(Client *client)
 					else
 						break ;
 				}*/
-				for (oper_it = (*servchan_it)->_operators.begin(); oper_it != (*servchan_it)->_operators.end(); ++oper_it)
+				/*for (oper_it = (*servchan_it)->_operators.begin(); oper_it != (*servchan_it)->_operators.end(); ++oper_it)
 				{
 					if ((*servchan_it)->_operators.size())
 					{
@@ -256,9 +256,9 @@ void	Server::deleteClient(Client *client)
 					}
 					else
 						break ;
-				}
+				}*/
 			}
-		//	std::cout << RED << "deleting chan from clientmap->_chans" << RESET << std::endl;
+			//std::cout << RED << "deleting chan from clientmap->_chans" << RESET << std::endl;
 			delete (*clichan_it);
 		}
 	}
@@ -288,7 +288,6 @@ void	Commands::cmd_manager(std::map<int, Client *> client_list)
 		{
 			server.deleteClient(client_list[_fd_co]);
 			delete this;
-			//delete client_list[_fd_co];
 		}
 	}
 }

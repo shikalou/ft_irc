@@ -6,7 +6,7 @@
 /*   By: ldinaut <ldinaut@student.42.fr>            +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2023/07/06 17:53:49 by ldinaut           #+#    #+#             */
-/*   Updated: 2023/07/12 02:46:51 by mcouppe          ###   ########.fr       */
+/*   Updated: 2023/07/12 15:51:10 by jtaravel         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -26,7 +26,7 @@ void	Server::kill_cmd(std::map<int, Client *> client_list)
 	}
 	std::vector<Channel *>::iterator itchan = server._channels.begin();
 	for (; itchan != server._channels.end(); ++itchan){
-	//	std::cout << RED << "deleting from server._channels" << RESET << std::endl;
+		std::cout << RED << "deleting from server._channels" << RESET << std::endl;
 		delete *itchan;
 	}
 	delete fin;

@@ -6,7 +6,7 @@
 /*   By: ldinaut <ldinaut@student.42.fr>            +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2023/07/06 16:05:48 by mcouppe           #+#    #+#             */
-/*   Updated: 2023/07/12 13:27:17 by ldinaut          ###   ########.fr       */
+/*   Updated: 2023/07/12 15:56:11 by jtaravel         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -47,6 +47,7 @@ void	Commands::remove_cli_chan(const std::string &chan_title, Client *client){
 	{
 		if ((*it_chan)->getTitle() == (*capi)->getTitle())
 		{
+			delete *capi;
 			client->_chans.erase(capi);
 			break ;
 		}
