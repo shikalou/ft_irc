@@ -6,7 +6,7 @@
 /*   By: ldinaut <ldinaut@student.42.fr>            +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2023/07/04 13:05:18 by ldinaut           #+#    #+#             */
-/*   Updated: 2023/07/12 17:17:28 by ldinaut          ###   ########.fr       */
+/*   Updated: 2023/07/12 19:09:19 by ldinaut          ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -261,6 +261,11 @@ std::vector<std::string>	Commands::mode(Client *client)
 		{
 			std::string mode = regroup_mode(chan);
 			reponse.push_back(rpl_channelmodeis(client->getNick(), _cmd_args[0], mode, ""));
+			return (reponse);
+		}
+		if (nick_exists(client->getNick(), chan->_clients) == NULL)
+		{
+			reponse.push_back(err_notonchannel(client->getNick(), _cmd_args[0]));
 			return (reponse);
 		}
 		if (_cmd_args[1][0] == '+')
