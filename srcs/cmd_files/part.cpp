@@ -6,7 +6,7 @@
 /*   By: ldinaut <ldinaut@student.42.fr>            +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2023/07/06 16:05:48 by mcouppe           #+#    #+#             */
-/*   Updated: 2023/07/12 15:59:05 by mcouppe          ###   ########.fr       */
+/*   Updated: 2023/07/12 23:59:24 by mcouppe          ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -40,15 +40,16 @@ void	Commands::remove_cli_chan(const std::string &chan_title, Client *client){
 			}
 		}
 	}
-//from server._channels
 			
 	std::vector<Channel *>::iterator capi = client->_chans.begin();
 	for (; capi != client->_chans.end(); ++capi)
 	{
 		if ((*it_chan)->getTitle() == (*capi)->getTitle())
 		{
+			std::cout << RED << "deleting " << (*it_chan)->getTitle() << RESET << std::endl;
 			delete *capi;
 			client->_chans.erase(capi);
+		//	delete *capi;
 			break ;
 		}
 	}
@@ -112,6 +113,7 @@ std::vector<std::string>	Commands::part(Client *client){
 			std::vector<Channel *>::iterator chan_cli = client->_chans.begin();
 			for (; chan_cli != client->_chans.end(); ++chan_cli){
 				if ((*chan_cli)->getTitle() == _cmd_args[0]){
+					std::cout << GREEN << "CALLING PART WITH " << _cmd_args[0] << RESET << std::endl;
 					std::string	reason = _cmd_args[1];
 					this->fd_users.push_back(client->_sock);
 					adding_fd_users((*it), client->_sock);
