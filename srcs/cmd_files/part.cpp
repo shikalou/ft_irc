@@ -6,7 +6,7 @@
 /*   By: ldinaut <ldinaut@student.42.fr>            +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2023/07/06 16:05:48 by mcouppe           #+#    #+#             */
-/*   Updated: 2023/07/12 03:14:21 by mcouppe          ###   ########.fr       */
+/*   Updated: 2023/07/12 12:15:49 by mcouppe          ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -21,15 +21,18 @@ void	Commands::remove_cli_chan(const std::string &chan_title, Client *client){
 		for (; it_chan != client->_chans.end(); ++it_chan){
 			if (chan_title == (*it_chan)->getTitle()){
 				std::vector<Client *>::iterator it_cli = (*it_chan)->_clients.begin();
-				if ((*it_chan)->_clients.size()){
+	//			if ((*it_chan)->_clients.size()){
 					for (; it_cli != (*it_chan)->_clients.end(); ++it_cli){
+						std::cout << RED << "cb de fois ici ? + it_chan->_clients size ="<< (*it_chan)->_clients.size() << RESET << std::endl;
 						if ((*it_cli)->getNick() == client->getNick()){
+							std::cout << RED << "salut salut" << RESET << std::endl;
 							(*it_chan)->_clients.erase(it_cli);
 							break ;
 						}
+						std::cout << ORANGE << "cb de fois ici ?" << RESET << std::endl;
 					}
-				}
-
+	//			}
+				std::cout << LIGHT_PINK << "cb de fois ici ?" << RESET << std::endl;
 				break ;
 			}
 		}
