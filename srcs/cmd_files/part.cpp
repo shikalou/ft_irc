@@ -6,7 +6,7 @@
 /*   By: ldinaut <ldinaut@student.42.fr>            +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2023/07/06 16:05:48 by mcouppe           #+#    #+#             */
-/*   Updated: 2023/07/12 15:56:11 by jtaravel         ###   ########.fr       */
+/*   Updated: 2023/07/12 15:59:05 by mcouppe          ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -75,6 +75,23 @@ void	Commands::remove_operators(const std::string &chan, Client *client){
 	return ;
 }
 
+void	Commands::remove_invited(const std::string &chan, Client *client){
+	std::vector<Channel *>::iterator	it = server._channels.begin();
+	for (; it != server._channels.end(); ++it){
+		if ((*it)->getTitle() == chan && (isInvited((*it)->_invites, client->getNick()) != NULL)){
+			std::vector<Client *>::iterator	it_cli = (*it)->_invites.begin();
+			for (; it_cli != (*it)->_invites.end(); ++it_cli){
+				if ((*it_cli)->getNick() == client->getNick()){
+					(*it)->_invites.erase(it_cli);
+					return ;
+				}
+			}
+		}
+	}
+	return ;
+}
+
+
 void	Commands::adding_fd_users(Channel* chan, int client_sock){
 	(void)client_sock; 
 	std::vector<Client *>::iterator	it = chan->_clients.begin();
@@ -100,6 +117,7 @@ std::vector<std::string>	Commands::part(Client *client){
 					adding_fd_users((*it), client->_sock);
 					std::vector<Channel *>::iterator test(chan_cli);
 					remove_operators((*chan_cli)->getTitle(), client);
+					remove_invited((*chan_cli)->getTitle(), client);
 					remove_cli_chan((*test)->getTitle(), client);
 					std::string ret = ":" + client->getNick() + "!" + client->getUser() + "@localhost PART " + (*it)->getTitle() + " "+ reason + "\r\n"; 
 					reponse.push_back(ret);

@@ -6,7 +6,7 @@
 /*   By: ldinaut <ldinaut@student.42.fr>            +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2023/06/19 14:10:05 by ldinaut           #+#    #+#             */
-/*   Updated: 2023/07/12 12:32:10 by ldinaut          ###   ########.fr       */
+/*   Updated: 2023/07/12 15:52:42 by mcouppe          ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -50,6 +50,7 @@ class Commands
 		void						remove_cli_chan(const std::string &chan_title, Client *client);
 		void						adding_fd_users(Channel* chan, int client_sock);
 		void						remove_operators(const std::string &chan, Client *client);
+		void						remove_invited(const std::string &chan, Client *client);
 		std::vector<std::string>	quit(Client *client);
 		std::vector<std::string>	nick_cmd(Client *client);
 		std::vector<std::string>	user_cmd(Client *client);
@@ -70,6 +71,7 @@ class Commands
 		// VERIF FUNCTIONS
 		std::string regroup_mess(std::vector<std::string> vec, Client *client, int mode);
 		Client	*isOperator(std::vector<Client *> operators, std::string client);
+		Client	*isInvited(std::vector<Client *> invited, std::string client);
 		Channel	*channel_exists(std::string chan_name);
 		Client	*nick_exists(std::string nick_name, std::vector<Client *> clients);
 
