@@ -263,6 +263,7 @@ void	Server::deleteClient(Client *client)
 		}
 	}
 	int fd = client->_sock;
+	close(client->_sock);
 	delete client;
 	server._clients.erase(fd);
 }

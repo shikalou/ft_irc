@@ -6,7 +6,7 @@
 /*   By: ldinaut <ldinaut@student.42.fr>            +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2023/06/09 14:30:46 by ldinaut           #+#    #+#             */
-/*   Updated: 2023/07/08 18:21:52 by ldinaut          ###   ########.fr       */
+/*   Updated: 2023/07/12 16:34:35 by ldinaut          ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -120,6 +120,11 @@ int	Server::run_serv()
 				if ((ret = recv(ev[k].data.fd, &buffer[0], 4096, MSG_DONTWAIT)) <= 0)
 				{
 					ft_error("error recv\n");
+					std::map<int, Client *>::iterator it = server._clients.find(ev[k].data.fd);
+					if (it != server._clients.end())
+					{
+						deleteClient(it->second);
+					}
 					continue ;
 				}
 				std::string	cmd_str(&buffer[0], ret);
@@ -138,6 +143,17 @@ int	Server::run_serv()
 					}
 					catch(const std::exception& e)
 					{
+					}
+				}
+				else if (ev[k].events == EPOLLERR)
+				{
+					std::cout << "JE RENTRE LA DEDANS OU PASSSSSS\n\n\n";
+					std::map<int, Client *>::iterator it = server._clients.find(ev[k].data.fd);
+					if (it != server._clients.end())
+					{
+						Commands *cmd_tmp = new Commands();
+						cmd_tmp->quit(it->second);
+						delete cmd_tmp;
 					}
 				}
 			}
