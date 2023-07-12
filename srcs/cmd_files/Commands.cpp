@@ -6,7 +6,7 @@
 /*   By: ldinaut <ldinaut@student.42.fr>            +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2023/06/19 14:09:45 by ldinaut           #+#    #+#             */
-/*   Updated: 2023/07/12 02:46:32 by mcouppe          ###   ########.fr       */
+/*   Updated: 2023/07/12 13:00:43 by ldinaut          ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -217,7 +217,7 @@ void	Server::deleteClient(Client *client)
 		{
 			if ((*servchan_it)->getTitle() == (*clichan_it)->getTitle())
 			{
-				for (oper_it = (*clichan_it)->_operators.begin(); oper_it != (*clichan_it)->_operators.end(); ++oper_it)
+				/*for (oper_it = (*clichan_it)->_operators.begin(); oper_it != (*clichan_it)->_operators.end(); ++oper_it)
 				{
 					if ((*clichan_it)->_operators.size())
 					{
@@ -236,7 +236,7 @@ void	Server::deleteClient(Client *client)
 					}
 					else
 						break ;
-				}
+				}*/
 				for (oper_it = (*servchan_it)->_operators.begin(); oper_it != (*servchan_it)->_operators.end(); ++oper_it)
 				{
 					if ((*servchan_it)->_operators.size())
@@ -262,8 +262,9 @@ void	Server::deleteClient(Client *client)
 			delete (*clichan_it);
 		}
 	}
-	server._clients.erase(client->_sock);
+	int fd = client->_sock;
 	delete client;
+	server._clients.erase(fd);
 }
 
 void	Commands::cmd_manager(std::map<int, Client *> client_list)
@@ -287,6 +288,7 @@ void	Commands::cmd_manager(std::map<int, Client *> client_list)
 		{
 			server.deleteClient(client_list[_fd_co]);
 			delete this;
+			//delete client_list[_fd_co];
 		}
 	}
 }

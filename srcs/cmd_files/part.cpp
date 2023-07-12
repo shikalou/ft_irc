@@ -6,7 +6,7 @@
 /*   By: ldinaut <ldinaut@student.42.fr>            +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2023/07/06 16:05:48 by mcouppe           #+#    #+#             */
-/*   Updated: 2023/07/12 12:15:49 by mcouppe          ###   ########.fr       */
+/*   Updated: 2023/07/12 12:31:58 by ldinaut          ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -96,8 +96,9 @@ std::vector<std::string>	Commands::part(Client *client){
 					std::string	reason = _cmd_args[1];
 					this->fd_users.push_back(client->_sock);
 					adding_fd_users((*it), client->_sock);
+					std::vector<Channel *>::iterator test(chan_cli);
 					remove_operators((*chan_cli)->getTitle(), client);
-					remove_cli_chan((*chan_cli)->getTitle(), client);
+					remove_cli_chan((*test)->getTitle(), client);
 					std::string ret = ":" + client->getNick() + "!" + client->getUser() + "@localhost PART " + (*it)->getTitle() + " "+ reason + "\r\n"; 
 					reponse.push_back(ret);
 					return (reponse);
