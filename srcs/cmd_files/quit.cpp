@@ -6,7 +6,7 @@
 /*   By: ldinaut <ldinaut@student.42.fr>            +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2023/07/06 12:35:07 by ldinaut           #+#    #+#             */
-/*   Updated: 2023/07/13 00:03:06 by mcouppe          ###   ########.fr       */
+/*   Updated: 2023/07/13 00:51:30 by jtaravel         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -28,6 +28,7 @@ std::vector<std::string>	Commands::quit(Client *client)
 		sender(reponse, "");
 		reponse.clear();
 	//	delete *it;
+		_cmd_args.clear();
 		i++;
 		if (i == size)
 			break;
