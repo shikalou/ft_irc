@@ -6,7 +6,7 @@
 /*   By: ldinaut <ldinaut@student.42.fr>            +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2023/07/06 16:05:48 by mcouppe           #+#    #+#             */
-/*   Updated: 2023/07/12 13:01:59 by ldinaut          ###   ########.fr       */
+/*   Updated: 2023/07/12 13:27:17 by ldinaut          ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -16,16 +16,19 @@
 
 void	Commands::remove_cli_chan(const std::string &chan_title, Client *client){
 //	from client->_chans
-	std::vector<Channel *>::iterator it_chan = client->_chans.begin();
+	std::cout << "11111 = " << _cmd_args[0] << "\n\n\n";
+	std::vector<Channel *>::iterator it_chan = server._channels.begin();
 	if (client->_chans.size() > 0){
-		for (; it_chan != client->_chans.end(); ++it_chan){
+	std::cout << "22222 = " << _cmd_args[0] << "\n\n\n";
+		for (; it_chan != server._channels.end(); ++it_chan){
 			if (chan_title == (*it_chan)->getTitle()){
+	std::cout << "3333 = " << _cmd_args[0] << "\n\n\n";
 				std::vector<Client *>::iterator it_cli = (*it_chan)->_clients.begin();
 	//			if ((*it_chan)->_clients.size()){
+						std::cout << RED << "cb de fois ici ? + it_chan->_clients size ="<< (*it_chan)->_clients.size() << RESET << std::endl;
 					for (; it_cli != (*it_chan)->_clients.end(); ++it_cli){
-				//		std::cout << RED << "cb de fois ici ? + it_chan->_clients size ="<< (*it_chan)->_clients.size() << RESET << std::endl;
+						std::cout << RED << "salut salut = " << (*it_cli)->getNick() << RESET << std::endl;
 						if ((*it_cli)->getNick() == client->getNick()){
-							std::cout << RED << "salut salut" << RESET << std::endl;
 							(*it_chan)->_clients.erase(it_cli);
 							break ;
 						}
@@ -38,22 +41,14 @@ void	Commands::remove_cli_chan(const std::string &chan_title, Client *client){
 		}
 	}
 //from server._channels
-	std::vector<Channel *>::iterator	it_serv = server._channels.begin();
-	if (server._channels.size() > 0){
-		for (; it_serv != server._channels.end(); ++it_serv){
-			if ((*it_serv)->getTitle() == chan_title){
-				std::vector<Client *>::iterator ite_cli = (*it_serv)->_clients.begin();
-				if ((*it_serv)->_clients.size() > 0){
-					for (; ite_cli != (*it_serv)->_clients.end(); ++ite_cli){
-						if ((*ite_cli)->getNick() == client->getNick()){
-							std::cout << GREEN << "lolololo" << RESET << std::endl;
-							(*it_serv)->_clients.erase(ite_cli);
-							break;
-						}
-					}
-				}
-				break ;
-			}
+			
+	std::vector<Channel *>::iterator capi = client->_chans.begin();
+	for (; capi != client->_chans.end(); ++capi)
+	{
+		if ((*it_chan)->getTitle() == (*capi)->getTitle())
+		{
+			client->_chans.erase(capi);
+			break ;
 		}
 	}
 

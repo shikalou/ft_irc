@@ -6,7 +6,7 @@
 /*   By: ldinaut <ldinaut@student.42.fr>            +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2023/07/05 16:17:14 by mcouppe           #+#    #+#             */
-/*   Updated: 2023/07/11 23:39:02 by mcouppe          ###   ########.fr       */
+/*   Updated: 2023/07/12 13:13:02 by ldinaut          ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -75,8 +75,12 @@ std::string	Commands::topic_from_client(Client *client, std::string chan_input){
 				std::map<int, Client *>::iterator	all_cli = server._clients.begin();
 				for (; all_cli != server._clients.end(); ++all_cli){
 					std::vector<Channel *>::iterator	chan_cli = (*all_cli).second->_chans.begin();
-					for (;chan_cli != (*all_cli).second->_chans.end(); ++chan_cli){
-						if (chan_input == (*chan_cli)->getTitle()){
+					for (;chan_cli != (*all_cli).second->_chans.end(); ++chan_cli)
+					{
+						std::cout << "namechan = " << (*chan_cli)->getTitle() << "\n\n\n";
+						std::cout << "cli name = " << (*all_cli).second->getNick() << "\n\n\n";
+						if (chan_input == (*chan_cli)->getTitle())
+						{
 							setting_topic(chan_cli, (*all_cli).second);
 								this->fd_users.push_back(((*all_cli).second)->_sock);
 							break ;
