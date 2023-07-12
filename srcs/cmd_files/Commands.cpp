@@ -6,7 +6,7 @@
 /*   By: ldinaut <ldinaut@student.42.fr>            +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2023/06/19 14:09:45 by ldinaut           #+#    #+#             */
-/*   Updated: 2023/07/08 18:24:04 by ldinaut          ###   ########.fr       */
+/*   Updated: 2023/07/12 02:46:32 by mcouppe          ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -258,6 +258,7 @@ void	Server::deleteClient(Client *client)
 						break ;
 				}
 			}
+		//	std::cout << RED << "deleting chan from clientmap->_chans" << RESET << std::endl;
 			delete (*clichan_it);
 		}
 	}

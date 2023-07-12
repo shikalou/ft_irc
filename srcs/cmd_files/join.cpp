@@ -6,7 +6,7 @@
 /*   By: ldinaut <ldinaut@student.42.fr>            +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2023/07/04 12:30:12 by mcouppe           #+#    #+#             */
-/*   Updated: 2023/07/08 18:16:30 by ldinaut          ###   ########.fr       */
+/*   Updated: 2023/07/12 02:49:59 by mcouppe          ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -28,7 +28,6 @@ std::vector<std::string>	Commands::join_chan(Client *client)
 	{
 		reponse.push_back(err_needmoreparams(_cmd));
 		return (reponse);
-		// NEED MORE PARAMS
 	}
 	std::vector<Channel *>::iterator it = server._channels.begin();
 	std::vector<Channel *>::iterator ite = server._channels.end();
