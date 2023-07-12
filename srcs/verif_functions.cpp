@@ -6,7 +6,7 @@
 /*   By: ldinaut <ldinaut@student.42.fr>            +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2023/07/06 15:44:14 by ldinaut           #+#    #+#             */
-/*   Updated: 2023/07/08 18:06:33 by ldinaut          ###   ########.fr       */
+/*   Updated: 2023/07/12 15:51:14 by mcouppe          ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -38,6 +38,22 @@ Client	*Commands::isOperator(std::vector<Client *> operators, std::string client
 	}
 	return (*ite);
 }
+
+Client	*Commands::isInvited(std::vector<Client *> invited, std::string client)
+{
+	std::vector<Client *>::iterator ite = invited.begin();
+	for (; ite != invited.end(); ++ite)
+	{
+		if ((*ite)->getNick() == client)
+			break ;
+	}
+	if (ite == invited.end())
+	{
+		return (NULL);
+	}
+	return (*ite);
+}
+
 
 Channel *Commands::channel_exists(std::string chan_name)
 {
