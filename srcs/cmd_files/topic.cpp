@@ -6,7 +6,7 @@
 /*   By: ldinaut <ldinaut@student.42.fr>            +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2023/07/05 16:17:14 by mcouppe           #+#    #+#             */
-/*   Updated: 2023/07/12 13:13:02 by ldinaut          ###   ########.fr       */
+/*   Updated: 2023/07/12 18:40:47 by ldinaut          ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -82,7 +82,7 @@ std::string	Commands::topic_from_client(Client *client, std::string chan_input){
 						if (chan_input == (*chan_cli)->getTitle())
 						{
 							setting_topic(chan_cli, (*all_cli).second);
-								this->fd_users.push_back(((*all_cli).second)->_sock);
+							this->fd_users.push_back(((*all_cli).second)->_sock);
 							break ;
 						}
 					}

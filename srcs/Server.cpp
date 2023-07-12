@@ -6,7 +6,7 @@
 /*   By: ldinaut <ldinaut@student.42.fr>            +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2023/06/09 14:30:46 by ldinaut           #+#    #+#             */
-/*   Updated: 2023/07/12 16:34:35 by ldinaut          ###   ########.fr       */
+/*   Updated: 2023/07/12 18:59:06 by ldinaut          ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -95,7 +95,11 @@ int	Server::init_serv()
 void	sig_handler(int sig)
 {
 	if (sig == 2)
+	{
 		server.kill_cmd(server._clients);
+		close(server.epoll_fd);
+		close(server.sock);
+	}
 }
 
 int	Server::run_serv()

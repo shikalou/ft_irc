@@ -6,7 +6,7 @@
 /*   By: ldinaut <ldinaut@student.42.fr>            +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2023/07/04 12:30:12 by mcouppe           #+#    #+#             */
-/*   Updated: 2023/07/12 15:56:05 by jtaravel         ###   ########.fr       */
+/*   Updated: 2023/07/12 17:49:32 by ldinaut          ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -105,6 +105,11 @@ std::vector<std::string>	Commands::join_chan(Client *client)
 		(*it)->_clients.push_back(client);
 		client->_chans.push_back(new Channel(*it));
 	}
+	// std::vector<Channel *>::iterator po = client->_chans.begin();
+	// for (; po != client->_chans.end(); ++po)
+	// {
+	// 	std::cout << "NAME CHAN JOIN: " << (*po)->getTitle() << "\n\n\n\n";
+	// }
 	std::vector<Client *> test = server._channels.back()->_clients;
 	std::vector<Channel *> recupname = server._channels;
 	std::vector<Channel *>::iterator itrecup = recupname.begin();
