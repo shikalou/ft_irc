@@ -6,7 +6,7 @@
 /*   By: ldinaut <ldinaut@student.42.fr>            +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2023/07/06 12:35:07 by ldinaut           #+#    #+#             */
-/*   Updated: 2023/07/12 02:12:26 by mcouppe          ###   ########.fr       */
+/*   Updated: 2023/07/12 03:36:28 by mcouppe          ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -23,6 +23,13 @@ std::vector<std::string>	Commands::quit(Client *client)
 	for (std::vector<Channel *>::iterator it = client->_chans.begin(); it != client->_chans.end(); ++it)
 	{
 		_cmd_args[0] = (*it)->getTitle();
+	// pour resoudre double message qd part + quit
+	// possible de mettre un bool dans part
+	// si true --> on est dans quit --> on esquive les rpl
+	// else on fait tt comme d'hab
+	// potentiellement on peut regler pblm de part pas total
+	// (qd juste part ou kick, on recoit encore les rpl de topic)
+	// qui pour etre regle fait des enormes invalid read
 		part(client);
 		sender(reponse, "");
 		i++;

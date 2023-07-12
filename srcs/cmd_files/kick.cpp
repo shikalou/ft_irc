@@ -6,7 +6,7 @@
 /*   By: ldinaut <ldinaut@student.42.fr>            +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2023/07/06 15:36:31 by ldinaut           #+#    #+#             */
-/*   Updated: 2023/07/07 19:30:28 by ldinaut          ###   ########.fr       */
+/*   Updated: 2023/07/12 03:23:39 by mcouppe          ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -43,7 +43,14 @@ std::vector<std::string>	Commands::kick_cmd(Client *client)
 		reponse.push_back(err_usernotinchannel(client->getNick(), _cmd_args[1], _cmd_args[0]));
 		return (reponse);
 	}
-	part(client_tmp);
+//	part(client_tmp);
+	std::map<int, Client *>::iterator map_it = server._clients.begin();
+	for (; map_it != server._clients.end(); ++map_it){
+		if ((*map_it).second->getNick() == client_tmp->getNick()){
+			part((*map_it).second);
+			break ;
+		}
+	}
 	reponse[0].insert(reponse[0].length() - 2, " has been kicked from channel");
 	std::string res = "You've been kicked from channel " + _cmd_args[0] + "\r\n";
 	send(client_tmp->_sock, res.c_str(), res.length(), 0);
