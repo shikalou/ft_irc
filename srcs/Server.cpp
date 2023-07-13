@@ -6,7 +6,7 @@
 /*   By: ldinaut <ldinaut@student.42.fr>            +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2023/06/09 14:30:46 by ldinaut           #+#    #+#             */
-/*   Updated: 2023/07/13 15:33:51 by jtaravel         ###   ########.fr       */
+/*   Updated: 2023/07/13 17:23:11 by mcouppe          ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -22,6 +22,7 @@ Server::Server(int port, std::string pass):password(pass), port(port), ev(5)
 	_recv = "";
 	_end = 1;
 	i = 0;
+	this->_check_pass = true;
 }
 
 Server::~Server()
@@ -141,7 +142,7 @@ int	Server::run_serv()
 					Commands *cmd = new Commands(_clients[ev[k].data.fd]->_recv, ev[k].data.fd);
 					_clients[ev[k].data.fd]->_cmd = cmd;
 					_clients[ev[k].data.fd]->_cmd->cmd_manager(_clients);
-					if (server._recv.find("QUIT") == server._recv.npos)
+					if (server._recv.find("QUIT") == server._recv.npos && _check_pass == true)
 						delete _clients[ev[k].data.fd]->_cmd;
 					try
 					{

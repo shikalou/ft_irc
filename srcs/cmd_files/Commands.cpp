@@ -6,7 +6,7 @@
 /*   By: ldinaut <ldinaut@student.42.fr>            +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2023/06/19 14:09:45 by ldinaut           #+#    #+#             */
-/*   Updated: 2023/07/13 15:34:02 by jtaravel         ###   ########.fr       */
+/*   Updated: 2023/07/13 17:25:17 by mcouppe          ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -22,7 +22,7 @@ Commands::Commands(std::string cmd_str, int fd_co):  fd_users(), reponse(), _str
 {
 	_cmd = "";
 	isQuit = false;
-	this->_check_pass = true;
+//	this->_check_pass = true;
 	return ;
 }
 
@@ -137,10 +137,12 @@ std::vector<std::string>	Commands::pass_cmd(Client *client)
 	if (server.password != _cmd_args[0]){
 		reponse.push_back(err_passwdmismatch(client->getNick()));
 		send(client->_sock, reponse[0].c_str(), reponse[0].length(), 0);
-		this->_check_pass = false;
+		server._check_pass = false;
 		close(client->_sock);
+		
 		return (reponse);
 	}
+	server._check_pass = true;
 	return (reponse);
 }
 
@@ -244,7 +246,7 @@ void	Commands::cmd_manager(std::map<int, Client *> client_list)
 		reponse.clear();
 		_cmd_args.clear();
 	}
-	if (isQuit == true)
+	if (isQuit == true || server._check_pass == false)
 	{
 		server.deleteClient(client_list[_fd_co]);
 		delete this;

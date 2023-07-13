@@ -6,7 +6,7 @@
 /*   By: ldinaut <ldinaut@student.42.fr>            +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2023/06/19 14:10:05 by ldinaut           #+#    #+#             */
-/*   Updated: 2023/07/12 15:52:42 by mcouppe          ###   ########.fr       */
+/*   Updated: 2023/07/13 17:24:52 by mcouppe          ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -80,7 +80,7 @@ class Commands
 		std::string					_cmd;
 		int							_fd_co;
 		std::vector<std::string>	_cmd_args;
-		bool						_check_pass;
+		//bool						_check_pass;
 };
 std::vector<std::string> split(std::string str, std::string delim);
 Channel	*channel_exists(std::string chan_name);

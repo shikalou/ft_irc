@@ -6,7 +6,7 @@
 /*   By: ldinaut <ldinaut@student.42.fr>            +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2023/05/29 13:25:21 by ldinaut           #+#    #+#             */
-/*   Updated: 2023/07/13 14:18:11 by mcouppe          ###   ########.fr       */
+/*   Updated: 2023/07/13 17:22:45 by mcouppe          ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -53,6 +53,7 @@ class Server
 		int			fd_co;
 		int			_end;
 		int			i;
+		bool		_check_pass;
 		std::string	network;
 		std::vector<epoll_event> ev;
 
