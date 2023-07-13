@@ -6,7 +6,7 @@
 /*   By: ldinaut <ldinaut@student.42.fr>            +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2023/07/06 16:05:48 by mcouppe           #+#    #+#             */
-/*   Updated: 2023/07/13 17:48:54 by mcouppe          ###   ########.fr       */
+/*   Updated: 2023/07/13 18:06:26 by jtaravel         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -105,8 +105,8 @@ std::vector<std::string>	Commands::part(Client *client){
 					if (_cmd_args.size() > 1)
 						std::string	reason = _cmd_args[1];
 					this->fd_users.push_back(client->_sock);
-					std::vector<Client *>::iterator ite = (*chan_cli)->_clients.begin();
-					for (; ite != (*chan_cli)->_clients.end(); ++ite){
+					std::vector<Client *>::iterator ite = (*it)->_clients.begin();
+					for (; ite != (*it)->_clients.end(); ++ite){
 						fd_users.push_back((*ite)->_sock);
 					}
 				//	adding_fd_users((*it), client->_sock);
