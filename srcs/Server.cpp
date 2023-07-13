@@ -6,7 +6,7 @@
 /*   By: ldinaut <ldinaut@student.42.fr>            +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2023/06/09 14:30:46 by ldinaut           #+#    #+#             */
-/*   Updated: 2023/07/12 18:59:06 by ldinaut          ###   ########.fr       */
+/*   Updated: 2023/07/13 14:18:53 by mcouppe          ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -21,6 +21,7 @@ Server::Server(int port, std::string pass):password(pass), port(port), ev(5)
 {
 	_end = 1;
 	i = 0;
+	destr_check = true;
 }
 
 Server::~Server()
@@ -134,12 +135,15 @@ int	Server::run_serv()
 				std::string	cmd_str(&buffer[0], ret);
 				_clients[ev[k].data.fd]->_recv += cmd_str;
 				std::cout << LAVENDER << "from client [" << cmd_str << "]" << RESET << std::endl;
+				std::cout << LIGHT_PINK << "_recv [" << _clients[ev[k].data.fd]->_recv << "]" << RESET << std::endl;
 				if (_clients[ev[k].data.fd]->_recv.find('\n') != _clients[ev[k].data.fd]->_recv.npos)
 				{
 					Commands *cmd = new Commands(_clients[ev[k].data.fd]->_recv, ev[k].data.fd);
+					std::cout << GREEN << "NEW COMMAND" << RESET << std::endl;
 					_clients[ev[k].data.fd]->_cmd = cmd;
 					_clients[ev[k].data.fd]->_cmd->cmd_manager(_clients);
-					if (cmd_str.find("QUIT"))
+				//	std::cout << ORANGE << "destructor was called" << RESET << std::endl;
+					if (cmd_str.find("QUIT") && cmd_str != "\r\n")
 						delete _clients[ev[k].data.fd]->_cmd;
 					try
 					{
@@ -148,6 +152,9 @@ int	Server::run_serv()
 					catch(const std::exception& e)
 					{
 					}
+					if (this->destr_check == false)
+						delete _clients[ev[k].data.fd]->_cmd;
+					std::cout << ORANGE << "destructor was called" << RESET << std::endl;
 				}
 				else if (ev[k].events == EPOLLERR)
 				{

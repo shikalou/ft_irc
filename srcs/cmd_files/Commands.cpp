@@ -6,7 +6,7 @@
 /*   By: ldinaut <ldinaut@student.42.fr>            +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2023/06/19 14:09:45 by ldinaut           #+#    #+#             */
-/*   Updated: 2023/07/12 15:59:29 by jtaravel         ###   ########.fr       */
+/*   Updated: 2023/07/13 14:17:50 by mcouppe          ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -20,6 +20,7 @@ Commands::Commands()
 
 Commands::Commands(std::string cmd_str, int fd_co):  fd_users(), reponse(), _str_rcv(cmd_str), _fd_co(fd_co), _cmd_args(0)
 {
+	server.destr_check = false;
 	_cmd = "";
 	isQuit = false;
 	this->_check_pass = true;
@@ -287,13 +288,22 @@ void	Commands::cmd_manager(std::map<int, Client *> client_list)
 		reponse.clear();
 		if (isQuit == true)
 		{
+			std::cout << RED << "DANS ISQUIT" << RESET << std::endl;
 			server.deleteClient(client_list[_fd_co]);
 			delete this;
 		}
 	}
+	std::cout << "t ou toi" << std::endl;
 }
 
 Commands::~Commands(void)
 {
+	std::cout << GREEN << "DELETE CMD" << RESET << std::endl;
+	this->_cmd.clear();
+	this->reponse.clear();
+	this->_str_rcv.clear();
+	this->_cmd_args.clear();
+	this->fd_users.clear();
+	server.destr_check = true;
 	return ;
 }
