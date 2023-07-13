@@ -6,7 +6,7 @@
 /*   By: ldinaut <ldinaut@student.42.fr>            +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2023/07/08 14:10:38 by ldinaut           #+#    #+#             */
-/*   Updated: 2023/07/13 14:15:50 by jtaravel         ###   ########.fr       */
+/*   Updated: 2023/07/13 14:50:26 by jtaravel         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -114,6 +114,8 @@ void	sig_handler(int sig)
 	{
 		bot._end = false;
 		send(bot.sock, "QUIT\r\n", 6, 0);
+		close(bot.epoll_fd);
+		close(bot.sock);
 		exit(130);
 	}
 }
