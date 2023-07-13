@@ -6,7 +6,7 @@
 /*   By: ldinaut <ldinaut@student.42.fr>            +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2023/07/06 12:35:07 by ldinaut           #+#    #+#             */
-/*   Updated: 2023/07/13 13:04:12 by jtaravel         ###   ########.fr       */
+/*   Updated: 2023/07/13 14:44:21 by ldinaut          ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -23,7 +23,6 @@ std::vector<std::string>	Commands::quit(Client *client)
 	for (std::vector<Channel *>::iterator it = client->_chans.begin(); it != client->_chans.end(); it++)
 	{
 		_cmd_args[0] = (*it)->getTitle();
-		std::cout << ORANGE << "quit loop for " << _cmd_args[0] << RESET << std::endl;
 		part(client);
 		sender(reponse, "");
 		reponse.clear();

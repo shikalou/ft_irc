@@ -6,7 +6,7 @@
 /*   By: ldinaut <ldinaut@student.42.fr>            +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2023/06/09 14:30:46 by ldinaut           #+#    #+#             */
-/*   Updated: 2023/07/13 14:18:53 by mcouppe          ###   ########.fr       */
+/*   Updated: 2023/07/13 14:41:56 by ldinaut          ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -135,16 +135,12 @@ int	Server::run_serv()
 				std::string	cmd_str(&buffer[0], ret);
 				_clients[ev[k].data.fd]->_recv += cmd_str;
 				server._recv += cmd_str;
-				std::cout << LAVENDER << "from client [" << cmd_str << "]" << RESET << std::endl;
-				std::cout << LIGHT_PINK << "_recv [" << _clients[ev[k].data.fd]->_recv << "]" << RESET << std::endl;
+				std::cout << LAVENDER << "from client [" << cmd_str << "]\n" << RESET << std::endl;
 				if (_clients[ev[k].data.fd]->_recv.find('\n') != _clients[ev[k].data.fd]->_recv.npos)
 				{
-					std::cout << "a;aa;aaaldaslfdasfsdfsdd\n\n\n";
 					Commands *cmd = new Commands(_clients[ev[k].data.fd]->_recv, ev[k].data.fd);
-					std::cout << GREEN << "NEW COMMAND" << RESET << std::endl;
 					_clients[ev[k].data.fd]->_cmd = cmd;
 					_clients[ev[k].data.fd]->_cmd->cmd_manager(_clients);
-					std::cout << GREEN << server._recv << "\n\n\n" << RESET;
 					if (server._recv.find("QUIT") == server._recv.npos)
 					{
 						delete _clients[ev[k].data.fd]->_cmd;
@@ -160,7 +156,6 @@ int	Server::run_serv()
 				}
 				else if (ev[k].events == EPOLLERR)
 				{
-					std::cout << "JE RENTRE LA DEDANS OU PASSSSSS\n\n\n";
 					std::map<int, Client *>::iterator it = server._clients.find(ev[k].data.fd);
 					if (it != server._clients.end())
 					{

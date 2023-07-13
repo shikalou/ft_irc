@@ -6,7 +6,7 @@
 /*   By: ldinaut <ldinaut@student.42.fr>            +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2023/06/19 14:09:45 by ldinaut           #+#    #+#             */
-/*   Updated: 2023/07/13 14:17:50 by mcouppe          ###   ########.fr       */
+/*   Updated: 2023/07/13 14:42:46 by ldinaut          ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -63,7 +63,7 @@ void	Commands::sender(std::vector<std::string> cmd, std::string args)
 	(void)args;
 	for (size_t i = 0; i < reponse.size(); ++i)
 	{
-		std::cout << LIGHT_BLUE << "server = [" << cmd[i] << "]" << "\n" << RESET;
+		std::cout << LIGHT_BLUE << "form server = [" << cmd[i] << "]\n" << RESET << std::endl;
 		if (fd_users.size() > 1)
 		{
 			for (std::vector<int>::iterator it = fd_users.begin(); it != fd_users.end(); ++it)
