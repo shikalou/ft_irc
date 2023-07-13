@@ -6,7 +6,7 @@
 /*   By: ldinaut <ldinaut@student.42.fr>            +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2023/06/19 14:09:45 by ldinaut           #+#    #+#             */
-/*   Updated: 2023/07/13 14:42:46 by ldinaut          ###   ########.fr       */
+/*   Updated: 2023/07/13 15:34:02 by jtaravel         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -243,11 +243,11 @@ void	Commands::cmd_manager(std::map<int, Client *> client_list)
 			sender(reponse, "");
 		reponse.clear();
 		_cmd_args.clear();
-		if (isQuit == true)
-		{
-			server.deleteClient(client_list[_fd_co]);
-			delete this;
-		}
+	}
+	if (isQuit == true)
+	{
+		server.deleteClient(client_list[_fd_co]);
+		delete this;
 	}
 }
 

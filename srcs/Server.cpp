@@ -6,7 +6,7 @@
 /*   By: ldinaut <ldinaut@student.42.fr>            +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2023/06/09 14:30:46 by ldinaut           #+#    #+#             */
-/*   Updated: 2023/07/13 14:41:56 by ldinaut          ###   ########.fr       */
+/*   Updated: 2023/07/13 15:33:51 by jtaravel         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -142,13 +142,11 @@ int	Server::run_serv()
 					_clients[ev[k].data.fd]->_cmd = cmd;
 					_clients[ev[k].data.fd]->_cmd->cmd_manager(_clients);
 					if (server._recv.find("QUIT") == server._recv.npos)
-					{
 						delete _clients[ev[k].data.fd]->_cmd;
-					}
 					try
 					{
-						_clients.at(ev[k].data.fd)->_recv.erase();
 						server._recv.erase();
+						_clients.at(ev[k].data.fd)->_recv.erase();
 					}
 					catch(const std::exception& e)
 					{
