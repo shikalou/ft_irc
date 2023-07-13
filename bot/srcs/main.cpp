@@ -6,11 +6,13 @@
 /*   By: ldinaut <ldinaut@student.42.fr>            +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2023/07/08 14:10:38 by ldinaut           #+#    #+#             */
-/*   Updated: 2023/07/08 16:54:12 by ldinaut          ###   ########.fr       */
+/*   Updated: 2023/07/13 14:15:50 by jtaravel         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
 #include "Bot.hpp"
+#include <iostream>
+#include <sstream>
 
 Bot bot;
 
@@ -55,11 +57,24 @@ int	Bot::init_bot()
 	return (0);
 }
 
+std::string	intToString(int i)
+{
+	std::string res;
+	std::stringstream recup;
+	recup << i;
+	recup >> res;
+	return res;
+}
+
+
 void	Bot::log_to_serv()
 {
+	int	random = rand() % 1000 + 1;
 	std::string ret = "PASS " + _pass + "\r\n";
 	send(sock, ret.c_str(), ret.length(), 0);
-	ret = "NICK bot\r\n";
+	ret = "NICK bot";
+	ret += intToString(random);
+	ret += "\r\n";
 	send(sock, ret.c_str(), ret.length(), 0);
 	ret = "USER bot bot localhost :Mister ROBOT\r\n";
 	send(sock, ret.c_str(), ret.length(), 0);

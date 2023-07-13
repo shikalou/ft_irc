@@ -6,7 +6,7 @@
 /*   By: ldinaut <ldinaut@student.42.fr>            +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2023/06/19 14:09:45 by ldinaut           #+#    #+#             */
-/*   Updated: 2023/07/12 15:59:29 by jtaravel         ###   ########.fr       */
+/*   Updated: 2023/07/13 14:31:58 by jtaravel         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -146,6 +146,7 @@ std::vector<std::string>	Commands::pass_cmd(Client *client)
 
 std::vector<std::string>	Commands::launcher(std::map<int, Client *> client_list)
 {
+
 	if (_cmd == "PING")
 		return (this->pong());
 	if (_cmd == "QUIT")
@@ -270,6 +271,7 @@ void	Server::deleteClient(Client *client)
 
 void	Commands::cmd_manager(std::map<int, Client *> client_list)
 {
+	std::cout << "dans cmd_manage = |" << _str_rcv << "|\n\n\n";
 	std::vector<std::string> split_nl = split(_str_rcv, "\r\n");
 	for (size_t i = 0; i < split_nl.size() - 1; ++i)
 	{
@@ -283,10 +285,11 @@ void	Commands::cmd_manager(std::map<int, Client *> client_list)
 		}
 		else
 			sender(reponse, "");
-		reponse.erase(reponse.begin(), reponse.end());
 		reponse.clear();
+		_cmd_args.clear();
 		if (isQuit == true)
 		{
+			std::cout << "laaaaaaaaaaaaaaaaa\n\n\n";
 			server.deleteClient(client_list[_fd_co]);
 			delete this;
 		}
@@ -295,5 +298,10 @@ void	Commands::cmd_manager(std::map<int, Client *> client_list)
 
 Commands::~Commands(void)
 {
-	return ;
+	std::cout << "LLLLLLLLLLLLLLLLLLLLLLLLLLLLLLLLLL\n\n\n";
+	_cmd_args.clear();
+	_str_rcv.clear();
+	_cmd.clear();
+	fd_users.clear();
+	reponse.clear();
 }

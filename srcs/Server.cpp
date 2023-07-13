@@ -6,7 +6,7 @@
 /*   By: ldinaut <ldinaut@student.42.fr>            +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2023/06/09 14:30:46 by ldinaut           #+#    #+#             */
-/*   Updated: 2023/07/12 18:59:06 by ldinaut          ###   ########.fr       */
+/*   Updated: 2023/07/13 14:18:54 by jtaravel         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -19,6 +19,7 @@ Server::Server()
 
 Server::Server(int port, std::string pass):password(pass), port(port), ev(5)
 {
+	_recv = "";
 	_end = 1;
 	i = 0;
 }
@@ -133,17 +134,23 @@ int	Server::run_serv()
 				}
 				std::string	cmd_str(&buffer[0], ret);
 				_clients[ev[k].data.fd]->_recv += cmd_str;
+				server._recv += cmd_str;
 				std::cout << LAVENDER << "from client [" << cmd_str << "]" << RESET << std::endl;
 				if (_clients[ev[k].data.fd]->_recv.find('\n') != _clients[ev[k].data.fd]->_recv.npos)
 				{
+					std::cout << "a;aa;aaaldaslfdasfsdfsdd\n\n\n";
 					Commands *cmd = new Commands(_clients[ev[k].data.fd]->_recv, ev[k].data.fd);
 					_clients[ev[k].data.fd]->_cmd = cmd;
 					_clients[ev[k].data.fd]->_cmd->cmd_manager(_clients);
-					if (cmd_str.find("QUIT"))
+					std::cout << GREEN << server._recv << "\n\n\n" << RESET;
+					if (server._recv.find("QUIT") == server._recv.npos)
+					{
 						delete _clients[ev[k].data.fd]->_cmd;
+					}
 					try
 					{
 						_clients.at(ev[k].data.fd)->_recv.erase();
+						server._recv.erase();
 					}
 					catch(const std::exception& e)
 					{

@@ -6,7 +6,7 @@
 /*   By: ldinaut <ldinaut@student.42.fr>            +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2023/07/06 16:05:48 by mcouppe           #+#    #+#             */
-/*   Updated: 2023/07/12 23:59:24 by mcouppe          ###   ########.fr       */
+/*   Updated: 2023/07/13 14:29:36 by jtaravel         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -114,7 +114,9 @@ std::vector<std::string>	Commands::part(Client *client){
 			for (; chan_cli != client->_chans.end(); ++chan_cli){
 				if ((*chan_cli)->getTitle() == _cmd_args[0]){
 					std::cout << GREEN << "CALLING PART WITH " << _cmd_args[0] << RESET << std::endl;
-					std::string	reason = _cmd_args[1];
+					std::string	reason = "";
+					if (_cmd_args.size() > 1)
+						std::string	reason = _cmd_args[1];
 					this->fd_users.push_back(client->_sock);
 					adding_fd_users((*it), client->_sock);
 					std::vector<Channel *>::iterator test(chan_cli);

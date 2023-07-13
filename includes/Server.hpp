@@ -6,7 +6,7 @@
 /*   By: ldinaut <ldinaut@student.42.fr>            +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2023/05/29 13:25:21 by ldinaut           #+#    #+#             */
-/*   Updated: 2023/07/08 16:45:44 by ldinaut          ###   ########.fr       */
+/*   Updated: 2023/07/13 13:19:16 by jtaravel         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -45,6 +45,7 @@ class Server
 
 		Server operator=(const Server *egal);
 
+		std::string 		_recv;
 		int			sock;
 		std::string	password;
 		int			port;
