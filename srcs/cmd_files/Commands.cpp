@@ -6,7 +6,7 @@
 /*   By: ldinaut <ldinaut@student.42.fr>            +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2023/06/19 14:09:45 by ldinaut           #+#    #+#             */
-/*   Updated: 2023/07/13 17:51:37 by mcouppe          ###   ########.fr       */
+/*   Updated: 2023/07/13 17:53:19 by mcouppe          ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -102,7 +102,7 @@ std::vector<std::string>	Commands::user_cmd(Client *client)
 
 std::vector<std::string>	Commands::nick_cmd(Client *client)
 {
-	if (_cmd_args.size() > 0)
+	if (client->getNick().size() > 0)
 		return (reponse);
 	if (_cmd_args[0].size() > 20)
 	{
