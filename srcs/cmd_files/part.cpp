@@ -6,7 +6,7 @@
 /*   By: ldinaut <ldinaut@student.42.fr>            +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2023/07/06 16:05:48 by mcouppe           #+#    #+#             */
-/*   Updated: 2023/07/13 14:29:36 by jtaravel         ###   ########.fr       */
+/*   Updated: 2023/07/13 14:43:10 by mcouppe          ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -16,26 +16,17 @@
 
 void	Commands::remove_cli_chan(const std::string &chan_title, Client *client){
 //	from client->_chans
-	std::cout << "11111 = " << _cmd_args[0] << "\n\n\n";
 	std::vector<Channel *>::iterator it_chan = server._channels.begin();
 	if (client->_chans.size() > 0){
-	std::cout << "22222 = " << _cmd_args[0] << "\n\n\n";
 		for (; it_chan != server._channels.end(); ++it_chan){
 			if (chan_title == (*it_chan)->getTitle()){
-	std::cout << "3333 = " << _cmd_args[0] << "\n\n\n";
 				std::vector<Client *>::iterator it_cli = (*it_chan)->_clients.begin();
-	//			if ((*it_chan)->_clients.size()){
-						std::cout << RED << "cb de fois ici ? + it_chan->_clients size ="<< (*it_chan)->_clients.size() << RESET << std::endl;
 					for (; it_cli != (*it_chan)->_clients.end(); ++it_cli){
-						std::cout << RED << "salut salut = " << (*it_cli)->getNick() << RESET << std::endl;
 						if ((*it_cli)->getNick() == client->getNick()){
 							(*it_chan)->_clients.erase(it_cli);
 							break ;
 						}
-				//		std::cout << ORANGE << "cb de fois ici ?" << RESET << std::endl;
 					}
-	//			}
-			//	std::cout << LIGHT_PINK << "cb de fois ici ?" << RESET << std::endl;
 				break ;
 			}
 		}
@@ -46,10 +37,8 @@ void	Commands::remove_cli_chan(const std::string &chan_title, Client *client){
 	{
 		if ((*it_chan)->getTitle() == (*capi)->getTitle())
 		{
-			std::cout << RED << "deleting " << (*it_chan)->getTitle() << RESET << std::endl;
 			delete *capi;
 			client->_chans.erase(capi);
-		//	delete *capi;
 			break ;
 		}
 	}
@@ -99,7 +88,6 @@ void	Commands::adding_fd_users(Channel* chan, int client_sock){
 	if (chan->_clients.size() == 0)
 		return ;
 	for (; it != chan->_clients.end(); ++it){
-	//	if ((*it)->_sock != client_sock)
 		this->fd_users.push_back((*it)->_sock);
 	}
 	return ;
@@ -113,7 +101,6 @@ std::vector<std::string>	Commands::part(Client *client){
 			std::vector<Channel *>::iterator chan_cli = client->_chans.begin();
 			for (; chan_cli != client->_chans.end(); ++chan_cli){
 				if ((*chan_cli)->getTitle() == _cmd_args[0]){
-					std::cout << GREEN << "CALLING PART WITH " << _cmd_args[0] << RESET << std::endl;
 					std::string	reason = "";
 					if (_cmd_args.size() > 1)
 						std::string	reason = _cmd_args[1];
