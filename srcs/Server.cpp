@@ -6,7 +6,7 @@
 /*   By: ldinaut <ldinaut@student.42.fr>            +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2023/06/09 14:30:46 by ldinaut           #+#    #+#             */
-/*   Updated: 2023/07/13 17:23:11 by mcouppe          ###   ########.fr       */
+/*   Updated: 2023/07/13 19:11:19 by jtaravel         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -23,6 +23,7 @@ Server::Server(int port, std::string pass):password(pass), port(port), ev(5)
 	_end = 1;
 	i = 0;
 	this->_check_pass = true;
+	sigint = false;
 }
 
 Server::~Server()
@@ -104,10 +105,84 @@ void	sig_handler(int sig)
 	}
 }
 
+
+void	Server::deleteClient2(Client *client)
+{
+	//server._channels// boucle sur ca
+	// boucle sur client de chaque channel
+	// check si il est dedans - operator ? delete
+	std::vector<Channel *>::iterator	servchan_it = server._channels.begin();
+	std::vector<Channel *>::iterator	clichan_it = client->_chans.begin();
+	std::vector<Client *>::iterator		oper_it;
+	std::vector<Client *>::iterator		invit_it;
+	for (; servchan_it != server._channels.end(); ++servchan_it)
+	{
+		for (; clichan_it != client->_chans.end(); ++clichan_it)
+		{
+			if ((*servchan_it)->getTitle() == (*clichan_it)->getTitle())
+			{
+				for (oper_it = (*clichan_it)->_operators.begin(); oper_it != (*clichan_it)->_operators.end(); ++oper_it)
+				{
+					if ((*clichan_it)->_operators.size())
+					{
+						if ((*oper_it)->getNick() == client->getNick())
+							(*clichan_it)->_operators.erase(oper_it);
+					}
+					else
+						break ;
+				}
+				for (invit_it = (*clichan_it)->_invites.begin(); invit_it != (*clichan_it)->_invites.end(); ++invit_it)
+				{
+					if ((*clichan_it)->_invites.size())
+					{
+						if ((*invit_it)->getNick() == client->getNick())
+						{
+							std::cout << "2 = " << GREEN << client->getNick() << "\n\n\n";
+							(*clichan_it)->_invites.erase(invit_it);
+						}
+					}
+					else
+						break ;
+				}
+				for (oper_it = (*servchan_it)->_operators.begin(); oper_it != (*servchan_it)->_operators.end(); ++oper_it)
+				{
+					if ((*servchan_it)->_operators.size())
+					{
+						if ((*oper_it)->getNick() == client->getNick())
+							(*servchan_it)->_operators.erase(oper_it);
+					}
+					else
+						break ;
+				}
+				for (invit_it = (*servchan_it)->_invites.begin(); invit_it != (*servchan_it)->_invites.end(); ++invit_it)
+				{
+					if ((*servchan_it)->_invites.size())
+					{
+						if ((*invit_it)->getNick() == client->getNick())
+						{
+							std::cout << "1 = " << GREEN << client->getNick() << "\n\n\n";
+							(*servchan_it)->_invites.erase(invit_it);
+						}
+					}
+					else
+						break ;
+				}
+			}
+			//std::cout << RED << "deleting chan from clientmap->_chans" << RESET << std::endl;
+			delete (*clichan_it);
+		}
+	}
+	int fd = client->_sock;
+	close(client->_sock);
+	delete client;
+	server._clients.erase(fd);
+}
+
 int	Server::run_serv()
 {
 	while (_end)
 	{
+		signal(SIGPIPE, SIG_IGN);
 		signal(SIGQUIT, SIG_IGN);
 		signal(SIGINT, sig_handler);
 		int event = epoll_wait(this->epoll_fd, ev.data(), 5, 1000);
@@ -129,7 +204,14 @@ int	Server::run_serv()
 					std::map<int, Client *>::iterator it = server._clients.find(ev[k].data.fd);
 					if (it != server._clients.end())
 					{
-						deleteClient(it->second);
+						sigint = true;
+						it->second->_recv.clear();
+						Commands *cmd_tmp = new Commands();
+						Client *tmp = it->second;
+						cmd_tmp->quit(it->second);
+						delete cmd_tmp;
+						delete tmp;
+						sigint = false;
 					}
 					continue ;
 				}

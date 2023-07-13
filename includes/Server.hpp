@@ -6,7 +6,7 @@
 /*   By: ldinaut <ldinaut@student.42.fr>            +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2023/05/29 13:25:21 by ldinaut           #+#    #+#             */
-/*   Updated: 2023/07/13 17:22:45 by mcouppe          ###   ########.fr       */
+/*   Updated: 2023/07/13 18:53:10 by jtaravel         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -53,6 +53,7 @@ class Server
 		int			fd_co;
 		int			_end;
 		int			i;
+		bool			sigint;
 		bool		_check_pass;
 		std::string	network;
 		std::vector<epoll_event> ev;
@@ -62,6 +63,7 @@ class Server
 
 		void	initBot(void);
 		void	deleteClient(Client *client);
+		void	deleteClient2(Client *client);
 		void	kill_cmd(std::map<int, Client *> client_list);
 		void	accept_newclient(sockaddr_in sockaddr);
 		void	add_epoll(int new_fd, int i);
