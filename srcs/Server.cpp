@@ -6,7 +6,7 @@
 /*   By: ldinaut <ldinaut@student.42.fr>            +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2023/06/09 14:30:46 by ldinaut           #+#    #+#             */
-/*   Updated: 2023/07/13 14:18:54 by jtaravel         ###   ########.fr       */
+/*   Updated: 2023/07/13 14:18:53 by mcouppe          ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -136,10 +136,12 @@ int	Server::run_serv()
 				_clients[ev[k].data.fd]->_recv += cmd_str;
 				server._recv += cmd_str;
 				std::cout << LAVENDER << "from client [" << cmd_str << "]" << RESET << std::endl;
+				std::cout << LIGHT_PINK << "_recv [" << _clients[ev[k].data.fd]->_recv << "]" << RESET << std::endl;
 				if (_clients[ev[k].data.fd]->_recv.find('\n') != _clients[ev[k].data.fd]->_recv.npos)
 				{
 					std::cout << "a;aa;aaaldaslfdasfsdfsdd\n\n\n";
 					Commands *cmd = new Commands(_clients[ev[k].data.fd]->_recv, ev[k].data.fd);
+					std::cout << GREEN << "NEW COMMAND" << RESET << std::endl;
 					_clients[ev[k].data.fd]->_cmd = cmd;
 					_clients[ev[k].data.fd]->_cmd->cmd_manager(_clients);
 					std::cout << GREEN << server._recv << "\n\n\n" << RESET;

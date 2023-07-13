@@ -6,7 +6,7 @@
 /*   By: ldinaut <ldinaut@student.42.fr>            +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2023/06/19 14:09:45 by ldinaut           #+#    #+#             */
-/*   Updated: 2023/07/13 14:31:58 by jtaravel         ###   ########.fr       */
+/*   Updated: 2023/07/13 14:17:50 by mcouppe          ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -205,9 +205,6 @@ void	aff_vector(std::vector<std::string> toto)
 
 void	Server::deleteClient(Client *client)
 {
-	//server._channels// boucle sur ca 
-	// boucle sur client de chaque channel
-	// check si il est dedans - operator ? delete
 	std::vector<Channel *>::iterator	servchan_it = server._channels.begin();
 	std::vector<Channel *>::iterator	clichan_it = client->_chans.begin();
 	std::vector<Client *>::iterator		oper_it;
@@ -218,48 +215,8 @@ void	Server::deleteClient(Client *client)
 		{
 			if ((*servchan_it)->getTitle() == (*clichan_it)->getTitle())
 			{
-				/*for (oper_it = (*clichan_it)->_operators.begin(); oper_it != (*clichan_it)->_operators.end(); ++oper_it)
-				{
-					if ((*clichan_it)->_operators.size())
-					{
-						if ((*oper_it)->getNick() == client->getNick())
-							(*clichan_it)->_operators.erase(oper_it);
-					}
-					else
-						break ;
-				}
-				for (invit_it = (*clichan_it)->_invites.begin(); invit_it != (*clichan_it)->_invites.end(); ++invit_it)
-				{
-					if ((*clichan_it)->_invites.size())
-					{
-						if ((*invit_it)->getNick() == client->getNick())
-							(*clichan_it)->_invites.erase(invit_it);
-					}
-					else
-						break ;
-				}*/
-				/*for (oper_it = (*servchan_it)->_operators.begin(); oper_it != (*servchan_it)->_operators.end(); ++oper_it)
-				{
-					if ((*servchan_it)->_operators.size())
-					{
-						if ((*oper_it)->getNick() == client->getNick())
-							(*servchan_it)->_operators.erase(oper_it);
-					}
-					else
-						break ;
-				}
-				for (invit_it = (*servchan_it)->_invites.begin(); invit_it != (*servchan_it)->_invites.end(); ++invit_it)
-				{
-					if ((*servchan_it)->_invites.size())
-					{
-						if ((*invit_it)->getNick() == client->getNick())
-							(*servchan_it)->_invites.erase(invit_it);
-					}
-					else
-						break ;
-				}*/
+				;
 			}
-			//std::cout << RED << "deleting chan from clientmap->_chans" << RESET << std::endl;
 			delete (*clichan_it);
 		}
 	}
@@ -271,7 +228,6 @@ void	Server::deleteClient(Client *client)
 
 void	Commands::cmd_manager(std::map<int, Client *> client_list)
 {
-	std::cout << "dans cmd_manage = |" << _str_rcv << "|\n\n\n";
 	std::vector<std::string> split_nl = split(_str_rcv, "\r\n");
 	for (size_t i = 0; i < split_nl.size() - 1; ++i)
 	{
@@ -289,7 +245,6 @@ void	Commands::cmd_manager(std::map<int, Client *> client_list)
 		_cmd_args.clear();
 		if (isQuit == true)
 		{
-			std::cout << "laaaaaaaaaaaaaaaaa\n\n\n";
 			server.deleteClient(client_list[_fd_co]);
 			delete this;
 		}
@@ -298,7 +253,6 @@ void	Commands::cmd_manager(std::map<int, Client *> client_list)
 
 Commands::~Commands(void)
 {
-	std::cout << "LLLLLLLLLLLLLLLLLLLLLLLLLLLLLLLLLL\n\n\n";
 	_cmd_args.clear();
 	_str_rcv.clear();
 	_cmd.clear();
