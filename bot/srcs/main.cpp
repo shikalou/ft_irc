@@ -6,11 +6,12 @@
 /*   By: ldinaut <ldinaut@student.42.fr>            +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2023/07/08 14:10:38 by ldinaut           #+#    #+#             */
-/*   Updated: 2023/07/13 14:50:26 by jtaravel         ###   ########.fr       */
+/*   Updated: 2023/07/14 11:35:08 by jtaravel         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
 #include "Bot.hpp"
+#include "Colors.hpp"
 #include <iostream>
 #include <sstream>
 
@@ -78,6 +79,7 @@ void	Bot::log_to_serv()
 	send(sock, ret.c_str(), ret.length(), 0);
 	ret = "USER bot bot localhost :Mister ROBOT\r\n";
 	send(sock, ret.c_str(), ret.length(), 0);
+	std::cout << GREEN << "\nBot nº" << intToString(random) << " is connected on the server !\n" << RESET;
 }
 
 std::vector<std::string> split(std::string str, std::string delim)
